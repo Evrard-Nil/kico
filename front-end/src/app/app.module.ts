@@ -3,10 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ACSegmentationComponent } from './components/acsegmentation/acsegmentation.component';
+import { ACHeaderComponent } from './components/acheader/acheader.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ACSegmentationComponent,
+    ACHeaderComponent
   ],
   imports: [
     BrowserModule,
