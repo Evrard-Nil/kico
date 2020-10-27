@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: Kico API
+  version: 0.0.0
+servers:
+- url: http://localhost.com/api/v1
+paths:
+  /videos:
+    description: Allow to get informations concerning videos stored and their state.
+    get:
+      operationId: getVideos
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Video'
+                type: array
+          description: Videos
+        default:
+          description: Default error sample response
+      summary: Retrieve all videos
+    summary: Operations on videos
+  /video/{id}:
+    delete:
+      operationId: deleteVideo
+      parameters:
+      - description: Numeric ID of the video to delete
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          description: Deletion sucessful
+        default:
+          description: Default error sample response
+      summary: delete a video
+    get:
+      operationId: getVideo
+      parameters:
+      - description: Numeric ID of the video to get
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+          description: A video
+        default:
+          description: Default error sample response
+      summary: Retrieve a single video
+    put:
+      operationId: updateVideo
+      parameters:
+      - description: Numeric ID of the video to update
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          description: Update sucessful
+        default:
+          description: Default error sample response
+      summary: Update a video
+    summary: Operation on the video {id}
+  /video:
+    post:
+      operationId: addVideo
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+          description: A video
+        default:
+          description: Default error sample response
+      summary: Add a  video
+components:
+  schemas:
+    VideoState:
+      description: State of a video
+      enum:
+      - imported
+      - segmented
+      - annotated
+      nullable: false
+      type: string
+    Video:
+      description: A video stored
+      example:
+        id: id
+        url: url
+      nullable: false
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+        state:
+          $ref: '#/components/schemas/VideoState'
+      type: object
+
