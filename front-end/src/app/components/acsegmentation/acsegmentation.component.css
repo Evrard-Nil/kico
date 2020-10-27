@@ -6,6 +6,10 @@
     width: 33%;
 }
 
+.h-half {
+    height: 50%;
+}
+
 .py-1 {
     padding-bottom: 1em;
     padding-top: 1em;
@@ -16,6 +20,45 @@
     padding-right: 1em;
 }
 
+img {
+    display: block;
+}
+
 .redirection {
     font-size: larger;
+}
+
+.overflow-y {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.thumbnail {
+    width: 66%;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+.images {
+    height: 50em;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.description-image {
+    padding-top: 1em;
+}
+
+.block-image {
+    margin: 1em;
+}
+
+.block-image:hover {
+    border: 1px;
+    border-color: cyan;
 }
