@@ -1,0 +1,21 @@
+.w-2 {
+    width: 66%;
+}
+
+.w-1 {
+    width: 33%;
+}
+
+.py-1 {
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+.py-1 {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.redirection {
+    font-size: larger;
+}

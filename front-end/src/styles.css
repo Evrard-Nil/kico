@@ -3,6 +3,13 @@
     display: flex;
 }
 
+.flex-column {
+    flex-direction: column;
+}
+.flex-row {
+    flex-direction: row;
+}
+
 .button-gris {
     text-align: center;
     background-color: gray;
@@ -10,4 +17,17 @@
     padding: 1em;
     display: block;
     border-radius: 2em;
+}
+
+.button-rouge {
+    text-align: center;
+    background-color: red;
+    color: white;
+    padding: 1em;
+    display: block;
+    border-radius: 2em;
+}
+
+.w-full {
+    width: 100%;
 }
