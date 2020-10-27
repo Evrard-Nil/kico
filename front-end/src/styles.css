@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+.flex {
+    display: flex;
+}
+
+.button-gris {
+    text-align: center;
+    background-color: gray;
+    color: white;
+    padding: 1em;
+    display: block;
+    border-radius: 2em;
+}
