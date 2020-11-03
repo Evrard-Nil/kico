@@ -19,10 +19,6 @@
     padding-top: 1em;
 }
 
-.titre-rubrique {
-    font-size: x-large;
-}
-
 .px-1 {
     padding-left: 1em;
     padding-right: 1em;
@@ -41,16 +37,6 @@ img {
     font-size: larger;
 }
 
-.overflow-y {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    white-space: nowrap;
-}
-
-.thumbnail {
-    width: 66%;
-}
-
 .no-scroll {
     overflow: hidden;
 }
@@ -61,17 +47,4 @@ img {
 
 .align-center {
     align-items: center;
-}
-
-.description-image {
-    padding-top: 1em;
-}
-
-.block-image {
-    margin: 1em;
-}
-
-.block-image:hover {
-    border: 1px;
-    border-color: cyan;
 }

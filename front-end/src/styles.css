@@ -39,3 +39,7 @@
 .bold {
     font-weight: bold;
 }
+
+.align-center {
+    align-items: center;
+}
