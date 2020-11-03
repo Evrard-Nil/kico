@@ -5,12 +5,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ACSegmentationComponent } from './components/acsegmentation/acsegmentation.component';
 import { ACHeaderComponent } from './components/acheader/acheader.component';
+import { ImageThumbnailComponent } from './components/acsegmentation/image-thumbnail/image-thumbnail.component';
+import { ListImageComponent } from './components/acsegmentation/list-image/list-image.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ACSegmentationComponent,
-    ACHeaderComponent
+    ACHeaderComponent,
+    ImageThumbnailComponent,
+    ListImageComponent
   ],
   imports: [
     BrowserModule,
