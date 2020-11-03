@@ -10,28 +10,10 @@
             Button + Barre avancement
         </div>
         <hr width="90%">
-        <div class="flex flex-row">
-            <div class="flex flex-column">
-                <div class="py-1">
-                    <label for="nom-image">Nom :</label>
-                    <input id="nom-image" type="text">
-                </div>
-                <div class="py-1">
-                    <label for="zone-image">Zone :</label>
-                    <select name="zone-image" id="zone-image"></select>
-                </div>
-                <div class="py-1">
-                    <span>Timer :</span>
-                    <span>00:12:152</span>
-                </div>
-            </div>
-            <div>
-                <span class="button-rouge">Supprimer la capture</span>
-            </div>
-        </div>
+        <app-form-image-information [currentImage]="currentImage"></app-form-image-information>
     </div>
     <div class="w-1 flex flex-column">
-        <app-list-image [images]="images"></app-list-image>
+        <app-list-image [images]="images" (eventSelectedImage)="changeCurrentImage($event)"></app-list-image>
         <span class="button-gris w-half m-auto my-1">Finir la segmentation</span>
     </div>
 </div>
