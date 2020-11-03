@@ -1,7 +1,9 @@
 import {
   Component,
+	EventEmitter,
   Input,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import {
   Image
@@ -14,11 +16,19 @@ import {
 })
 export class ListImageComponent implements OnInit {
 
-  @Input() images: Array <Image> ;
+  @Input() images: Array <Image>;
+  @Output() eventSelectedImage: EventEmitter<Image>;
+
   constructor() {
+	this.eventSelectedImage = new EventEmitter();
+  }
+
+  changeSelectedImage(image: Image){
+	  this.eventSelectedImage.emit(image);
   }
 
   ngOnInit(): void {
+	  
   }
 
 }

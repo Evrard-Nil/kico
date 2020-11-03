@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {Image} from 'src/app/model/image'
 
 @Component({
@@ -9,9 +9,18 @@ import {Image} from 'src/app/model/image'
 export class ImageThumbnailComponent implements OnInit {
 
   @Input() image: Image;
-  constructor() { }
+  @Output() eventImageSelected: EventEmitter<Image>;
+
+  constructor() { 
+    this.eventImageSelected = new EventEmitter();
+  }
 
   ngOnInit(): void {
+    
+  }
+
+  selectThisImage(){
+    this.eventImageSelected.emit(this.image)
   }
 
 }
