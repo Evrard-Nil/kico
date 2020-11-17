@@ -1,0 +1,7 @@
+go/api.go
+go/api_default.go
+go/logger.go
+go/model_image.go
+go/model_video.go
+go/model_video_state.go
+go/routers.go
