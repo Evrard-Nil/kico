@@ -5,8 +5,8 @@ export class Video {
   scorePci: number
   state: string
   url: string
-  path: string
   title: string
+
   constructor() {}
 
 }
