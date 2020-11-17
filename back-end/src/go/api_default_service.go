@@ -12,6 +12,7 @@ package openapi
 import (
 	"context"
 	"errors"
+	"log"
 )
 
 // DefaultApiService is a service that implents the logic for the DefaultApiServicer
@@ -28,6 +29,7 @@ func NewDefaultApiService() DefaultApiServicer {
 // AddVideo - Add a  video
 func (s *DefaultApiService) AddVideo(ctx context.Context) (interface{}, error) {
 	// TODO - update AddVideo with the required logic for this service method.
+	log.Printf("AddVideo")
 	return "OK", nil
 }
 
@@ -40,9 +42,8 @@ func (s *DefaultApiService) DeleteVideo(ctx context.Context, id int32) (interfac
 
 // GetVideo - Retrieve a single video
 func (s *DefaultApiService) GetVideo(ctx context.Context, id int32) (interface{}, error) {
-	// TODO - update GetVideo with the required logic for this service method.
-	// Add api_default_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-	return nil, errors.New("service method 'GetVideo' not implemented")
+	log.Printf("GetVideo")
+	return "OK", nil
 }
 
 // GetVideos - Retrieve all videos
