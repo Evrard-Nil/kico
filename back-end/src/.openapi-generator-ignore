@@ -11,6 +11,7 @@ api/*
 README.md
 go.mod
 go/api_default_service.go
+Dockerfile
 
 # You can match any string of characters against a directory, file or extension with a single asterisk (*):
 #foo/*/qux

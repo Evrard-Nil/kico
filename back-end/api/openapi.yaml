@@ -105,15 +105,44 @@ components:
     Video:
       description: A video stored
       example:
-        id: id
-        url: url
+        id: abc4
+        url: https://www.youtube.com/watch?v=-5KAN9_CzSA
+        date: '2017-07-21T17:32:28Z'
+        scorePci: 14.5
+        title: A great video
+        state: imported
       nullable: false
+      type: object
       properties:
         id:
           type: string
-        url:
-          type: string
         state:
           $ref: '#/components/schemas/VideoState'
+        annotatedBy: 
+          type: string
+        date: 
+          type: string
+          format: date-time
+        scorePci: 
+          type: number
+        url:         
+          type: string
+        title: 
+          type: string
+    Image:
+      description: An extracted image from a video
       type: object
-
+      nullable: false
+      properties:
+        id: 
+          type: number
+        secteur_id: 
+          type: number
+        secteur_name: 
+          type: string
+        name:  
+          type: string
+        time:  
+          type: string
+        video_id:  
+          type: number

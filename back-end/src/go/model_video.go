@@ -9,12 +9,24 @@
 
 package openapi
 
+import (
+	"time"
+)
+
 // Video - A video stored
 type Video struct {
 
 	Id string `json:"id,omitempty"`
 
+	State VideoState `json:"state,omitempty"`
+
+	AnnotatedBy string `json:"annotatedBy,omitempty"`
+
+	Date time.Time `json:"date,omitempty"`
+
+	ScorePci float32 `json:"scorePci,omitempty"`
+
 	Url string `json:"url,omitempty"`
 
-	State VideoState `json:"state,omitempty"`
+	Title string `json:"title,omitempty"`
 }

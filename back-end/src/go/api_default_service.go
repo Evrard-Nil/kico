@@ -15,7 +15,7 @@ import (
 )
 
 // DefaultApiService is a service that implents the logic for the DefaultApiServicer
-// This service should implement the business logic for every endpoint for the DefaultApi API. 
+// This service should implement the business logic for every endpoint for the DefaultApi API.
 // Include any external packages or services that will be required by this service.
 type DefaultApiService struct {
 }
@@ -28,14 +28,13 @@ func NewDefaultApiService() DefaultApiServicer {
 // AddVideo - Add a  video
 func (s *DefaultApiService) AddVideo(ctx context.Context) (interface{}, error) {
 	// TODO - update AddVideo with the required logic for this service method.
-	// Add api_default_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-	return nil, errors.New("service method 'AddVideo' not implemented")
+	return "OK", nil
 }
 
 // DeleteVideo - delete a video
 func (s *DefaultApiService) DeleteVideo(ctx context.Context, id int32) (interface{}, error) {
 	// TODO - update DeleteVideo with the required logic for this service method.
-	// Add api_default_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+
 	return nil, errors.New("service method 'DeleteVideo' not implemented")
 }
 
