@@ -27,23 +27,20 @@ export class ACSegmentationComponent implements OnInit {
 
     this.images.push({
       id: 1,
-      secteur_id: 2,
+      secteur_id: 1,
       name: "testeur",
-      secteur_name: "Zone 2",
       time: "12:09:09",
       video_id: 2,
     }, {
       id: 2,
       secteur_id: 2,
       name: "testeur",
-      secteur_name: "Zone 2",
       time: "15:09:29",
       video_id: 2,
     }, {
       id: 3,
       secteur_id: 2,
       name: "testeur",
-      secteur_name: "Zone 2",
       time: "09:37:09",
       video_id: 2,
   }, );

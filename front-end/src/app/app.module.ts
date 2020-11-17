@@ -9,6 +9,7 @@ import { ImageThumbnailComponent } from './components/acsegmentation/image-thumb
 import { ListImageComponent } from './components/acsegmentation/list-image/list-image.component';
 import { FormImageInformationComponent } from './components/acsegmentation/form-image-information/form-image-information.component';
 import { VideoVisualisationComponent } from './components/acsegmentation/video-visualisation/video-visualisation.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,9 @@ import { VideoVisualisationComponent } from './components/acsegmentation/video-v
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

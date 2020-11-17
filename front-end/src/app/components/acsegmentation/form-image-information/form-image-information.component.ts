@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Image } from 'src/app/model/image';
+import { Secteurs } from 'src/assets/data/secteurs'
 
 @Component({
   selector: 'app-form-image-information',
@@ -11,6 +12,7 @@ export class FormImageInformationComponent implements OnInit {
   @Input() currentImage: Image;
   @Output() eventNameImage : EventEmitter<Image>;
   @Output() eventDeleteImage : EventEmitter<Image>;
+  secteurs = Secteurs
 
   constructor() {
 		this.eventNameImage = new EventEmitter();
@@ -22,12 +24,10 @@ export class FormImageInformationComponent implements OnInit {
   }
 
   onDeleteImage() {
-		console.log("Deleting", this.currentImage)
 		this.eventDeleteImage.emit(this.currentImage)
   }
 
   onChangeName(newName: String){
-    console.log('Change :', newName)
     this.currentImage.name = newName;
     this.eventNameImage.emit(this.currentImage)
   }
