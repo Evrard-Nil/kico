@@ -1,0 +1,55 @@
+<div class="page">
+    <h1>Toutes les vidéos</h1>
+    <div class="list-video-legend">
+        <span>
+            <div id="annote-color" class="list-video-legend-block"></div> Annotée
+        </span>
+        <span>
+            <div id="partiellement-annote-color" class="list-video-legend-block"></div> Partiellement annotée
+        </span>
+        <span>
+            <div id="segmente-color" class="list-video-legend-block"></div> Segmentée
+        </span>
+        <span>
+            <div id="enregistre-color" class="list-video-legend-block"></div> Enregistrée
+        </span>
+    </div>
+    <div class="table">
+        <div class="table-head">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Date</th>
+                        <th>Annotée par</th>
+                        <th>Etat</th>
+                        <th>Score PCI</th>
+                        <th>Progression</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="table-body js-pscroll">
+            <table>
+                <tbody>
+                    <tr *ngFor="let video of videos">
+                        <td>{{video.title}}</td>
+                        <td>{{video.date | date:'dd/MM/yyyy'}}</td>
+                        <td>{{video.annotatedBy}}</td>
+                        <td>{{video.state}}</td>
+                        <td>{{video.scorePci}}/39</td>
+                        <td>Progression</td>
+                        <td>Segmenter Supprimer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="center-wrapper">
+        <button id="btn-ajouter-video"><img src="assets/img/iconAdd.png" width=16 height=16 /> Ajouter une
+            vidéo</button>
+    </div>
+</div>

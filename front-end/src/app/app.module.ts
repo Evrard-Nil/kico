@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ActableauVideosComponent } from './components/actableau-videos/actableau-videos.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ActableauVideosComponent
   ],
   imports: [
     BrowserModule,
