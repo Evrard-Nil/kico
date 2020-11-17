@@ -27,26 +27,35 @@ export class ACSegmentationComponent implements OnInit {
 
     this.images.push({
       id: 1,
-      Secteur_id: 2,
+      secteur_id: 2,
       name: "testeur",
       secteur_name: "Zone 2",
       time: "12:09:09",
       video_id: 2,
     }, {
       id: 2,
-      Secteur_id: 2,
+      secteur_id: 2,
       name: "testeur",
       secteur_name: "Zone 2",
       time: "15:09:29",
       video_id: 2,
     }, {
       id: 3,
-      Secteur_id: 2,
+      secteur_id: 2,
       name: "testeur",
       secteur_name: "Zone 2",
       time: "09:37:09",
       video_id: 2,
-	}, )
+  }, );
+  this.video = {
+    date : new Date(),
+    annotatedBy : "Me",
+    scorePci : 3,
+    id : "23",
+    url : "../../../../assets/patient.mp4",
+    state : "en cours",
+    title : "Ma video"
+  };
 	this.changeCurrentImage(this.images[0])
   }
 
@@ -70,6 +79,12 @@ export class ACSegmentationComponent implements OnInit {
     else {
       this.changeCurrentImage(undefined)
     }
+  }
+
+  terminateSegmentation() {
+    console.log("Segmentation terminée")
+    // TODO : Sauvegarder la liste des images
+    // TODO : Redirection
   }
 
 }
