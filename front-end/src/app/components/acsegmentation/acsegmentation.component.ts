@@ -50,9 +50,26 @@ export class ACSegmentationComponent implements OnInit {
 	this.changeCurrentImage(this.images[0])
   }
 
-  changeCurrentImage(newImage: Image){
-	this.currentImage = newImage;
-	console.log(this.images)
+  changeCurrentImage(newImage: Image) {
+    this.currentImage = newImage;
+  }
+
+  deleteCurrentImage() {
+    let indexFound = this.images.indexOf(this.currentImage)
+    this.images.splice(indexFound,1)
+    this.changeCurrentImageOnDelete(indexFound)
+  }
+
+  changeCurrentImageOnDelete(index: number) {
+    if(this.images[index] !== undefined) {
+      this.changeCurrentImage(this.images[index])
+    }
+    else if(this.images[index - 1] !== undefined) {
+      this.changeCurrentImage(this.images[index - 1])
+    }
+    else {
+      this.changeCurrentImage(undefined)
+    }
   }
 
 }

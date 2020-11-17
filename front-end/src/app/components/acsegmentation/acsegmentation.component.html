@@ -10,7 +10,7 @@
             Button + Barre avancement
         </div>
         <hr width="90%">
-        <app-form-image-information [currentImage]="currentImage"></app-form-image-information>
+        <app-form-image-information [currentImage]="currentImage" (eventDeleteImage)="deleteCurrentImage()"></app-form-image-information>
     </div>
     <div class="w-1 flex flex-column">
         <app-list-image [images]="images" (eventSelectedImage)="changeCurrentImage($event)"></app-list-image>

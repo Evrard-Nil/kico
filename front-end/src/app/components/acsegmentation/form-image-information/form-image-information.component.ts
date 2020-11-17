@@ -9,20 +9,29 @@ import { Image } from 'src/app/model/image';
 export class FormImageInformationComponent implements OnInit {
 
   @Input() currentImage: Image;
-  @Output() eventCurrentImage : EventEmitter<Image>;
+  @Output() eventNameImage : EventEmitter<Image>;
+  @Output() eventDeleteImage : EventEmitter<Image>;
 
   constructor() {
+		this.eventNameImage = new EventEmitter();
+		this.eventDeleteImage = new EventEmitter();
+  }
 
+  ngOnInit(): void {
+    
+  }
+
+  onDeleteImage() {
+		console.log("Deleting", this.currentImage)
+		this.eventDeleteImage.emit(this.currentImage)
   }
 
   onChangeName(newName: String){
     console.log('Change :', newName)
     this.currentImage.name = newName;
-    this.eventCurrentImage.emit(this.currentImage)
+    this.eventNameImage.emit(this.currentImage)
   }
 
-  ngOnInit(): void {
-    this.eventCurrentImage = new EventEmitter();
-  }
+  
 
 }

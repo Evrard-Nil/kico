@@ -23,7 +23,7 @@ export class ListImageComponent implements OnInit {
 	this.eventSelectedImage = new EventEmitter();
   }
 
-  changeSelectedImage(image: Image){
+  changeSelectedImage(image: Image) {
 	  this.eventSelectedImage.emit(image);
   }
 
