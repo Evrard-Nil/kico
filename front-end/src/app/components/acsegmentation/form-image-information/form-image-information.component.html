@@ -1,9 +1,9 @@
-<div class="flex flex-row">
+<div class="flex flex-row" *ngIf="currentImage !== undefined">
     <form>
         <div class="flex flex-column">
             <div class="py-1">
                 <label for="nom-image">Nom : </label>
-                <input id="nom-image" type="text" value="{{currentImage?.name}}" (input)="onChangeName($event.target.value)">
+                <input id="nom-image" type="text" value="{{currentImage.name}}" (input)="onChangeName($event.target.value)">
             </div>
             <div class="py-1">
                 <label for="zone-image">Secteur : </label>
@@ -13,7 +13,7 @@
             </div>
             <div class="py-1">
                 <span>Timer : </span>
-                <span>{{currentImage?.time}}</span>
+                <span>{{currentImage.time}}</span>
             </div>
         </div>
     </form>
