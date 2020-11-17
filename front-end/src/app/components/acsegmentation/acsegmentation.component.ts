@@ -52,7 +52,7 @@ export class ACSegmentationComponent implements OnInit {
     annotatedBy : "Me",
     scorePci : 3,
     id : "23",
-    url : "../../../../assets/patient.mp4",
+    url : "../../../../assets/videos/patient.mp4",
     state : "en cours",
     title : "Ma video"
   };

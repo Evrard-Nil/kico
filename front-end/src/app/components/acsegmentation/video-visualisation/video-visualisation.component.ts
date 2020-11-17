@@ -31,8 +31,12 @@ export class VideoVisualisationComponent implements OnInit {
     canvasElement.width = this.videoElement.clientWidth;
     canvasElement.height = this.videoElement.clientHeight;
     canvasElement.getContext('2d').drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
-    var dataURL = canvasElement.toDataURL()
-    window.open(dataURL)
+    
+    canvasElement.toBlob((blob) => {
+      console.log(blob)
+      var url = URL.createObjectURL(blob)
+      console.log(url)
+    },"image/jpeg")
     // TODO : Send dataurl to server
   }
 
