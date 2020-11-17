@@ -1,15 +1,15 @@
 <div class="flex flex-row">
     <div class="flex flex-column">
         <div class="py-1">
-            <label for="nom-image">Nom :</label>
+            <label for="nom-image">Nom : </label>
             <input id="nom-image" type="text" value="{{currentImage?.name}}" (input)="onChangeName($event.target.value)">
         </div>
         <div class="py-1">
-            <label for="zone-image">Zone :</label>
+            <label for="zone-image">Zone : </label>
             <select name="zone-image" id="zone-image"></select>
         </div>
         <div class="py-1">
-            <span>Timer :</span>
+            <span>Timer : </span>
             <span>{{currentImage?.time}}</span>
         </div>
     </div>
