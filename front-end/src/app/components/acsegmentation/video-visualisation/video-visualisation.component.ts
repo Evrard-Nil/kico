@@ -12,9 +12,7 @@ export class VideoVisualisationComponent implements OnInit {
 
   @Input() video : Video
   @ViewChild("videoRef") videoReference: ElementRef
-  @ViewChild("canvasRef") canvasReference: ElementRef
 
-  canvasElement: HTMLCanvasElement
   videoElement: HTMLVideoElement
 
   constructor() { 
@@ -26,15 +24,16 @@ export class VideoVisualisationComponent implements OnInit {
 
   ngAfterViewInit() {
     this.videoElement = this.videoReference.nativeElement
-    this.canvasElement = this.canvasReference.nativeElement
   }
 
   captureCurrentImage() {
-    this.canvasElement.width = this.videoElement.clientWidth;
-    this.canvasElement.height = this.videoElement.clientHeight;
-    this.canvasElement.getContext('2d').drawImage(this.videoElement, 0, 0, this.canvasElement.width, this.canvasElement.height);
-    var dataURL = this.canvasElement.toDataURL()
+    var canvasElement = document.createElement("canvas")
+    canvasElement.width = this.videoElement.clientWidth;
+    canvasElement.height = this.videoElement.clientHeight;
+    canvasElement.getContext('2d').drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
+    var dataURL = canvasElement.toDataURL()
     window.open(dataURL)
+    // TODO : Send dataurl to server
   }
 
 }
