@@ -35,18 +35,18 @@ Alternativelky you could open specifications on [swaggerhub](https://app.swagger
 
 To run the server, follow these simple steps:
 
-```
+```bash
 go run main.go
 ```
 
 To run the server in a docker container
 
-```
-docker build --network=host -t openapi .
+```bash
+docker build --network=host -t kico-back .
 ```
 
 Once image is built use
 
-```
-docker run --rm -it openapi
+```bash
+docker run --rm -it --publish 8080:8080 kico-back
 ```

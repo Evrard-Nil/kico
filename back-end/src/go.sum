@@ -1,5 +1,2 @@
-github.com/evrard-nil/kico v0.0.0-20201027082304-0668d361e13c h1:3Wx7/DRf22rfrY9YsMkUFAGKPJiskhVTxUNVuG6fuec=
-github.com/evrard-nil/kico v0.0.1 h1:0P7tCutcXEPfIs0reUHqdUWNVJA7dC1UTr/IQH8Orcc=
-github.com/evrard-nil/kico v0.0.1/go.mod h1:3Nkygc+FSHuCXWF4bMeQJq+R1/ljwcNvFhXvdoyXC9g=
-github.com/gorilla/mux v1.7.3/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
+github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
 github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=

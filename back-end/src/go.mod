@@ -1,5 +1,5 @@
-module github.com/GIT_USER_ID/GIT_REPO_ID
+module github.com/evrard-nil/kico/back-end/src
 
-go 1.13
+go 1.15
 
 require github.com/gorilla/mux v1.8.0
