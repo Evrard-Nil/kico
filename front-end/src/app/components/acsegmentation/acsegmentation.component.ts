@@ -48,15 +48,7 @@ export class ACSegmentationComponent implements OnInit {
       video_id: 2,
   }, );
   this.showVideo();
-  this.video = {
-    date : new Date(),
-    annotated_by : "Me",
-    score_pci : 3,
-    id : 23,
-    url : "../../../../assets/videos/patient.mp4",
-    state : "en cours",
-    title : "Ma video"
-  };
+  
 	this.changeCurrentImage(this.images[0])
   }
 
@@ -85,8 +77,18 @@ export class ACSegmentationComponent implements OnInit {
   showVideo() {
     this.videoService.getVideo(2)
       .subscribe((receivedVideo: Video) => {
-        console.log(receivedVideo)     
+        console.log(receivedVideo)
+        // TODO : Stop simulation and get real data  
       });
+      this.video = {
+        date : new Date(),
+        annotated_by : "Me",
+        score_pci : 3,
+        id : 23,
+        url : "../../../../assets/videos/patient.mp4",
+        state : "en cours",
+        title : "Ma video"
+      };  
   }
 
   getAllImages() {
