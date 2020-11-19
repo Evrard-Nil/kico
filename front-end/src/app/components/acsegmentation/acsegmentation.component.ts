@@ -1,3 +1,4 @@
+import { HttpEvent } from '@angular/common/http';
 import {
   Component,
   OnInit
@@ -8,6 +9,8 @@ import {
 import {
   Video
 } from 'src/app/model/video';
+import { ImageService } from 'src/app/services/image.service';
+import { VideoService } from 'src/app/services/video.service';
 
 @Component({
   selector: 'app-acsegmentation',
@@ -19,7 +22,7 @@ export class ACSegmentationComponent implements OnInit {
   video: Video;
   currentImage: Image;
 
-  constructor() {
+  constructor(private videoService : VideoService, private imageService: ImageService) {
     this.images = new Array();
   }
 
@@ -44,6 +47,7 @@ export class ACSegmentationComponent implements OnInit {
       time: "09:37:09",
       video_id: 2,
   }, );
+  this.showVideo();
   this.video = {
     date : new Date(),
     annotatedBy : "Me",
@@ -76,6 +80,17 @@ export class ACSegmentationComponent implements OnInit {
     else {
       this.changeCurrentImage(undefined)
     }
+  }
+
+  showVideo() {
+    this.videoService.getVideo(2)
+      .subscribe((receivedVideo: Video) => {
+        console.log(receivedVideo)     
+      });
+  }
+
+  getAllImages() {
+    this.imageService.getImagesFromVideo(2)
   }
 
   terminateSegmentation() {
