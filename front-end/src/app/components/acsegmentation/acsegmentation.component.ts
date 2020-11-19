@@ -50,9 +50,9 @@ export class ACSegmentationComponent implements OnInit {
   this.showVideo();
   this.video = {
     date : new Date(),
-    annotatedBy : "Me",
-    scorePci : 3,
-    id : "23",
+    annotated_by : "Me",
+    score_pci : 3,
+    id : 23,
     url : "../../../../assets/videos/patient.mp4",
     state : "en cours",
     title : "Ma video"

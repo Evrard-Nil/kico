@@ -1,8 +1,8 @@
 export class Video {
-  id: string
-  annotatedBy: string
+  id: number
+  annotated_by: string
   date: Date
-  scorePci: number
+  score_pci: number
   state: string
   url: string
   title: string
