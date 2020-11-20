@@ -14,3 +14,4 @@ RUN npm run build --prod
 FROM nginx:1.15.8-alpine
 
 COPY --from=builder /usr/src/app/dist/poc-cornerstone/ /usr/share/nginx/html
+#2345
