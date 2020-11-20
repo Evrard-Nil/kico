@@ -3,6 +3,7 @@ import {
   Component,
   OnInit
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   Image
 } from 'src/app/model/image';
@@ -21,35 +22,16 @@ export class ACSegmentationComponent implements OnInit {
   images: Array <Image> ;
   video: Video;
   currentImage: Image;
+  private idVideo: number;
 
-  constructor(private videoService : VideoService, private imageService: ImageService) {
+  constructor(private videoService : VideoService, private imageService: ImageService, private route: ActivatedRoute) {
     this.images = new Array();
+    this.idVideo = +this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit(): void {
-
-    this.images.push({
-      id: 1,
-      secteur_id: 1,
-      name: "testeur",
-      time: "12:09:09",
-      video_id: 2,
-    }, {
-      id: 2,
-      secteur_id: 2,
-      name: "testeur",
-      time: "15:09:29",
-      video_id: 2,
-    }, {
-      id: 3,
-      secteur_id: 2,
-      name: "testeur",
-      time: "09:37:09",
-      video_id: 2,
-  }, );
-  this.showVideo();
-  
-	this.changeCurrentImage(this.images[0])
+    this.loadVideo();
+    this.loadImages();
   }
 
   changeCurrentImage(newImage: Image) {
@@ -74,12 +56,12 @@ export class ACSegmentationComponent implements OnInit {
     }
   }
 
-  showVideo() {
-    this.videoService.getVideo(2)
+  loadVideo() {
+    this.videoService.getVideo(this.idVideo)
       .subscribe((receivedVideo: Video) => {
         console.log(receivedVideo)
-        // TODO : Stop simulation and get real data  
       });
+      
       this.video = {
         date : new Date(),
         annotated_by : "Me",
@@ -91,8 +73,31 @@ export class ACSegmentationComponent implements OnInit {
       };  
   }
 
-  getAllImages() {
-    this.imageService.getImagesFromVideo(2)
+  loadImages() {
+    this.imageService.getImagesFromVideo(this.idVideo)
+      .subscribe((images) => {
+        console.log(images)
+    })
+
+    this.images.push({
+      id: 1,
+      secteur_id: 1,
+      name: "testeur",
+      time: "12:09:09",
+      video_id: 2,
+    }, {
+      id: 2,
+      secteur_id: 2,
+      name: "testeur",
+      time: "15:09:29",
+      video_id: 2,
+    }, {
+      id: 3,
+      secteur_id: 2,
+      name: "testeur",
+      time: "09:37:09",
+      video_id: 2,
+    });
   }
 
   terminateSegmentation() {
