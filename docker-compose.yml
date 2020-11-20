@@ -1,0 +1,27 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  api:
+    image: kico-api
+    build: ./back-end/src
+    restart: always
+    ports:
+      - '8080:8080'
+    depends_on:
+      - 'mongo'
+      
+  web:
+    image: kico-front 
+    build: ./front-end
+    ports:
+      - '3000:80'
+    depends_on:
+      - 'api'
+      
+  mongo:
+    image: 'mongo:latest'
+    container_name: 'mongo'
+    ports:
+      - '27100:27017'
