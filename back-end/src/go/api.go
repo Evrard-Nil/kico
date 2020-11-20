@@ -19,10 +19,15 @@ import (
 // The DefaultApiRouter implementation should parse necessary information from the http request, 
 // pass the data to a DefaultApiServicer to perform the required actions, then write the service results to the http response.
 type DefaultApiRouter interface { 
+	AddImageToVideo(http.ResponseWriter, *http.Request)
 	AddVideo(http.ResponseWriter, *http.Request)
+	DeleteImage(http.ResponseWriter, *http.Request)
 	DeleteVideo(http.ResponseWriter, *http.Request)
+	GetImage(http.ResponseWriter, *http.Request)
+	GetImagesFromVideo(http.ResponseWriter, *http.Request)
 	GetVideo(http.ResponseWriter, *http.Request)
 	GetVideos(http.ResponseWriter, *http.Request)
+	UpdateImage(http.ResponseWriter, *http.Request)
 	UpdateVideo(http.ResponseWriter, *http.Request)
 }
 
@@ -32,9 +37,14 @@ type DefaultApiRouter interface {
 // while the service implementation can ignored with the .openapi-generator-ignore file 
 // and updated with the logic required for the API.
 type DefaultApiServicer interface { 
-	AddVideo(context.Context) (interface{}, error)
+	AddImageToVideo(context.Context, int32, Image) (interface{}, error)
+	AddVideo(context.Context, Video) (interface{}, error)
+	DeleteImage(context.Context, int32) (interface{}, error)
 	DeleteVideo(context.Context, int32) (interface{}, error)
+	GetImage(context.Context, int32) (interface{}, error)
+	GetImagesFromVideo(context.Context, int32) (interface{}, error)
 	GetVideo(context.Context, int32) (interface{}, error)
 	GetVideos(context.Context) (interface{}, error)
-	UpdateVideo(context.Context, int32) (interface{}, error)
+	UpdateImage(context.Context, int32, Image) (interface{}, error)
+	UpdateVideo(context.Context, int32, Video) (interface{}, error)
 }

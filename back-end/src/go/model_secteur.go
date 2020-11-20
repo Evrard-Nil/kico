@@ -9,16 +9,10 @@
 
 package openapi
 
-// Image - An extracted image from a video
-type Image struct {
+// Secteur - A secteur in abdomen
+type Secteur struct {
 
-	Id float32 `json:"id,omitempty"`
-
-	SecteurId float32 `json:"secteur_id,omitempty"`
+	Index float32 `json:"index,omitempty"`
 
 	Name string `json:"name,omitempty"`
-
-	Time string `json:"time,omitempty"`
-
-	VideoId float32 `json:"video_id,omitempty"`
 }
