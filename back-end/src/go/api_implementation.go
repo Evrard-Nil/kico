@@ -11,18 +11,22 @@ package openapi
 
 import (
 	"context"
+	"fmt"
 	"log"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // ApiService is a service that implents the logic for the DefaultApiServicer
 // This service should implement the business logic for every endpoint for the DefaultApi API.
 // Include any external packages or services that will be required by this service.
 type ApiService struct {
+	dbClient mongo.Client
 }
 
 // NewDefaultApiService creates a default api service
-func NewApiService() DefaultApiServicer {
-	return &ApiService{}
+func NewApiService(client mongo.Client) DefaultApiServicer {
+	return &ApiService{dbClient: client}
 }
 
 // AddImageToVideo - Upload an image linked to a video
@@ -34,6 +38,16 @@ func (s *ApiService) AddImageToVideo(ctx context.Context, id int32, image Image)
 // AddVideo - Add a  video
 func (s *ApiService) AddVideo(ctx context.Context, video Video) (interface{}, error) {
 	log.Printf("AddVideo")
+	collection := s.dbClient.Database("ico").Collection("videos")
+	insertResult, err := collection.InsertOne(context.TODO(), video)
+
+	if err != nil {
+		log.Fatal(err)
+		return "Insertion error", err
+	}
+
+	fmt.Println("Inserted post with ID:", insertResult.InsertedID)
+
 	return "OK", nil
 }
 
