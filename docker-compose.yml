@@ -11,6 +11,8 @@ services:
       - '8080:8080'
     depends_on:
       - 'mongo'
+    volumes:
+      - ./data/storage:/tmp/cache
       
   web:
     image: kico-front 
@@ -25,3 +27,18 @@ services:
     container_name: 'mongo'
     ports:
       - '27100:27017'
+    environment:
+        MONGO_INITDB_ROOT_USERNAME: mongoadmin
+        MONGO_INITDB_ROOT_PASSWORD: secret
+        MONGO_INITDB_DATABASE: ico
+    volumes:
+      - ./data/dbfile:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mongoadmin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: secret
