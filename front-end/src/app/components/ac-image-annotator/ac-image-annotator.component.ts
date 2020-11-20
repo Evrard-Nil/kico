@@ -11,6 +11,7 @@ export class ACImageAnnotatorComponent implements OnInit {
   @ViewChild('canvas', {static : true}) public canvas: ElementRef;
   @Input() public width = window.innerWidth;
   @Input() public height = 600;
+  // @Input() image: ImageBitmap;
 
 
 
@@ -27,6 +28,8 @@ export class ACImageAnnotatorComponent implements OnInit {
   private increment : number;
   private state:ImageData;
 
+  private image;
+
 
   constructor() {
     this.coordinates = new Array<[number, number]>();
@@ -34,6 +37,8 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.states = new Array<ImageData>();
     this.polygons =[];
     this.polygonsByState= new Map<ImageData, Array<Array<([number, number])>>>();
+
+
   }
 
   //Méthode faisant partie du cycle angular : Lancée à l'initialisation du composant.
@@ -46,6 +51,14 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.ctx = this.canvas.nativeElement.getContext('2d'); //On récupère le contexte du canvas.
     this.canvas.nativeElement.width = this.width;
     this.canvas.nativeElement.height = this.height;
+
+    this.image = new Image();
+    this.image.src = "../../../assets/tsconfig.app.jpg";
+
+    this.image.onload = () => {
+      this.ctx.drawImage(this.image, 0,0);
+    }
+
     this.states.push(this.ctx.getImageData(0,0, this.width, this.height));
     this.state = this.states[0]
     this.polygonsByState.set(this.state, []);
@@ -55,6 +68,7 @@ export class ACImageAnnotatorComponent implements OnInit {
         this.drawPolygon(this.ctx);
       }
     });
+
 
   }
 
@@ -69,6 +83,8 @@ export class ACImageAnnotatorComponent implements OnInit {
   undoAction(): void {
     this.increment+1>this.states.length ? this.increment = this.states.length : this.increment++;
     this.state = this.states[this.states.length-this.increment < 0 ? 0 : this.states.length-this.increment];
+    console.log(this.states.length-this.increment < 0);
+    console.log(this.states.length-this.increment);
     this.ctx.putImageData(this.state,0,0);
   }
 
@@ -103,10 +119,13 @@ export class ACImageAnnotatorComponent implements OnInit {
     console.log(this.polygons);
     this.polygons.forEach(polygon => {
       this.ctx.clearRect(0,0, this.width, this.height);
+      this.ctx.drawImage(this.image, 0,0);
       this.ctx.beginPath();
-      this.ctx.moveTo(polygon[0][0], polygon[0][1]);
-      for(let i = 1; i < polygon.length; i++){
-        this.ctx.lineTo(polygon[i][0] , polygon[i][1] );
+      if(polygon.length>0){
+        this.ctx.moveTo(polygon[0][0], polygon[0][1]);
+        for(let i = 1; i < polygon.length; i++){
+          this.ctx.lineTo(polygon[i][0] , polygon[i][1] );
+        }
       }
       this.ctx.closePath();
       this.ctx.stroke();
@@ -121,6 +140,7 @@ export class ACImageAnnotatorComponent implements OnInit {
   drawPolygon(ctx : CanvasRenderingContext2D): void{
     ctx.clearRect(0,0, this.width, this.height);
     this.drawPreviousPolygons();
+    this.ctx.drawImage(this.image, 0,0);
     ctx.beginPath();
     ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
     for(let i = 1; i < this.coordinates.length; i++){
