@@ -12,14 +12,14 @@ export class VideoService {
   constructor(private apiService: ApiService) {   }
 
   getVideos() {
-    return this.apiService.doGet<Array<Video>>(environment.apiBaseUrl + '/videos')
+    return this.apiService.doGet<Array<Video>>(`${environment.apiBaseUrl}/videos`)
   }
 
   getVideo(idVideo: number) {
-    return this.apiService.doGet<Video>(environment.apiBaseUrl + '/video/' + idVideo)
+    return this.apiService.doGet<Video>(`${environment.apiBaseUrl}/video/${idVideo}`)
   }
 
   addVideo(video: Video) {
-    return this.apiService.doPost(environment.apiBaseUrl + "/video", video)
+    return this.apiService.doPost(`${environment.apiBaseUrl}/video`, video)
   }
 }

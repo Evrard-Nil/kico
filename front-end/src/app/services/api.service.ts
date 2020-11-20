@@ -17,8 +17,15 @@ export class ApiService {
     )
   }
 
-  doPost(endpoint: string, body: any, options?: object) {
-    return this.http.post(endpoint, body, options)
+  doPost<T>(endpoint: string, body: any, options?: object) {
+    return this.http.post<T>(endpoint, body, options)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  doPut<T>(endpoint: string, body: any, options?: object) {
+    return this.http.post<T>(endpoint, body, options)
     .pipe(
       catchError(this.handleError)
     )
