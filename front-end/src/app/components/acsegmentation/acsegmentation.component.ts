@@ -41,12 +41,18 @@ export class ACSegmentationComponent implements OnInit {
     let indexFound = this.images.indexOf(this.currentImage)
     this.images.splice(indexFound,1)
     this.changeCurrentImageOnDelete(indexFound)
+    // TODO : Appel au service pour supprimer l'image
   }
 
+  /**
+   * On modifie l'image courante en fonction de la position de l'image qui a été supprimée
+   * @param index : La place de l'image dans la liste des images
+   */
   changeCurrentImageOnDelete(index: number) {
     if(this.images[index] !== undefined) {
       this.changeCurrentImage(this.images[index])
     }
+    // L'image était en dernière position, on prend donc l'image d'avant
     else if(this.images[index - 1] !== undefined) {
       this.changeCurrentImage(this.images[index - 1])
     }
@@ -55,6 +61,9 @@ export class ACSegmentationComponent implements OnInit {
     }
   }
 
+  /**
+   * Charge la vidéo ayant cet identifiant, depuis le serveur
+   */
   loadVideo() {
     this.videoService.getVideo(this.idVideo)
       .subscribe((receivedVideo: Video) => {
@@ -74,6 +83,9 @@ export class ACSegmentationComponent implements OnInit {
       };  
   }
 
+  /**
+   * Charge les images de la vidéo, depuis le serveur
+   */
   loadImages() {
     this.imageService.getImages(this.idVideo)
       .subscribe((images) => {
@@ -108,6 +120,10 @@ export class ACSegmentationComponent implements OnInit {
     });
   }
 
+  /**
+   * Action du bouton permettant de quitter la page, redirige vers la page d'accueil.  
+   * Cette action déclenche également la sauvegarde des images
+   */
   terminateSegmentation() {
     console.log("Segmentation terminée")
     // TODO : Sauvegarder la liste des images
