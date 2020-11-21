@@ -4,6 +4,7 @@ export class Image {
   name: String
   time: string
   video_id: number
-
+  url: String
+  
   constructor() {}
 }
