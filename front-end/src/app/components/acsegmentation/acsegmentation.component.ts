@@ -90,18 +90,21 @@ export class ACSegmentationComponent implements OnInit {
       name: "testeur",
       time: "12:09:09",
       video_id: 2,
+      url: '../../../assets/images/tsconfig.app.jpg'
     }, {
       id: 2,
       secteur_id: 2,
       name: "testeur",
       time: "15:09:29",
       video_id: 2,
+      url: '../../../assets/images/tsconfig.app.jpg'
     }, {
       id: 3,
       secteur_id: 2,
       name: "testeur",
       time: "09:37:09",
       video_id: 2,
+      url: '../../../assets/images/tsconfig.app.jpg'
     });
   }
 
