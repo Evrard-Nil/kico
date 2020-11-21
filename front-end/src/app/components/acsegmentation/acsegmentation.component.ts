@@ -1,4 +1,3 @@
-import { HttpEvent } from '@angular/common/http';
 import {
   Component,
   OnInit
@@ -59,7 +58,9 @@ export class ACSegmentationComponent implements OnInit {
   loadVideo() {
     this.videoService.getVideo(this.idVideo)
       .subscribe((receivedVideo: Video) => {
-        console.log(receivedVideo)
+        console.log("VIDEO RECUE :",receivedVideo)
+        this.video = receivedVideo
+        console.log(this.video)
       });
       
       this.video = {
@@ -74,8 +75,12 @@ export class ACSegmentationComponent implements OnInit {
   }
 
   loadImages() {
-    this.imageService.getImagesFromVideo(this.idVideo)
+    this.imageService.getImages(this.idVideo)
       .subscribe((images) => {
+        console.log("IMAGES RECUES:", images)
+        images.forEach((image) => {
+          this.images.push(image)
+        })
         console.log(images)
     })
 
