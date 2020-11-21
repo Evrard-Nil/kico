@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+
 	"github.com/gorilla/mux"
 )
 
@@ -30,7 +31,7 @@ type Route struct {
 type Routes []Route
 
 // Router defines the required methods for retrieving api routes
-type Router interface { 
+type Router interface {
 	Routes() Routes
 }
 
@@ -80,7 +81,7 @@ func ReadFormFileToTempFile(r *http.Request, key string) (*os.File, error) {
 		return nil, err
 	}
 
-	defer file.Close()
+	//defer file.Close()
 	fileBytes, err := ioutil.ReadAll(formFile)
 	if err != nil {
 		return nil, err

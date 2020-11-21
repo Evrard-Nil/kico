@@ -23,7 +23,7 @@ import (
 func main() {
 	log.Printf("Server started")
 
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongoadmin:secret@localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +38,7 @@ func main() {
 	defer cancel()
 	defer client.Disconnect(ctx)
 
-	DefaultApiService := openapi.NewApiService(*client)
+	DefaultApiService := openapi.NewAPIService(*client)
 	DefaultApiController := openapi.NewDefaultApiController(DefaultApiService)
 
 	router := openapi.NewRouter(DefaultApiController)

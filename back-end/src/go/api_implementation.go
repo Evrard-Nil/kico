@@ -12,34 +12,56 @@ package openapi
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
+	"time"
 
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// ApiService is a service that implents the logic for the DefaultApiServicer
+// APIService is a service that implents the logic for the DefaultApiServicer
 // This service should implement the business logic for every endpoint for the DefaultApi API.
 // Include any external packages or services that will be required by this service.
-type ApiService struct {
+type APIService struct {
 	dbClient mongo.Client
 }
 
-// NewDefaultApiService creates a default api service
-func NewApiService(client mongo.Client) DefaultApiServicer {
-	return &ApiService{dbClient: client}
+// NewAPIService creates a default api service
+func NewAPIService(client mongo.Client) DefaultApiServicer {
+	return &APIService{dbClient: client}
 }
 
 // AddImageToVideo - Upload an image linked to a video
-func (s *ApiService) AddImageToVideo(ctx context.Context, id int32, image Image) (interface{}, error) {
+func (s *APIService) AddImageToVideo(ctx context.Context, id int32, image Image) (interface{}, error) {
 	log.Printf("AddImageToVideo")
 	return "OK", nil
 }
 
 // AddVideo - Add a  video
-func (s *ApiService) AddVideo(ctx context.Context, video Video) (interface{}, error) {
+func (s *APIService) AddVideo(ctx context.Context, title string, videos *os.File) (interface{}, error) {
 	log.Printf("AddVideo")
+	defer videos.Close()
+
 	collection := s.dbClient.Database("ico").Collection("videos")
-	insertResult, err := collection.InsertOne(context.TODO(), video)
+	video := Video{
+		Id:    uuid.New().String(),
+		State: IMPORTED,
+		Date:  time.Now(),
+		Title: title,
+	}
+	bytes, err := ioutil.ReadAll(videos)
+
+	if err != nil {
+		log.Fatal(err)
+		return "Could not read file", err
+	}
+	filepath := "/ico-data/storage/videos/" + video.Id
+
+	ioutil.WriteFile(filepath, bytes, 0644)
+
+	insertResult, err := collection.InsertOne(ctx, video)
 
 	if err != nil {
 		log.Fatal(err)
@@ -52,49 +74,49 @@ func (s *ApiService) AddVideo(ctx context.Context, video Video) (interface{}, er
 }
 
 // DeleteImage - Deletes an image
-func (s *ApiService) DeleteImage(ctx context.Context, id int32) (interface{}, error) {
+func (s *APIService) DeleteImage(ctx context.Context, id int32) (interface{}, error) {
 	log.Printf("DeleteImage")
 	return "OK", nil
 }
 
 // DeleteVideo - delete a video
-func (s *ApiService) DeleteVideo(ctx context.Context, id int32) (interface{}, error) {
+func (s *APIService) DeleteVideo(ctx context.Context, id int32) (interface{}, error) {
 	log.Printf("DeleteVideo")
 	return "OK", nil
 }
 
 // GetImage - Retrieve an image
-func (s *ApiService) GetImage(ctx context.Context, id int32) (interface{}, error) {
+func (s *APIService) GetImage(ctx context.Context, id int32) (interface{}, error) {
 	log.Printf("GetImage")
 	return "OK", nil
 }
 
 // GetImagesFromVideo - Retrieve all images linked to a video
-func (s *ApiService) GetImagesFromVideo(ctx context.Context, id int32) (interface{}, error) {
+func (s *APIService) GetImagesFromVideo(ctx context.Context, id int32) (interface{}, error) {
 	log.Printf("GetImagesFromVideo")
 	return "OK", nil
 }
 
 // GetVideo - Retrieve a single video
-func (s *ApiService) GetVideo(ctx context.Context, id int32) (interface{}, error) {
+func (s *APIService) GetVideo(ctx context.Context, id int32) (interface{}, error) {
 	log.Printf("GetVideo")
 	return "OK", nil
 }
 
 // GetVideos - Retrieve all videos
-func (s *ApiService) GetVideos(ctx context.Context) (interface{}, error) {
+func (s *APIService) GetVideos(ctx context.Context) (interface{}, error) {
 	log.Printf("GetVideos")
 	return "OK", nil
 }
 
 // UpdateImage - update an image
-func (s *ApiService) UpdateImage(ctx context.Context, id int32, image Image) (interface{}, error) {
+func (s *APIService) UpdateImage(ctx context.Context, id int32, image Image) (interface{}, error) {
 	log.Printf("UpdateImage")
 	return "OK", nil
 }
 
 // UpdateVideo - Update a video
-func (s *ApiService) UpdateVideo(ctx context.Context, id int32, video Video) (interface{}, error) {
+func (s *APIService) UpdateVideo(ctx context.Context, id int32, video Video) (interface{}, error) {
 	log.Printf("UpdateVideo")
 	return "OK", nil
 }

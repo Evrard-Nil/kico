@@ -12,6 +12,7 @@ package openapi
 import (
 	"context"
 	"net/http"
+	"os"
 )
 
 
@@ -38,7 +39,7 @@ type DefaultApiRouter interface {
 // and updated with the logic required for the API.
 type DefaultApiServicer interface { 
 	AddImageToVideo(context.Context, int32, Image) (interface{}, error)
-	AddVideo(context.Context, Video) (interface{}, error)
+	AddVideo(context.Context, string, *os.File) (interface{}, error)
 	DeleteImage(context.Context, int32) (interface{}, error)
 	DeleteVideo(context.Context, int32) (interface{}, error)
 	GetImage(context.Context, int32) (interface{}, error)

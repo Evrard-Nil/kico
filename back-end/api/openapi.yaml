@@ -96,12 +96,17 @@ paths:
     post:
       operationId: addVideo
       requestBody:
-        description: Data of this new video
-        required: true
+        description: Videos files
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Video'
+              type: object
+              properties:
+                title:
+                  type: string
+                fileName:
+                  type: string
+                  format: binary
       responses:
         "200":
           content:
