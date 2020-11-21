@@ -31,6 +31,13 @@ export class ApiService {
     )
   }
 
+  doDelete<T>(endpoint: string, options?: object) {
+    return this.http.delete<T>(endpoint, options)
+    .pipe(
+      catchError(this.handleError)
+    )
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error(error)
     return throwError(

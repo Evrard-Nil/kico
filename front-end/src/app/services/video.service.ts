@@ -19,7 +19,15 @@ export class VideoService {
     return this.apiService.doGet<Video>(`${environment.apiBaseUrl}/video/${idVideo}`)
   }
 
+  updateVideo(video: Video) {
+    return this.apiService.doPut<Video>(`${environment.apiBaseUrl}/video/${video.id}`, video)
+  }
+
   addVideo(video: Video) {
-    return this.apiService.doPost(`${environment.apiBaseUrl}/video`, video)
+    return this.apiService.doPost<Video>(`${environment.apiBaseUrl}/video`, video)
+  }
+
+  deleteVideo(idVideo: number) {
+    return this.apiService.doDelete(`${environment.apiBaseUrl}/video/${idVideo}`)
   }
 }

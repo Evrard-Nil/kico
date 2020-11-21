@@ -9,22 +9,23 @@ import { ApiService } from './api.service'
 export class ImageService {
   constructor(private apiService: ApiService) {   }
 
-  getImages() {
-    return this.apiService.doGet<Array<Image>>(`${environment.apiBaseUrl}/images`)
-  }
-
-  getImagesFromVideo(idVideo: number) {
-    // TODO : Wait for backend impl
+  getImages(idVideo: number) {
     return this.apiService.doGet<Array<Image>>(`${environment.apiBaseUrl}/video/${idVideo}/images`)
   }
 
-  saveImage(blob: Blob) {
-    // TODO : Wait for backend impl
-    return this.apiService.doPost<Image>(`${environment.apiBaseUrl}/images`, blob)
+  getImage(idImage: number) {
+    return this.apiService.doGet<Image>(`${environment.apiBaseUrl}/images/${idImage}`)
   }
 
-  updateImages(images: Array<Image>) {
-    // TODO : Wait for backend impl
-    this.apiService.doPut<Array<Image>>(`${environment.apiBaseUrl}/images`, images)
+  saveImage(idVideo: number, blob: Blob) {
+    return this.apiService.doPost<Image>(`${environment.apiBaseUrl}/video/${idVideo}/images`, blob)
+  }
+
+  updateImage(image: Image) {
+    this.apiService.doPut<Image>(`${environment.apiBaseUrl}/images/${image.id}`, image)
+  }
+
+  deleteImage(idImage: number) {
+    this.apiService.doDelete<Image>(`${environment.apiBaseUrl}/image/${idImage}`)
   }
 }
