@@ -7,6 +7,7 @@ servers:
 paths:
   /videos:
     description: Allow to get informations concerning videos stored and their state.
+    summary: Operations on videos
     get:
       operationId: getVideos
       responses:
@@ -21,8 +22,8 @@ paths:
         default:
           description: Default error sample response
       summary: Retrieve all videos
-    summary: Operations on videos
   /video/{id}:
+    summary: Operation on the video {id}
     delete:
       operationId: deleteVideo
       parameters:
@@ -72,16 +73,35 @@ paths:
         schema:
           type: integer
         style: simple
+        
+      requestBody:
+        description: new data of this video
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video'
+              
       responses:
         "200":
-          description: Update sucessful
+          description: The updated data for this video
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
         default:
           description: Default error sample response
       summary: Update a video
-    summary: Operation on the video {id}
   /video:
     post:
       operationId: addVideo
+      requestBody:
+        description: Data of this new video
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video'
       responses:
         "200":
           content:
@@ -92,8 +112,139 @@ paths:
         default:
           description: Default error sample response
       summary: Add a  video
+  /video/{id}/images:
+    get:
+      operationId: getImagesFromVideo
+      summary: Retrieve all images linked to a video
+      parameters:
+      - description: Numeric ID of the video
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+          description: images linked to video
+        default:
+          description: Default error sample response
+    post:
+      operationId: addImageToVideo
+      summary: Upload an image linked to a video
+      parameters:
+      - description: Numeric ID of the video
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        description: Data of this new iamge
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+      responses:
+        "200":
+          description: Newly uploaded image
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        default:
+          description: Default error sample response
+  /images/{id}:
+    get:
+      operationId: getImage
+      summary: Retrieve an image
+      parameters:
+      - description: Numeric ID of the image
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: An image
+        default:
+          description: Default error sample response
+    put:
+      operationId: updateImage
+      summary: update an image
+      parameters:
+      - description: Numeric ID of the image
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      
+      requestBody:
+        description: New data of image
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+              
+      responses:
+        "200":
+          description: Newly update image
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        default:
+          description: Default error sample response
+      
+    delete:
+      operationId: deleteImage
+      summary: Deletes an image
+      parameters:
+      - description: Numeric ID of the image
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          description: Delete went fine
+        default:
+          description: Default error sample response
+
 components:
   schemas:
+    Secteur:
+      description: A secteur in abdomen
+      type: object
+      properties:
+        index:
+          type: number
+        name:
+          type: string
     VideoState:
       description: State of a video
       enum:
@@ -118,12 +269,12 @@ components:
           type: string
         state:
           $ref: '#/components/schemas/VideoState'
-        annotatedBy: 
+        annotated_by: 
           type: string
         date: 
           type: string
           format: date-time
-        scorePci: 
+        score_pci: 
           type: number
         url:         
           type: string
@@ -138,8 +289,6 @@ components:
           type: number
         secteur_id: 
           type: number
-        secteur_name: 
-          type: string
         name:  
           type: string
         time:  

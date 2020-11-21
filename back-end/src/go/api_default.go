@@ -10,6 +10,7 @@
 package openapi
 
 import (
+	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -23,12 +24,18 @@ type DefaultApiController struct {
 
 // NewDefaultApiController creates a default api controller
 func NewDefaultApiController(s DefaultApiServicer) Router {
-	return &DefaultApiController{service: s}
+	return &DefaultApiController{ service: s }
 }
 
 // Routes returns all of the api route for the DefaultApiController
 func (c *DefaultApiController) Routes() Routes {
-	return Routes{
+	return Routes{ 
+		{
+			"AddImageToVideo",
+			strings.ToUpper("Post"),
+			"/api/v1/video/{id}/images",
+			c.AddImageToVideo,
+		},
 		{
 			"AddVideo",
 			strings.ToUpper("Post"),
@@ -36,10 +43,28 @@ func (c *DefaultApiController) Routes() Routes {
 			c.AddVideo,
 		},
 		{
+			"DeleteImage",
+			strings.ToUpper("Delete"),
+			"/api/v1/images/{id}",
+			c.DeleteImage,
+		},
+		{
 			"DeleteVideo",
 			strings.ToUpper("Delete"),
 			"/api/v1/video/{id}",
 			c.DeleteVideo,
+		},
+		{
+			"GetImage",
+			strings.ToUpper("Get"),
+			"/api/v1/images/{id}",
+			c.GetImage,
+		},
+		{
+			"GetImagesFromVideo",
+			strings.ToUpper("Get"),
+			"/api/v1/video/{id}/images",
+			c.GetImagesFromVideo,
 		},
 		{
 			"GetVideo",
@@ -54,6 +79,12 @@ func (c *DefaultApiController) Routes() Routes {
 			c.GetVideos,
 		},
 		{
+			"UpdateImage",
+			strings.ToUpper("Put"),
+			"/api/v1/images/{id}",
+			c.UpdateImage,
+		},
+		{
 			"UpdateVideo",
 			strings.ToUpper("Put"),
 			"/api/v1/video/{id}",
@@ -62,78 +93,192 @@ func (c *DefaultApiController) Routes() Routes {
 	}
 }
 
-// AddVideo - Add a  video
-func (c *DefaultApiController) AddVideo(w http.ResponseWriter, r *http.Request) {
-	result, err := c.service.AddVideo(r.Context())
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
-
-	EncodeJSONResponse(result, nil, w)
-}
-
-// DeleteVideo - delete a video
-func (c *DefaultApiController) DeleteVideo(w http.ResponseWriter, r *http.Request) {
+// AddImageToVideo - Upload an image linked to a video
+func (c *DefaultApiController) AddImageToVideo(w http.ResponseWriter, r *http.Request) { 
 	params := mux.Vars(r)
 	id, err := parseInt32Parameter(params["id"])
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
+	
+	image := &Image{}
+	if err := json.NewDecoder(r.Body).Decode(&image); err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	result, err := c.service.AddImageToVideo(r.Context(), id, *image)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	EncodeJSONResponse(result, nil, w)
+}
 
+// AddVideo - Add a  video
+func (c *DefaultApiController) AddVideo(w http.ResponseWriter, r *http.Request) { 
+	video := &Video{}
+	if err := json.NewDecoder(r.Body).Decode(&video); err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	result, err := c.service.AddVideo(r.Context(), *video)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	EncodeJSONResponse(result, nil, w)
+}
+
+// DeleteImage - Deletes an image
+func (c *DefaultApiController) DeleteImage(w http.ResponseWriter, r *http.Request) { 
+	params := mux.Vars(r)
+	id, err := parseInt32Parameter(params["id"])
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	result, err := c.service.DeleteImage(r.Context(), id)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	EncodeJSONResponse(result, nil, w)
+}
+
+// DeleteVideo - delete a video
+func (c *DefaultApiController) DeleteVideo(w http.ResponseWriter, r *http.Request) { 
+	params := mux.Vars(r)
+	id, err := parseInt32Parameter(params["id"])
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
 	result, err := c.service.DeleteVideo(r.Context(), id)
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
-
+	
 	EncodeJSONResponse(result, nil, w)
 }
 
-// GetVideo - Retrieve a single video
-func (c *DefaultApiController) GetVideo(w http.ResponseWriter, r *http.Request) {
+// GetImage - Retrieve an image
+func (c *DefaultApiController) GetImage(w http.ResponseWriter, r *http.Request) { 
 	params := mux.Vars(r)
 	id, err := parseInt32Parameter(params["id"])
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
+	
+	result, err := c.service.GetImage(r.Context(), id)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	EncodeJSONResponse(result, nil, w)
+}
 
+// GetImagesFromVideo - Retrieve all images linked to a video
+func (c *DefaultApiController) GetImagesFromVideo(w http.ResponseWriter, r *http.Request) { 
+	params := mux.Vars(r)
+	id, err := parseInt32Parameter(params["id"])
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	result, err := c.service.GetImagesFromVideo(r.Context(), id)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	EncodeJSONResponse(result, nil, w)
+}
+
+// GetVideo - Retrieve a single video
+func (c *DefaultApiController) GetVideo(w http.ResponseWriter, r *http.Request) { 
+	params := mux.Vars(r)
+	id, err := parseInt32Parameter(params["id"])
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
 	result, err := c.service.GetVideo(r.Context(), id)
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
-
+	
 	EncodeJSONResponse(result, nil, w)
 }
 
 // GetVideos - Retrieve all videos
-func (c *DefaultApiController) GetVideos(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultApiController) GetVideos(w http.ResponseWriter, r *http.Request) { 
 	result, err := c.service.GetVideos(r.Context())
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
-
+	
 	EncodeJSONResponse(result, nil, w)
 }
 
-// UpdateVideo - Update a video
-func (c *DefaultApiController) UpdateVideo(w http.ResponseWriter, r *http.Request) {
+// UpdateImage - update an image
+func (c *DefaultApiController) UpdateImage(w http.ResponseWriter, r *http.Request) { 
 	params := mux.Vars(r)
 	id, err := parseInt32Parameter(params["id"])
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
-
-	result, err := c.service.UpdateVideo(r.Context(), id)
+	
+	image := &Image{}
+	if err := json.NewDecoder(r.Body).Decode(&image); err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	result, err := c.service.UpdateImage(r.Context(), id, *image)
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
+	
+	EncodeJSONResponse(result, nil, w)
+}
 
+// UpdateVideo - Update a video
+func (c *DefaultApiController) UpdateVideo(w http.ResponseWriter, r *http.Request) { 
+	params := mux.Vars(r)
+	id, err := parseInt32Parameter(params["id"])
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	video := &Video{}
+	if err := json.NewDecoder(r.Body).Decode(&video); err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
+	result, err := c.service.UpdateVideo(r.Context(), id, *video)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+	
 	EncodeJSONResponse(result, nil, w)
 }

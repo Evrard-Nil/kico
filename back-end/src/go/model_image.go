@@ -16,8 +16,6 @@ type Image struct {
 
 	SecteurId float32 `json:"secteur_id,omitempty"`
 
-	SecteurName string `json:"secteur_name,omitempty"`
-
 	Name string `json:"name,omitempty"`
 
 	Time string `json:"time,omitempty"`

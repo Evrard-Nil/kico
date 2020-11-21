@@ -1,6 +1,6 @@
 FROM golang:1.10 AS build
 WORKDIR /go/src
-COPY go ./go
+COPY go ./github.com/evrard-nil/kico/back-end/src/go
 COPY main.go .
 
 ENV CGO_ENABLED=0

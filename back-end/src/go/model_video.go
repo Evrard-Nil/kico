@@ -20,11 +20,11 @@ type Video struct {
 
 	State VideoState `json:"state,omitempty"`
 
-	AnnotatedBy string `json:"annotatedBy,omitempty"`
+	AnnotatedBy string `json:"annotated_by,omitempty"`
 
 	Date time.Time `json:"date,omitempty"`
 
-	ScorePci float32 `json:"scorePci,omitempty"`
+	ScorePci float32 `json:"score_pci,omitempty"`
 
 	Url string `json:"url,omitempty"`
 
