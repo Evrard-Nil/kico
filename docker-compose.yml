@@ -42,3 +42,13 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: mongoadmin
       ME_CONFIG_MONGODB_ADMINPASSWORD: secret
+
+  fileserver:
+    image: halverneus/static-file-server
+    restart: always
+    ports:
+      - 8082:8080
+    environment:
+      folder: /ico-data/storage
+    volumes:
+      - ./data/storage:/ico-data/storage
