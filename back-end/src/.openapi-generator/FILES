@@ -3,6 +3,7 @@ go/api_default.go
 go/api_default_service.go
 go/logger.go
 go/model_image.go
+go/model_inline_object.go
 go/model_secteur.go
 go/model_video.go
 go/model_video_state.go
