@@ -1,0 +1,28 @@
+.w-2 {
+    width: 66%;
+}
+
+.w-1 {
+    width: 33%;
+}
+
+.h-half {
+    height: 50%;
+}
+
+.m-auto {
+    margin: auto;
+}
+
+
+img {
+    display: block;
+}
+
+.redirection {
+    font-size: larger;
+}
+
+.no-scroll {
+    overflow: hidden;
+}

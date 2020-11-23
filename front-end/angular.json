@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "poc-cornerstone"
+    }
+  },
+  "defaultProject": "poc-cornerstone",
+  "cli": {
+    "analytics": false
+  }
 }

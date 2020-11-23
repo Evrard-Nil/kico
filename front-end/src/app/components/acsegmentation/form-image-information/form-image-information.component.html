@@ -1,0 +1,23 @@
+<div class="flex flex-row" *ngIf="currentImage !== undefined">
+    <form>
+        <div class="flex flex-column">
+            <div class="py-1">
+                <label for="nom-image">Nom : </label>
+                <input id="nom-image" type="text" value="{{currentImage.name}}" (input)="onChangeName($event.target.value)">
+            </div>
+            <div class="py-1">
+                <label for="zone-image">Secteur : </label>
+                <select name="zone-image" id="zone-image" [(ngModel)]="currentImage.secteur_id">
+                    <option *ngFor="let secteur of secteurs" [ngValue]="secteur.index">{{secteur.name}}</option>
+                </select>
+            </div>
+            <div class="py-1">
+                <span>Timer : </span>
+                <span>{{currentImage.time}}</span>
+            </div>
+        </div>
+    </form>
+    <div>
+        <button class="button-rouge" (click)="onDeleteImage()">Supprimer la capture</button>
+    </div>
+</div>
