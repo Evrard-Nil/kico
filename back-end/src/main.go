@@ -13,11 +13,20 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	openapi "github.com/evrard-nil/kico/back-end/src/go"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+const (
+	// IcoDataFolderEnv represents the name of the environnement variable defining
+	// where images and videos should be stored
+	IcoDataFolderEnv = "ICO_DATA_STORAGE"
+	// Port defines the listening port number
+	port = "8080"
 )
 
 func main() {
@@ -34,14 +43,21 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Printf("Mongo connection: OK")
+
 	// Release resources at last
 	defer cancel()
 	defer client.Disconnect(ctx)
 
-	DefaultApiService := openapi.NewAPIService(*client)
-	DefaultApiController := openapi.NewDefaultApiController(DefaultApiService)
+	dataFolder := os.Getenv(IcoDataFolderEnv)
+	if dataFolder == "" {
+		log.Fatalf("Data folder is not set up in environement variables. Check %s variable to set it up.", IcoDataFolderEnv)
+	}
 
-	router := openapi.NewRouter(DefaultApiController)
+	APIService := openapi.NewAPIService(*client, dataFolder)
+	APIController := openapi.NewDefaultApiController(APIService)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	router := openapi.NewRouter(APIController)
+
+	log.Printf("Starting to listen on %s.", port)
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }

@@ -11,6 +11,8 @@ services:
       - '8080:8080'
     depends_on:
       - 'mongo'
+    environment:
+      ICO_DATA_STORAGE: /ico-data/storage
     volumes:
       - ./data/storage:/ico-data/storage
       
@@ -26,7 +28,7 @@ services:
     image: 'mongo:latest'
     container_name: 'mongo'
     ports:
-      - '27017:27017'
+      - '27100:27017'
     environment:
         MONGO_INITDB_ROOT_USERNAME: mongoadmin
         MONGO_INITDB_ROOT_PASSWORD: secret
@@ -49,6 +51,6 @@ services:
     ports:
       - 8082:8080
     environment:
-      folder: /ico-data/storage
+      FOLDER: /ico-data/storage
     volumes:
       - ./data/storage:/ico-data/storage

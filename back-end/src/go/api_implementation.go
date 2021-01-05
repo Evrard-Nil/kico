@@ -25,17 +25,18 @@ import (
 // This service should implement the business logic for every endpoint for the DefaultApi API.
 // Include any external packages or services that will be required by this service.
 type APIService struct {
-	dbClient mongo.Client
+	dbClient   mongo.Client
+	dataFolder string
 }
 
 // NewAPIService creates a default api service
-func NewAPIService(client mongo.Client) DefaultApiServicer {
-	return &APIService{dbClient: client}
+func NewAPIService(client mongo.Client, dataFolder string) DefaultApiServicer {
+	return &APIService{dbClient: client, dataFolder: dataFolder}
 }
 
 // AddImageToVideo - Upload an image linked to a video
 func (s *APIService) AddImageToVideo(ctx context.Context, id int32, image Image) (interface{}, error) {
-	log.Printf("AddImageToVideo")
+	log.Print("AddImageToVideo")
 	return "OK", nil
 }
 
@@ -57,7 +58,7 @@ func (s *APIService) AddVideo(ctx context.Context, title string, videos *os.File
 		log.Fatal(err)
 		return "Could not read file", err
 	}
-	filepath := "/ico-data/storage/videos/" + video.Id
+	filepath := s.dataFolder + "/videos/" + video.Id
 
 	ioutil.WriteFile(filepath, bytes, 0644)
 
