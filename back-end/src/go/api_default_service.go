@@ -27,7 +27,7 @@ func NewDefaultApiService() DefaultApiServicer {
 }
 
 // AddImageToVideo - Upload an image linked to a video
-func (s *DefaultApiService) AddImageToVideo(ctx context.Context, id int32, image Image) (interface{}, error) {
+func (s *DefaultApiService) AddImageToVideo(ctx context.Context, id int32, name string, fileName *os.File, secteurId string, time string) (interface{}, error) {
 	// TODO - update AddImageToVideo with the required logic for this service method.
 	// Add api_default_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
 	return nil, errors.New("service method 'AddImageToVideo' not implemented")

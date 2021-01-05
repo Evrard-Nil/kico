@@ -35,7 +35,7 @@ func NewAPIService(client mongo.Client, dataFolder string) DefaultApiServicer {
 }
 
 // AddImageToVideo - Upload an image linked to a video
-func (s *APIService) AddImageToVideo(ctx context.Context, id int32, image Image) (interface{}, error) {
+func (s *APIService) AddImageToVideo(ctx context.Context, id int32, name string, fileName *os.File, secteurId float32, time string) (interface{}, error) {
 	log.Print("AddImageToVideo")
 	return "OK", nil
 }
