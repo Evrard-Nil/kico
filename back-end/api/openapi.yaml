@@ -270,13 +270,6 @@ components:
       type: string
     Video:
       description: A video stored
-      example:
-        id: abc4
-        url: https://www.youtube.com/watch?v=-5KAN9_CzSA
-        date: "2017-07-21T17:32:28Z"
-        scorePci: 14.5
-        title: A great video
-        state: imported
       nullable: false
       type: object
       properties:
@@ -301,14 +294,14 @@ components:
       nullable: false
       properties:
         id:
-          type: number
+          type: string
         secteur_id:
-          type: number
+          type: string
         name:
           type: string
         time:
           type: string
         video_id:
-          type: number
+          type: string
         url:
           type: string

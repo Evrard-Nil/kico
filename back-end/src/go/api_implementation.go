@@ -35,9 +35,40 @@ func NewAPIService(client mongo.Client, dataFolder string) DefaultApiServicer {
 }
 
 // AddImageToVideo - Upload an image linked to a video
-func (s *APIService) AddImageToVideo(ctx context.Context, id int32, name string, fileName *os.File, secteurId float32, time string) (interface{}, error) {
+func (s *APIService) AddImageToVideo(ctx context.Context, id int32, name string, file *os.File, secteurId string, time string) (interface{}, error) {
 	log.Print("AddImageToVideo")
-	return "OK", nil
+	defer file.Close()
+
+	collection := s.dbClient.Database("ico").Collection("videos")
+	pid := uuid.New().String()
+	picture := Image{
+		Id:        pid,
+		Name:      name,
+		Time:      time,
+		SecteurId: secteurId,
+		Url:       "/images/" + pid,
+	}
+	bytes, err := ioutil.ReadAll(file)
+
+	if err != nil {
+		log.Fatal(err)
+		return "Could not read file", err
+	}
+
+	filepath := s.dataFolder + "/images/" + picture.Id
+
+	ioutil.WriteFile(filepath, bytes, 0644)
+
+	insertResult, err := collection.InsertOne(ctx, picture)
+
+	if err != nil {
+		log.Fatal(err)
+		return "Insertion error", err
+	}
+
+	fmt.Println("Inserted post with ID:", insertResult.InsertedID)
+
+	return picture, nil
 }
 
 // AddVideo - Add a  video
@@ -46,11 +77,13 @@ func (s *APIService) AddVideo(ctx context.Context, title string, videos *os.File
 	defer videos.Close()
 
 	collection := s.dbClient.Database("ico").Collection("videos")
+	vid := uuid.New().String()
 	video := Video{
-		Id:    uuid.New().String(),
+		Id:    vid,
 		State: IMPORTED,
 		Date:  time.Now(),
 		Title: title,
+		Url:   "/videos/" + vid,
 	}
 	bytes, err := ioutil.ReadAll(videos)
 
@@ -58,6 +91,7 @@ func (s *APIService) AddVideo(ctx context.Context, title string, videos *os.File
 		log.Fatal(err)
 		return "Could not read file", err
 	}
+
 	filepath := s.dataFolder + "/videos/" + video.Id
 
 	ioutil.WriteFile(filepath, bytes, 0644)
