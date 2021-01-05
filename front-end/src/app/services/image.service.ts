@@ -17,8 +17,8 @@ export class ImageService {
     return this.apiService.doGet<Image>(`${environment.apiBaseUrl}/images/${idImage}`)
   }
 
-  saveImage(idVideo: number, blob: Blob) {
-    return this.apiService.doPost<Image>(`${environment.apiBaseUrl}/video/${idVideo}/images`, blob)
+  saveImage(idVideo: number, formData: FormData) {
+    return this.apiService.doPost<Image>(`${environment.apiBaseUrl}/video/${idVideo}/images`, formData)
   }
 
   updateImage(image: Image) {

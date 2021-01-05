@@ -1,8 +1,12 @@
 import { ElementRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { Output } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
+import { Image } from 'src/app/model/image';
 import { Video } from 'src/app/model/video';
 import { ImageService } from 'src/app/services/image.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-video-visualisation',
@@ -13,10 +17,12 @@ export class VideoVisualisationComponent implements OnInit {
 
   @Input() video : Video
   @ViewChild("videoRef") videoReference: ElementRef
-
   videoElement: HTMLVideoElement
 
+  @Output() eventCreateImage : EventEmitter<Image>;
+
   constructor(private imageService: ImageService) { 
+    this.eventCreateImage = new EventEmitter()
   }
 
   ngOnInit(): void {
@@ -46,14 +52,30 @@ export class VideoVisualisationComponent implements OnInit {
    */
   saveImage(canvasElement: HTMLCanvasElement) {
     canvasElement.toBlob((blob) => {
-      console.log(blob)
-      var url = URL.createObjectURL(blob)
-      console.log(url)
-      this.imageService.saveImage(this.video.id, blob).subscribe((image) => {
+      const time = Math.round(this.videoElement.currentTime)
+      // console.log(blob)
+      // var url = URL.createObjectURL(blob)
+      // console.log(url);
+
+      const formData = new FormData()
+      formData.append('name', "undefined");
+      formData.append('fileName', blob);
+      formData.append('secteur_id', "0");
+      formData.append('time', this.getDurationFromSeconds(time));
+
+      console.log(this.getDurationFromSeconds(time))
+      this.imageService.saveImage(this.video.id, formData).subscribe((image) => {
         console.log("IMAGE CREEE:",image)
-        // TODO : Add image to the list
+        image.url = environment.apiBaseUrl + image.url
+        this.eventCreateImage.emit(image)
       })
     },"image/jpeg")
+  }
+
+  private getDurationFromSeconds(time) {
+    var minutes = Math.floor(time / 60);
+    var seconds = time - minutes * 60;
+    return minutes+ ":" + seconds
   }
 
 }

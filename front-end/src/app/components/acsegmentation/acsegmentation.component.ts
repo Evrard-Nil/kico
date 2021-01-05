@@ -106,18 +106,22 @@ export class ACSegmentationComponent implements OnInit {
     }, {
       id: 2,
       secteur_id: 2,
-      name: "testeur",
+      name: "Flanc droit",
       time: "15:09:29",
       video_id: 2,
       url: '../../../assets/images/tsconfig.app.jpg'
     }, {
       id: 3,
       secteur_id: 2,
-      name: "testeur",
+      name: "Vérolé",
       time: "09:37:09",
       video_id: 2,
       url: '../../../assets/images/tsconfig.app.jpg'
     });
+  }
+
+  addImageToList(newImage: Image) {
+    this.images.push(newImage)
   }
 
   /**
