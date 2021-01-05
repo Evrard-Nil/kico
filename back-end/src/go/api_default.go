@@ -11,7 +11,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -96,6 +95,12 @@ func (c *DefaultApiController) Routes() Routes {
 
 // AddImageToVideo - Upload an image linked to a video
 func (c *DefaultApiController) AddImageToVideo(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+
 	params := mux.Vars(r)
 	id, err := parseInt32Parameter(params["id"])
 	if err != nil {
@@ -103,13 +108,16 @@ func (c *DefaultApiController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	image := &Image{}
-	if err := json.NewDecoder(r.Body).Decode(&image); err != nil {
+	name := r.FormValue("name")
+	fileName, err := ReadFormFileToTempFile(r, "fileName")
+	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
 
-	result, err := c.service.AddImageToVideo(r.Context(), id, *image)
+	secteurId := r.FormValue("secteurId")
+	time := r.FormValue("time")
+	result, err := c.service.AddImageToVideo(r.Context(), id, name, fileName, secteurId, time)
 	if err != nil {
 		w.WriteHeader(500)
 		return
@@ -129,7 +137,6 @@ func (c *DefaultApiController) AddVideo(w http.ResponseWriter, r *http.Request) 
 	title := r.FormValue("title")
 	fileName, err := ReadFormFileToTempFile(r, "fileName")
 	if err != nil {
-		fmt.Print(err)
 		w.WriteHeader(500)
 		return
 	}

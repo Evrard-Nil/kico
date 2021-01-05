@@ -38,7 +38,7 @@ type DefaultApiRouter interface {
 // while the service implementation can ignored with the .openapi-generator-ignore file 
 // and updated with the logic required for the API.
 type DefaultApiServicer interface { 
-	AddImageToVideo(context.Context, int32, Image) (interface{}, error)
+	AddImageToVideo(context.Context, int32, string, *os.File, string, string) (interface{}, error)
 	AddVideo(context.Context, string, *os.File) (interface{}, error)
 	DeleteImage(context.Context, int32) (interface{}, error)
 	DeleteVideo(context.Context, int32) (interface{}, error)
