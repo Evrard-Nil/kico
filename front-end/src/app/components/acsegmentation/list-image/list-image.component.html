@@ -1,0 +1,6 @@
+<span class="bold titre-rubrique">Image sélectionnées</span>
+    <div class="py-1">
+        <div class="overflow-y w-full h-half align-center images" >
+            <app-image-thumbnail *ngFor="let image of images" [image]="image" (eventImageSelected)="changeSelectedImage($event)"></app-image-thumbnail>           
+        </div>
+    </div>
