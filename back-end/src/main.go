@@ -53,8 +53,8 @@ func main() {
 		log.Fatalf("Data folder is not set up in environement variables. Check %s variable to set it up.", IcoDataFolderEnv)
 	}
 
-	APIService := openapi.NewAPIService(*client, dataFolder)
-	APIController := openapi.NewDefaultAPIController(APIService)
+	APIService := openapi.NewAPIService(*client)
+	APIController := openapi.NewDefaultAPIController(APIService, dataFolder)
 
 	router := openapi.NewRouter(APIController)
 
