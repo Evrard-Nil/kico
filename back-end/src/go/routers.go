@@ -11,10 +11,11 @@ package openapi
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -45,7 +46,7 @@ func NewRouter(routers ...Router) *mux.Router {
 			handler = Logger(handler, route.Name)
 
 			router.
-				Methods(route.Method, "OPTIONS").
+				Methods(route.Method).
 				Path(route.Pattern).
 				Name(route.Name).
 				Handler(handler)
@@ -67,28 +68,33 @@ func EncodeJSONResponse(i interface{}, status *int, w http.ResponseWriter) error
 	return json.NewEncoder(w).Encode(i)
 }
 
-// ReadFormFileToTempFile reads file data from a request form and writes it to a temporary file
-func ReadFormFileToTempFile(r *http.Request, key string) (*os.File, error) {
+// ReadFormFileToFileserver reads file data from a request form and writes it to a specified path
+func ReadFormFileToFileserver(r *http.Request, key string, path string) error {
 	r.ParseForm()
-	formFile, _, err := r.FormFile(key)
-	if err != nil {
-		return nil, err
-	}
-
+	formFile, fileHeader, err := r.FormFile(key)
 	defer formFile.Close()
-	file, err := ioutil.TempFile("tmp", key)
+
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	//defer file.Close()
-	fileBytes, err := ioutil.ReadAll(formFile)
+	ext := "." + strings.Split(fileHeader.Filename, ".")[1]
+	// Create file
+	dst, err := os.Create(path + ext)
+	defer dst.Close()
+
 	if err != nil {
-		return nil, err
+		print(err)
+		return err
 	}
 
-	file.Write(fileBytes)
-	return file, nil
+	// Copy the uploaded file to the created file on the filesystem
+	if _, err := io.Copy(dst, formFile); err != nil {
+		print(err)
+		return err
+	}
+
+	return nil
 }
 
 // parseInt64Parameter parses a sting parameter to an int64

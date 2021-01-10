@@ -32,7 +32,7 @@ const (
 func main() {
 	log.Printf("Server started")
 
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongoadmin:secret@localhost:27017"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongoadmin:secret@localhost:27100"))
 	if err != nil {
 		log.Fatal(err)
 	}

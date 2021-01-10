@@ -9,13 +9,9 @@
 
 package openapi
 
-import (
-	"os"
-)
-
 type InlineObject struct {
 
 	Title string `json:"title,omitempty"`
 
-	FileName *os.File `json:"fileName,omitempty"`
+	FileName string `json:"fileName,omitempty"`
 }

@@ -108,16 +108,16 @@ func (c *DefaultApiController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	time := r.FormValue("time")
 	name := r.FormValue("name")
-	fileName, err := ReadFormFileToTempFile(r, "fileName")
+	secteurID := r.FormValue("secteurId")
+
+	result, path, err := c.service.AddImageToVideo(r.Context(), id, name, secteurID, time)
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
-
-	secteurId := r.FormValue("secteurId")
-	time := r.FormValue("time")
-	result, err := c.service.AddImageToVideo(r.Context(), id, name, fileName, secteurId, time)
+	err = ReadFormFileToFileserver(r, "fileName", path)
 	if err != nil {
 		w.WriteHeader(500)
 		return
@@ -128,22 +128,28 @@ func (c *DefaultApiController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 
 // AddVideo - Add a  video
 func (c *DefaultApiController) AddVideo(w http.ResponseWriter, r *http.Request) {
+
+	r.ParseMultipartForm(500 << 20)
 	err := r.ParseForm()
 	if err != nil {
 		w.WriteHeader(500)
+		EncodeJSONResponse(err, nil, w)
 		return
 	}
 
 	title := r.FormValue("title")
-	fileName, err := ReadFormFileToTempFile(r, "fileName")
+	result, path, err := c.service.AddVideo(r.Context(), title)
 	if err != nil {
+		print(err)
 		w.WriteHeader(500)
+		EncodeJSONResponse(err, nil, w)
 		return
 	}
 
-	result, err := c.service.AddVideo(r.Context(), title, fileName)
+	err = ReadFormFileToFileserver(r, "fileName", path)
 	if err != nil {
 		w.WriteHeader(500)
+		EncodeJSONResponse(err, nil, w)
 		return
 	}
 

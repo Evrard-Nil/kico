@@ -12,9 +12,7 @@ package openapi
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 	"time"
 
 	"github.com/google/uuid"
@@ -35,49 +33,33 @@ func NewAPIService(client mongo.Client, dataFolder string) DefaultApiServicer {
 }
 
 // AddImageToVideo - Upload an image linked to a video
-func (s *APIService) AddImageToVideo(ctx context.Context, id int32, name string, file *os.File, secteurId string, time string) (interface{}, error) {
+func (s *APIService) AddImageToVideo(ctx context.Context, id int32, name string, secteurID string, time string) (interface{}, string, error) {
 	log.Print("AddImageToVideo")
-	defer file.Close()
 
-	collection := s.dbClient.Database("ico").Collection("videos")
 	pid := uuid.New().String()
+	url := "/images/" + pid
+	filepath := s.dataFolder + url
+
 	picture := Image{
 		Id:        pid,
 		Name:      name,
 		Time:      time,
-		SecteurId: secteurId,
+		SecteurId: secteurID,
 		Url:       "/images/" + pid,
 	}
-	bytes, err := ioutil.ReadAll(file)
 
-	if err != nil {
-		log.Fatal(err)
-		return "Could not read file", err
-	}
-
-	filepath := s.dataFolder + "/images/" + picture.Id
-
-	ioutil.WriteFile(filepath, bytes, 0644)
-
-	insertResult, err := collection.InsertOne(ctx, picture)
-
-	if err != nil {
-		log.Fatal(err)
-		return "Insertion error", err
-	}
-
-	fmt.Println("Inserted post with ID:", insertResult.InsertedID)
-
-	return picture, nil
+	return picture, filepath, nil
 }
 
 // AddVideo - Add a  video
-func (s *APIService) AddVideo(ctx context.Context, title string, videos *os.File) (interface{}, error) {
+func (s *APIService) AddVideo(ctx context.Context, title string) (interface{}, string, error) {
 	log.Printf("AddVideo")
-	defer videos.Close()
 
 	collection := s.dbClient.Database("ico").Collection("videos")
 	vid := uuid.New().String()
+	url := "/videos/" + vid
+	filepath := s.dataFolder + url
+
 	video := Video{
 		Id:    vid,
 		State: IMPORTED,
@@ -85,27 +67,16 @@ func (s *APIService) AddVideo(ctx context.Context, title string, videos *os.File
 		Title: title,
 		Url:   "/videos/" + vid,
 	}
-	bytes, err := ioutil.ReadAll(videos)
-
-	if err != nil {
-		log.Fatal(err)
-		return "Could not read file", err
-	}
-
-	filepath := s.dataFolder + "/videos/" + video.Id
-
-	ioutil.WriteFile(filepath, bytes, 0644)
 
 	insertResult, err := collection.InsertOne(ctx, video)
 
 	if err != nil {
-		log.Fatal(err)
-		return "Insertion error", err
+		print(err)
+		return "Insertion error", "", err
 	}
-
 	fmt.Println("Inserted post with ID:", insertResult.InsertedID)
 
-	return "OK", nil
+	return "OK", filepath, nil
 }
 
 // DeleteImage - Deletes an image
