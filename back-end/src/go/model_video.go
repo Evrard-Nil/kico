@@ -15,8 +15,7 @@ import (
 
 // Video - A video stored
 type Video struct {
-
-	Id string `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	State VideoState `json:"state,omitempty"`
 
@@ -24,9 +23,9 @@ type Video struct {
 
 	Date time.Time `json:"date,omitempty"`
 
-	ScorePci float32 `json:"score_pci,omitempty"`
+	ScorePCI float32 `json:"score_pci,omitempty"`
 
-	Url string `json:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 
 	Title string `json:"title,omitempty"`
 }

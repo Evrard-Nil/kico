@@ -28,7 +28,7 @@ type APIService struct {
 }
 
 // NewAPIService creates a default api service
-func NewAPIService(client mongo.Client, dataFolder string) DefaultApiServicer {
+func NewAPIService(client mongo.Client, dataFolder string) DefaultAPIServicer {
 	return &APIService{dbClient: client, dataFolder: dataFolder}
 }
 
@@ -41,11 +41,11 @@ func (s *APIService) AddImageToVideo(ctx context.Context, id int32, name string,
 	filepath := s.dataFolder + url
 
 	picture := Image{
-		Id:        pid,
+		ID:        pid,
 		Name:      name,
 		Time:      time,
-		SecteurId: secteurID,
-		Url:       "/images/" + pid,
+		SecteurID: secteurID,
+		URL:       "/images/" + pid,
 	}
 
 	return picture, filepath, nil
@@ -61,11 +61,11 @@ func (s *APIService) AddVideo(ctx context.Context, title string) (interface{}, s
 	filepath := s.dataFolder + url
 
 	video := Video{
-		Id:    vid,
+		ID:    vid,
 		State: IMPORTED,
 		Date:  time.Now(),
 		Title: title,
-		Url:   "/videos/" + vid,
+		URL:   "/videos/" + vid,
 	}
 
 	insertResult, err := collection.InsertOne(ctx, video)

@@ -54,7 +54,7 @@ func main() {
 	}
 
 	APIService := openapi.NewAPIService(*client, dataFolder)
-	APIController := openapi.NewDefaultApiController(APIService)
+	APIController := openapi.NewDefaultAPIController(APIService)
 
 	router := openapi.NewRouter(APIController)
 
