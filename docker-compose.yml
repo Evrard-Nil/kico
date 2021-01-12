@@ -11,8 +11,10 @@ services:
       - '8080:8080'
     depends_on:
       - 'mongo'
+    environment:
+      ICO_DATA_STORAGE: /ico-data/storage
     volumes:
-      - ./data/storage:/tmp/cache
+      - ./data/storage:/ico-data/storage
       
   web:
     image: kico-front 
@@ -37,8 +39,20 @@ services:
   mongo-express:
     image: mongo-express
     restart: always
+    depends_on:
+      - 'mongo'
     ports:
       - 8081:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: mongoadmin
       ME_CONFIG_MONGODB_ADMINPASSWORD: secret
+
+  fileserver:
+    image: halverneus/static-file-server
+    restart: always
+    ports:
+      - 8082:8080
+    environment:
+      FOLDER: /ico-data/storage
+    volumes:
+      - ./data/storage:/ico-data/storage

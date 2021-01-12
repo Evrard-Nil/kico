@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ACImageAnnotatorComponent } from './components/ac-image-annotator/ac-image-annotator.component';
@@ -10,6 +9,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import { ContainerComponent } from './components/ac-image-annotator/container/container.component';
 import { ItemComponent } from './components/ac-image-annotator/container/item/item.component';
 import { ConnectorDirective } from './components/ac-image-annotator/container/connector.directive';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,10 @@ import { ConnectorDirective } from './components/ac-image-annotator/container/co
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
