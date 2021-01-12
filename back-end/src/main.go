@@ -26,9 +26,9 @@ const (
 	// where images and videos should be stored
 	IcoDataFolderEnv = "ICO_DATA_STORAGE"
 	// MondoDB adress (localhost for dev)
-	dbAdress = "localhost"
+	dbAdress = "mongo"
 	// MondoDB port (27100 for dev)
-	dbPort = "27100"
+	dbPort = "27017"
 	// MongoDB user
 	dbUser = "mongoadmin"
 	// MongoDB password
