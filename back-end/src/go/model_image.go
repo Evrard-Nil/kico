@@ -22,4 +22,6 @@ type Image struct {
 	VideoID string `json:"video_id,omitempty" bson:"video_id"`
 
 	URL string `json:"url,omitempty" bson:"url"`
+
+	Annotations [][2]int `json:"annotations,omitempty" bson:"annotations"`
 }
