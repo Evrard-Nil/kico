@@ -11,6 +11,7 @@ package openapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -99,16 +100,16 @@ func (c *DefaultAPIController) Routes() Routes {
 func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		fmt.Print(err)
 		w.WriteHeader(500)
-		EncodeJSONResponse(err, nil, w)
 		return
 	}
 
 	params := mux.Vars(r)
 	id := params["id"]
 	if err != nil {
+		fmt.Print(err)
 		w.WriteHeader(500)
-		EncodeJSONResponse(err, nil, w)
 		return
 	}
 
@@ -121,15 +122,16 @@ func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 
 	ext, err := ReadFormFileToFileserver(r, "fileName", filepath)
 	if err != nil {
+
+		fmt.Print(err)
 		w.WriteHeader(500)
-		EncodeJSONResponse(err, nil, w)
 		return
 	}
 
 	result, err := c.service.AddImageToVideo(r.Context(), id, name, secteurID, time, pid, ext)
 	if err != nil {
+		fmt.Print(err)
 		w.WriteHeader(500)
-		EncodeJSONResponse(err, nil, w)
 		return
 	}
 
@@ -141,8 +143,8 @@ func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) 
 	r.ParseMultipartForm(500 << 20)
 	err := r.ParseForm()
 	if err != nil {
+		print(err)
 		w.WriteHeader(500)
-		EncodeJSONResponse(err, nil, w)
 		return
 	}
 	title := r.FormValue("title")
@@ -151,8 +153,8 @@ func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) 
 	filepath := c.dataFolder + "/videos/" + vid
 	ext, err := ReadFormFileToFileserver(r, "fileName", filepath)
 	if err != nil {
+		print(err)
 		w.WriteHeader(500)
-		EncodeJSONResponse(err, nil, w)
 		return
 	}
 
@@ -160,7 +162,6 @@ func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		print(err)
 		w.WriteHeader(500)
-		EncodeJSONResponse(err, nil, w)
 		return
 	}
 

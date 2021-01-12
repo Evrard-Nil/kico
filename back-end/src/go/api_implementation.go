@@ -15,6 +15,7 @@ import (
 	"log"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -36,7 +37,7 @@ func (s *APIService) AddImageToVideo(ctx context.Context, id string, name string
 
 	url := "/images/" + pid + "." + ext
 
-	picture := Image{
+	image := Image{
 		ID:        pid,
 		Name:      name,
 		Time:      time,
@@ -46,15 +47,15 @@ func (s *APIService) AddImageToVideo(ctx context.Context, id string, name string
 	}
 
 	collection := s.dbClient.Database("ico").Collection("images")
-	insertResult, err := collection.InsertOne(ctx, picture)
+	insertResult, err := collection.InsertOne(ctx, image)
 
 	if err != nil {
-		print(err)
+		fmt.Print(err)
 		return "Insertion error", err
 	}
 	fmt.Println("Inserted post with ID:", insertResult.InsertedID)
 
-	return picture, nil
+	return image, nil
 }
 
 // AddVideo - Add a  video
@@ -86,37 +87,119 @@ func (s *APIService) AddVideo(ctx context.Context, title string, vid string, ext
 // DeleteImage - Deletes an image
 func (s *APIService) DeleteImage(ctx context.Context, id string) (interface{}, error) {
 	log.Printf("DeleteImage")
+
+	collection := s.dbClient.Database("ico").Collection("images")
+	result, err := collection.DeleteOne(ctx, bson.M{"id": id})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("DeleteOne removed %v document(s)\n", result.DeletedCount)
+
 	return "OK", nil
 }
 
 // DeleteVideo - delete a video
 func (s *APIService) DeleteVideo(ctx context.Context, id string) (interface{}, error) {
 	log.Printf("DeleteVideo")
+
+	collection := s.dbClient.Database("ico").Collection("videos")
+	result, err := collection.DeleteOne(ctx, bson.M{"id": id})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("DeleteOne removed %v document(s)\n", result.DeletedCount)
 	return "OK", nil
 }
 
 // GetImage - Retrieve an image
 func (s *APIService) GetImage(ctx context.Context, id string) (interface{}, error) {
 	log.Printf("GetImage")
-	return "OK", nil
+	result := *s.dbClient.Database("ico").Collection("images").FindOne(ctx, bson.M{"_id": id})
+	err := result.Err()
+	if err != nil {
+		fmt.Print(err)
+		return "", err
+	}
+	image := &Image{}
+	err = result.Decode(image)
+	if err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+
+	return *image, nil
 }
 
 // GetImagesFromVideo - Retrieve all images linked to a video
 func (s *APIService) GetImagesFromVideo(ctx context.Context, id string) (interface{}, error) {
 	log.Printf("GetImagesFromVideo")
-	return "OK", nil
+	result, err := s.dbClient.Database("ico").Collection("images").Find(ctx, bson.M{"video_id": id})
+
+	if err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+	defer result.Close(context.Background())
+	images := []Image{}
+	for result.Next(context.Background()) {
+		i := &Image{}
+
+		err := result.Decode(i)
+		if err != nil {
+			fmt.Print(err)
+			return nil, err
+		}
+		images = append(images, *i)
+
+	}
+
+	return images, nil
 }
 
 // GetVideo - Retrieve a single video
 func (s *APIService) GetVideo(ctx context.Context, id string) (interface{}, error) {
 	log.Printf("GetVideo")
-	return "OK", nil
+	result := *s.dbClient.Database("ico").Collection("videos").FindOne(ctx, bson.M{"_id": id})
+	err := result.Err()
+	if err != nil {
+		fmt.Print(err)
+		return "", err
+	}
+	video := &Video{}
+	err = result.Decode(video)
+	if err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+
+	return video, nil
 }
 
 // GetVideos - Retrieve all videos
 func (s *APIService) GetVideos(ctx context.Context) (interface{}, error) {
 	log.Printf("GetVideos")
-	return "OK", nil
+	result, err := s.dbClient.Database("ico").Collection("videos").Find(ctx, bson.M{})
+
+	if err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+	defer result.Close(context.Background())
+	videos := []Video{}
+	for result.Next(context.Background()) {
+		i := &Video{}
+
+		err := result.Decode(i)
+		if err != nil {
+			fmt.Print(err)
+			return nil, err
+		}
+		videos = append(videos, *i)
+
+	}
+	return videos, nil
 }
 
 // UpdateImage - update an image

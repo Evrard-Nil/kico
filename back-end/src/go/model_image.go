@@ -11,15 +11,15 @@ package openapi
 
 // Image - An extracted image from a video
 type Image struct {
-	ID string `json:"id,omitempty"`
+	ID string `json:"id,omitempty" bson:"_id"`
 
-	SecteurID string `json:"secteur_id,omitempty"`
+	SecteurID string `json:"secteur_id,omitempty" bson:"secteur_id"`
 
-	Name string `json:"name,omitempty"`
+	Name string `json:"name,omitempty" bson:"name"`
 
-	Time string `json:"time,omitempty"`
+	Time string `json:"time,omitempty" bson:"time"`
 
-	VideoID string `json:"video_id,omitempty"`
+	VideoID string `json:"video_id,omitempty" bson:"video_id"`
 
-	URL string `json:"url,omitempty"`
+	URL string `json:"url,omitempty" bson:"url"`
 }
