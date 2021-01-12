@@ -9,7 +9,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 export class ACImageAnnotatorComponent implements OnInit {
 
   @ViewChild('canvas', {static : true}) public canvas: ElementRef;
-  @Input() public width = window.innerWidth;
+  @Input() public width = 1200;
   @Input() public height = 600;
   // @Input() image: ImageBitmap;
 
@@ -21,6 +21,12 @@ export class ACImageAnnotatorComponent implements OnInit {
   private coordinates: Array<([number, number])>;
   private polygons: Array<Array<([number, number])>>;
   private polygonsByState : Map<ImageData, Array<Array<([number, number])>>>;
+  public numbers: Array<Number>;
+  public images:Array<String>;
+
+
+  //Paramètres pour gérer les appels API
+  private polygonsByImage : Map<String, Array<Array<([number, number])>>>; //Contient l'url de l'image associé à ses annotations
 
 
   //Paramètres pour gérer les undo/redo
@@ -31,14 +37,16 @@ export class ACImageAnnotatorComponent implements OnInit {
   private image;
 
 
+
   constructor() {
     this.coordinates = new Array<[number, number]>();
     this.increment = 1;
     this.states = new Array<ImageData>();
     this.polygons =[];
     this.polygonsByState= new Map<ImageData, Array<Array<([number, number])>>>();
-
-
+    this.numbers = [0,1,2,3,4,5,6,7,8,5,5,5,5,5];
+    this.images = ['https://picsum.photos/id/237/1200/600', 'https://picsum.photos/id/238/1200/600', 'https://picsum.photos/id/239/1200/600', 'https://picsum.photos/id/240/1200/600'];
+    // this.numbers = Array(5).fill(4); // [4,4,4,4,4]
   }
 
   //Méthode faisant partie du cycle angular : Lancée à l'initialisation du composant.
@@ -54,6 +62,7 @@ export class ACImageAnnotatorComponent implements OnInit {
 
     this.image = new Image();
     this.image.src = "../../../assets/tsconfig.app.jpg";
+    this.image.crossOrigin = "Anonymous";
 
     this.image.onload = () => {
       this.ctx.drawImage(this.image, 0,0);
@@ -81,11 +90,15 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   //Permet de faire retour arrière sur les états précédents.
   undoAction(): void {
-    this.increment+1>this.states.length ? this.increment = this.states.length : this.increment++;
-    this.state = this.states[this.states.length-this.increment < 0 ? 0 : this.states.length-this.increment];
-    console.log(this.states.length-this.increment < 0);
-    console.log(this.states.length-this.increment);
-    this.ctx.putImageData(this.state,0,0);
+    if(this.increment==1){
+      this.ctx.drawImage(this.image, 0,0);
+    } else {
+      this.increment+1>this.states.length ? this.increment = this.states.length : this.increment++;
+      this.state = this.states[this.states.length-this.increment < 0 ? 0 : this.states.length-this.increment];
+      // console.log(this.states.length-this.increment < 0);
+      // console.log(this.states.length-this.increment);
+      this.ctx.putImageData(this.state,0,0);
+    }
   }
 
 
@@ -105,22 +118,25 @@ export class ACImageAnnotatorComponent implements OnInit {
     let polygons = Array.from(this.polygons);
     this.polygonsByState.set(state, polygons);
     this.coordinates.splice(0, this.coordinates.length); //On remet le tableau de coordonnées du polygone à vide.
+
   }
 
   //Permet de passer en mode dessin.
   drawCanvas():void{
     this.polygons = this.polygonsByState.get(this.state);
+    console.log("this polygons : ", this.polygons);
     this.increment=1;
     this.isDrawing = true;
   }
 
   //Permet de garder affiché les polygones précédemment dessinés.
   drawPreviousPolygons():void{
-    console.log(this.polygons);
+    // console.log(this.polygons);
     this.polygons.forEach(polygon => {
       this.ctx.clearRect(0,0, this.width, this.height);
+      // console.log(this.image);
       this.ctx.drawImage(this.image, 0,0);
-      this.ctx.beginPath();
+      // this.ctx.beginPath();
       if(polygon.length>0){
         this.ctx.moveTo(polygon[0][0], polygon[0][1]);
         for(let i = 1; i < polygon.length; i++){
@@ -138,10 +154,13 @@ export class ACImageAnnotatorComponent implements OnInit {
    * On redessine les polygones précédents à chaque clic, car on doit nettoyer le canvas à chaque clic afin d'obtenir le rendu souhaité.
   */
   drawPolygon(ctx : CanvasRenderingContext2D): void{
-    ctx.clearRect(0,0, this.width, this.height);
-    this.drawPreviousPolygons();
-    this.ctx.drawImage(this.image, 0,0);
+
     ctx.beginPath();
+    ctx.clearRect(0,0, this.width, this.height);
+
+    this.ctx.drawImage(this.image, 0,0);
+    this.drawPreviousPolygons();
+    this.ctx.beginPath();
     ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
     for(let i = 1; i < this.coordinates.length; i++){
       ctx.lineTo(this.coordinates[i][0] , this.coordinates[i][1] );
@@ -149,6 +168,30 @@ export class ACImageAnnotatorComponent implements OnInit {
     ctx.closePath();
     ctx.stroke();
   }
+
+
+  /*
+   * Remet le canvas à blanc.
+   * Remet à vide les polygons.
+   * Charge la nouvelle image.
+   *
+  */
+  clickImage(image: string){
+    this.ctx.clearRect(0, 0, this.width, this.height); //Remet le canvas à blanc.
+
+    this.polygons = [];
+    this.polygonsByState.clear();
+    this.coordinates = [];
+    this.states = [];
+
+    this.states.push(this.ctx.getImageData(0,0, this.width, this.height));
+    this.state = this.states[0]
+    this.polygonsByState.set(this.state, []);
+
+    this.image.src = image;
+    this.ctx.drawImage(this.image, 0, 0);
+  }
+
 
   updateState(){
 
@@ -159,8 +202,6 @@ export class ACImageAnnotatorComponent implements OnInit {
 
 
   }
-
-
 
 
 }

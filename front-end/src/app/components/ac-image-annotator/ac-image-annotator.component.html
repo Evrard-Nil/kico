@@ -1,13 +1,57 @@
-<div style="background-color: antiquewhite;">
-  <canvas #canvas></canvas>
-  <!-- <div>
-    <img #image src="../../../assets/tsconfig.app.jpg">
-  </div> -->
+<!-- <div style="background-color: white; width: 30%; height: 100%; float: left;">
+
 </div>
 
 
-<!-- <button id="redo" (click)="redoAction()">Redo</button>
-<button id="undo" (click)="undoAction()">Undo</button>
-<button id="save" (click)="saveCanvas()">Save</button>
-<button id="draw" (click)="drawCanvas()">Draw</button>
- -->
+<div style="background-color: antiquewhite; float:right">
+  <canvas #canvas></canvas> -->
+  <!-- <div>
+    <img #image src="../../../assets/tsconfig.app.jpg">
+  </div> -->
+  <!-- <button id="redo" (click)="redoAction()">Redo</button>
+  <button id="undo" (click)="undoAction()">Undo</button>
+  <button id="save" (click)="saveCanvas()">Save</button>
+  <button id="draw" (click)="drawCanvas()">Draw</button>
+</div> -->
+
+
+
+
+<div class="box">
+  <div class="sidebar">
+
+    <div class="wrapper">
+      <div class="one"><input type="image" src="../../../assets/redo.jpg" id="redo" (click)="redoAction()" width="64px" height="64px"></div>
+      <div class="two"><input type="image" src="../../../assets/undo.jpg" id="undo" (click)="undoAction()" width="64px" height="64px"></div>
+      <div class="three"><input type="image" src="../../../assets/save.jpg" id="save" (click)="saveCanvas()" width="64px" height="64px"></div>
+      <div class="four"><input type="image" src="../../../assets/draw.jpg" id="draw" (click)="drawCanvas()" width="64px" height="64px"></div>
+    </div>
+
+    <hr />
+
+    <div>
+      <!-- <ng-container appConnector>
+        <app-container>
+          <app-item *ngFor="let number of numbers" [id]="number" [url]="'https://wallpapercave.com/wp/wp4470754.jpg'" (click)="clickImage()">
+          </app-item>
+        </app-container>
+      </ng-container> -->
+
+      <ng-container appConnector>
+        <app-container>
+          <app-item *ngFor="let image of images" [url]="image"
+            (click)="clickImage(image)">
+          </app-item>
+        </app-container>
+      </ng-container>
+    </div>
+
+  </div>
+
+  <div class="div2">
+    <canvas #canvas style="position: absolute;"></canvas>
+
+
+  </div>
+  <div class="clear">
+</div>

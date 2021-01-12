@@ -7,12 +7,18 @@ import { ACImageAnnotatorComponent } from './components/ac-image-annotator/ac-im
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ACImageViewComponent } from './components/ac-image-view/ac-image-view.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import { ContainerComponent } from './components/ac-image-annotator/container/container.component';
+import { ItemComponent } from './components/ac-image-annotator/container/item/item.component';
+import { ConnectorDirective } from './components/ac-image-annotator/container/connector.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     ACImageAnnotatorComponent,
-    ACImageViewComponent
+    ACImageViewComponent,
+    ContainerComponent,
+    ItemComponent,
+    ConnectorDirective
   ],
   imports: [
     BrowserModule,
