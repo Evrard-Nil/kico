@@ -37,8 +37,8 @@ type DefaultAPIRouter interface {
 type DefaultAPIServicer interface {
 	AddImageToVideo(context context.Context, id string, name string, secteurID string, time string, pid string, ext string) (interface{}, error)
 	AddVideo(context context.Context, title string, vid string, ext string) (interface{}, error)
-	DeleteImage(context.Context, string) (interface{}, error)
-	DeleteVideo(context.Context, string) (interface{}, error)
+	DeleteImage(context.Context, string, string) (interface{}, error)
+	DeleteVideo(context.Context, string, string) (interface{}, error)
 	GetImage(context.Context, string) (interface{}, error)
 	GetImagesFromVideo(context.Context, string) (interface{}, error)
 	GetVideo(context.Context, string) (interface{}, error)

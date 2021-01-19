@@ -177,7 +177,7 @@ func (c *DefaultAPIController) DeleteImage(w http.ResponseWriter, r *http.Reques
 	params := mux.Vars(r)
 	id := params["id"]
 
-	result, err := c.service.DeleteImage(r.Context(), id)
+	result, err := c.service.DeleteImage(r.Context(), id, c.dataFolder)
 	if err != nil {
 		w.WriteHeader(500)
 		return
@@ -192,7 +192,7 @@ func (c *DefaultAPIController) DeleteVideo(w http.ResponseWriter, r *http.Reques
 	params := mux.Vars(r)
 	id := params["id"]
 
-	result, err := c.service.DeleteVideo(r.Context(), id)
+	result, err := c.service.DeleteVideo(r.Context(), id, c.dataFolder)
 	if err != nil {
 		w.WriteHeader(500)
 		return
