@@ -25,14 +25,22 @@ const (
 	// IcoDataFolderEnv represents the name of the environnement variable defining
 	// where images and videos should be stored
 	IcoDataFolderEnv = "ICO_DATA_STORAGE"
+	// MondoDB adress (localhost for dev)
+	dbAdress = "mongo"
+	// MondoDB port (27100 for dev)
+	dbPort = "27017"
+	// MongoDB user
+	dbUser = "mongoadmin"
+	// MongoDB password
+	dbPassword = "secret"
 	// Port defines the listening port number
 	port = "8080"
 )
 
 func main() {
 	log.Printf("Server started")
-
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongoadmin:secret@mongo:27017"))
+	uri := "mongodb://" + dbUser + ":" + dbPassword + "@" + dbAdress + ":" + dbPort
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
 	}

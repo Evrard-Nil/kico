@@ -205,11 +205,24 @@ func (s *APIService) GetVideos(ctx context.Context) (interface{}, error) {
 // UpdateImage - update an image
 func (s *APIService) UpdateImage(ctx context.Context, id string, image Image) (interface{}, error) {
 	log.Printf("UpdateImage")
+
+	result, err := s.dbClient.Database("ico").Collection("images").ReplaceOne(ctx, bson.M{"_id": id}, image)
+	if err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
 	return "OK", nil
 }
 
 // UpdateVideo - Update a video
 func (s *APIService) UpdateVideo(ctx context.Context, id string, video Video) (interface{}, error) {
 	log.Printf("UpdateVideo")
+	result, err := s.dbClient.Database("ico").Collection("videos").ReplaceOne(ctx, bson.M{"_id": id}, video)
+	if err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
 	return "OK", nil
 }

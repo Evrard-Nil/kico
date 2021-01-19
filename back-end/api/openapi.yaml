@@ -6,25 +6,28 @@ servers:
   - url: http://localhost.com/api/v1
 paths:
   /videos:
-    description: Allow to get informations concerning videos stored and their state.
     summary: Operations on videos
+    description: Path for operations concerning all videos
     get:
+      summary: Retrieve all videos
       operationId: getVideos
       responses:
         "200":
+          description: List of all videos in db
           content:
             application/json:
               schema:
+                type: array
                 items:
                   $ref: "#/components/schemas/Video"
-                type: array
-          description: Videos
         default:
           description: Default error sample response
-      summary: Retrieve all videos
+
   /video/{id}:
-    summary: Operation on the video {id}
+    summary: Operation on a single video
+    description: Path for operation concerning the specific video id
     delete:
+      summary: delete a video
       operationId: deleteVideo
       parameters:
         - description: Numeric ID of the video to delete
@@ -40,9 +43,9 @@ paths:
           description: Deletion sucessful
         default:
           description: Default error sample response
-      summary: delete a video
     get:
       operationId: getVideo
+      summary: Retrieve a single video
       parameters:
         - description: Numeric ID of the video to get
           explode: false
@@ -61,9 +64,9 @@ paths:
           description: A video
         default:
           description: Default error sample response
-      summary: Retrieve a single video
     put:
       operationId: updateVideo
+      summary: Update a video
       parameters:
         - description: Numeric ID of the video to update
           explode: false
@@ -73,7 +76,6 @@ paths:
           schema:
             type: integer
           style: simple
-
       requestBody:
         description: new data of this video
         required: true
@@ -81,7 +83,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Video"
-
       responses:
         "200":
           description: The updated data for this video
@@ -91,10 +92,13 @@ paths:
                 $ref: "#/components/schemas/Video"
         default:
           description: Default error sample response
-      summary: Update a video
+
   /video:
+    summary: Operation on a single video
+    description: Path for operation concerning the specific video id
     post:
       operationId: addVideo
+      summary: Add a video
       requestBody:
         description: Videos files
         content:
@@ -116,8 +120,10 @@ paths:
           description: A video
         default:
           description: Default error sample response
-      summary: Add a  video
+
   /video/{id}/images:
+    summary: Operation on images linked to a video
+    description: Path for operation concerning the images of a specific video id
     get:
       operationId: getImagesFromVideo
       summary: Retrieve all images linked to a video
@@ -179,7 +185,10 @@ paths:
                 $ref: "#/components/schemas/Image"
         default:
           description: Default error sample response
+
   /images/{id}:
+    summary: Operation on a single image
+    description: Path for operation concerning the specific image id
     get:
       operationId: getImage
       summary: Retrieve an image
@@ -213,7 +222,6 @@ paths:
           schema:
             type: integer
           style: simple
-
       requestBody:
         description: New data of image
         required: true
@@ -221,7 +229,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Image"
-
       responses:
         "200":
           description: Newly update image
@@ -231,7 +238,6 @@ paths:
                 $ref: "#/components/schemas/Image"
         default:
           description: Default error sample response
-
     delete:
       operationId: deleteImage
       summary: Deletes an image
@@ -272,6 +278,12 @@ components:
       description: A video stored
       nullable: false
       type: object
+      example:
+        id: 5e749324-eb03-4c43-adee-4c2a31c8a999
+        state: imported
+        date: "2021-01-12T14:35:50.756Z"
+        url: "/videos/5e749324-eb03-4c43-adee-4c2a31c8a999.avi"
+        title: greattitle
       properties:
         id:
           type: string
@@ -292,6 +304,16 @@ components:
       description: An extracted image from a video
       type: object
       nullable: false
+      example:
+        id: 5093fe4d-b4a6-4bdc-a4d3-1f25890c89e8
+        name: gfhbjknl,
+        video_id: 71a0b60b-0085-4693-805c-47a1bff41e91
+        url: "/images/5093fe4d-b4a6-4bdc-a4d3-1f25890c89e8.svg"
+        annotations:
+          - - 1
+            - 2
+          - - 3
+            - 4
       properties:
         id:
           type: string
@@ -305,3 +327,9 @@ components:
           type: string
         url:
           type: string
+        annotations:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer

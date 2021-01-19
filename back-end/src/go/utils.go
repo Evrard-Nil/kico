@@ -18,8 +18,12 @@ func ReadFormFileToFileserver(r *http.Request, key string, path string) (string,
 	if err != nil {
 		return "", err
 	}
+	ext := "jpeg"
+	spl := strings.Split(fileHeader.Filename, ".")
+	if len(spl) > 1 {
+		ext = spl[1]
+	}
 
-	ext := strings.Split(fileHeader.Filename, ".")[1]
 	// Create file
 	dst, err := os.Create(path + "." + ext)
 	defer dst.Close()
