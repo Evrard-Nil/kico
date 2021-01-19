@@ -12,7 +12,10 @@ package openapi
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -99,6 +102,23 @@ func (s *APIService) DeleteImage(ctx context.Context, imageID string, dataFolder
 	}
 	fmt.Printf("DeleteOne removed %v document(s)\n", result.DeletedCount)
 
+	files, err := ioutil.ReadDir(dataFolder + "/images/")
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, f := range files {
+		// if a filename
+		if strings.Split(f.Name(), ".")[0] == imageID {
+			pathToRemove := dataFolder + "/images/" + f.Name()
+			fmt.Printf("Removing at: %s\n", pathToRemove)
+			err = os.Remove(pathToRemove)
+			if err != nil {
+				log.Fatal(err)
+			}
+			break
+		}
+	}
+
 	return "OK", nil
 }
 
@@ -112,8 +132,25 @@ func (s *APIService) DeleteVideo(ctx context.Context, videoID string, dataFolder
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	fmt.Printf("DeleteOne removed %v document(s)\n", result.DeletedCount)
+
+	files, err := ioutil.ReadDir(dataFolder + "/videos/")
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, f := range files {
+		// if a filename
+		if strings.Split(f.Name(), ".")[0] == videoID {
+			pathToRemove := dataFolder + "/videos/" + f.Name()
+			fmt.Printf("Removing at: %s\n", pathToRemove)
+			err = os.Remove(pathToRemove)
+			if err != nil {
+				log.Fatal(err)
+			}
+			break
+		}
+	}
+
 	return "OK", nil
 }
 
