@@ -99,6 +99,7 @@ func (c *DefaultAPIController) Routes() Routes {
 // AddImageToVideo - Upload an image linked to a video
 func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	r.ParseMultipartForm(5 << 20)
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Print(err)
