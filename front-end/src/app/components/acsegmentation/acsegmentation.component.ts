@@ -87,29 +87,6 @@ export class ACSegmentationComponent implements OnInit {
         })
         console.log(images)
     })
-
-    // this.images.push({
-    //   id: "71a0b60b-0085-4693-805c-47a1bff41e93",
-    //   secteur_id: 1,
-    //   name: "testeur",
-    //   time: "12:09:09",
-    //   video_id: 2,
-    //   url: '../../../assets/images/tsconfig.app.jpg'
-    // }, {
-    //   id: "71a0b60b-0085-4093-805c-47a1bff41e93",
-    //   secteur_id: 2,
-    //   name: "Flanc droit",
-    //   time: "15:09:29",
-    //   video_id: 2,
-    //   url: '../../../assets/images/tsconfig.app.jpg'
-    // }, {
-    //   id: "71aEb60b-0085-4693-805c-47a1bff41e93",
-    //   secteur_id: 2,
-    //   name: "Vérolé",
-    //   time: "09:37:09",
-    //   video_id: 2,
-    //   url: '../../../assets/images/tsconfig.app.jpg'
-    // });
   }
 
   addImageToList(newImage: Image) {

@@ -69,8 +69,7 @@ export class VideoVisualisationComponent implements OnInit {
 
       console.log(this.getDurationFromSeconds(time))
       this.imageService.saveImage(this.video.id, formData).subscribe((image) => {
-        console.log("IMAGE CREEE:",image)
-        image.url = environment.apiBaseUrl + image.url
+        image.url = environment.fileBaseUrl + image.url
         this.eventCreateImage.emit(image)
       })
     },"image/jpeg")
