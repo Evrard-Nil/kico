@@ -26,11 +26,12 @@ export class VideoVisualisationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    
   }
 
   ngAfterViewInit() {
     this.videoElement = this.videoReference.nativeElement
+    this.videoElement.crossOrigin = "anonymous"
   }
 
   /**
@@ -39,9 +40,12 @@ export class VideoVisualisationComponent implements OnInit {
    */
   captureCurrentImage() {
     var canvasElement = document.createElement("canvas")
+    var ctx = canvasElement.getContext('2d')
+    
     canvasElement.width = this.videoElement.clientWidth;
     canvasElement.height = this.videoElement.clientHeight;
-    canvasElement.getContext('2d').drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
+    ctx.drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
+
     this.saveImage(canvasElement)
   }
 
@@ -53,9 +57,9 @@ export class VideoVisualisationComponent implements OnInit {
   saveImage(canvasElement: HTMLCanvasElement) {
     canvasElement.toBlob((blob) => {
       const time = Math.round(this.videoElement.currentTime)
-      // console.log(blob)
-      // var url = URL.createObjectURL(blob)
-      // console.log(url);
+      console.log(blob)
+      var url = URL.createObjectURL(blob)
+      console.log(url);
 
       const formData = new FormData()
       formData.append('name', "undefined");
