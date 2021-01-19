@@ -40,9 +40,11 @@ export class ACSegmentationComponent implements OnInit {
 
   deleteCurrentImage() {
     let indexFound = this.images.indexOf(this.currentImage)
-    this.images.splice(indexFound,1)
-    this.changeCurrentImageOnDelete(indexFound)
-    // TODO : Appel au service pour supprimer l'image
+    this.imageService.deleteImage(this.currentImage.id).subscribe((image : Image) => {
+      console.log(image)
+      this.images.splice(indexFound,1)
+      this.changeCurrentImageOnDelete(indexFound)
+    })
   }
 
   /**
@@ -80,36 +82,11 @@ export class ACSegmentationComponent implements OnInit {
   loadImages() {
     this.imageService.getImages(this.idVideo)
       .subscribe((images) => {
-        console.log("IMAGES RECUES:", images)
         images.forEach((image) => {
           image.url = environment.fileBaseUrl + image.url
           this.images.push(image)
         })
-        console.log(images)
     })
-
-    // this.images.push({
-    //   id: "71a0b60b-0085-4693-805c-47a1bff41e93",
-    //   secteur_id: 1,
-    //   name: "testeur",
-    //   time: "12:09:09",
-    //   video_id: 2,
-    //   url: '../../../assets/images/tsconfig.app.jpg'
-    // }, {
-    //   id: "71a0b60b-0085-4093-805c-47a1bff41e93",
-    //   secteur_id: 2,
-    //   name: "Flanc droit",
-    //   time: "15:09:29",
-    //   video_id: 2,
-    //   url: '../../../assets/images/tsconfig.app.jpg'
-    // }, {
-    //   id: "71aEb60b-0085-4693-805c-47a1bff41e93",
-    //   secteur_id: 2,
-    //   name: "Vérolé",
-    //   time: "09:37:09",
-    //   video_id: 2,
-    //   url: '../../../assets/images/tsconfig.app.jpg'
-    // });
   }
 
   addImageToList(newImage: Image) {
