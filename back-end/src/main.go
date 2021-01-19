@@ -32,7 +32,7 @@ const (
 func main() {
 	log.Printf("Server started")
 
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongoadmin:secret@localhost:27017"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongoadmin:secret@mongo:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,8 +53,8 @@ func main() {
 		log.Fatalf("Data folder is not set up in environement variables. Check %s variable to set it up.", IcoDataFolderEnv)
 	}
 
-	APIService := openapi.NewAPIService(*client, dataFolder)
-	APIController := openapi.NewDefaultApiController(APIService)
+	APIService := openapi.NewAPIService(*client)
+	APIController := openapi.NewDefaultAPIController(APIService, dataFolder)
 
 	router := openapi.NewRouter(APIController)
 

@@ -15,18 +15,17 @@ import (
 
 // Video - A video stored
 type Video struct {
+	ID string `json:"id,omitempty" bson:"_id"`
 
-	Id string `json:"id,omitempty"`
+	State VideoState `json:"state,omitempty" bson:"state"`
 
-	State VideoState `json:"state,omitempty"`
+	AnnotatedBy string `json:"annotated_by,omitempty" bson:"annotated_by"`
 
-	AnnotatedBy string `json:"annotated_by,omitempty"`
+	Date time.Time `json:"date,omitempty" bson:"date"`
 
-	Date time.Time `json:"date,omitempty"`
+	ScorePCI float32 `json:"score_pci,omitempty" bson:"score_pci"`
 
-	ScorePci float32 `json:"score_pci,omitempty"`
+	URL string `json:"url,omitempty" bson:"url"`
 
-	Url string `json:"url,omitempty"`
-
-	Title string `json:"title,omitempty"`
+	Title string `json:"title,omitempty" bson:"title"`
 }

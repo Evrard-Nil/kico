@@ -6,7 +6,6 @@ services:
   api:
     image: kico-api
     build: ./back-end/src
-    restart: always
     ports:
       - '8080:8080'
     depends_on:
@@ -51,6 +50,7 @@ services:
     ports:
       - 8082:8080
     environment:
+      CORS: 'true'
       FOLDER: /ico-data/storage
     volumes:
       - ./data/storage:/ico-data/storage

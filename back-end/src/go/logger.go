@@ -15,8 +15,10 @@ import (
 	"time"
 )
 
+// Logger - utility function for logging
 func Logger(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		(w).Header().Set("Access-Control-Allow-Origin", "*")
 		start := time.Now()
 
 		inner.ServeHTTP(w, r)

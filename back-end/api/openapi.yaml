@@ -3,7 +3,7 @@ info:
   title: Kico API
   version: 0.0.0
 servers:
-- url: http://localhost.com/api/v1
+  - url: http://localhost.com/api/v1
 paths:
   /videos:
     description: Allow to get informations concerning videos stored and their state.
@@ -16,7 +16,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Video'
+                  $ref: "#/components/schemas/Video"
                 type: array
           description: Videos
         default:
@@ -27,14 +27,14 @@ paths:
     delete:
       operationId: deleteVideo
       parameters:
-      - description: Numeric ID of the video to delete
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-        style: simple
+        - description: Numeric ID of the video to delete
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
       responses:
         "200":
           description: Deletion sucessful
@@ -44,20 +44,20 @@ paths:
     get:
       operationId: getVideo
       parameters:
-      - description: Numeric ID of the video to get
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-        style: simple
+        - description: Numeric ID of the video to get
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Video'
+                $ref: "#/components/schemas/Video"
           description: A video
         default:
           description: Default error sample response
@@ -65,30 +65,30 @@ paths:
     put:
       operationId: updateVideo
       parameters:
-      - description: Numeric ID of the video to update
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-        style: simple
-        
+        - description: Numeric ID of the video to update
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+
       requestBody:
         description: new data of this video
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Video'
-              
+              $ref: "#/components/schemas/Video"
+
       responses:
         "200":
           description: The updated data for this video
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Video'
+                $ref: "#/components/schemas/Video"
         default:
           description: Default error sample response
       summary: Update a video
@@ -112,7 +112,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Video'
+                $ref: "#/components/schemas/Video"
           description: A video
         default:
           description: Default error sample response
@@ -122,14 +122,14 @@ paths:
       operationId: getImagesFromVideo
       summary: Retrieve all images linked to a video
       parameters:
-      - description: Numeric ID of the video
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-        style: simple
+        - description: Numeric ID of the video
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
       responses:
         "200":
           content:
@@ -137,7 +137,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Image'
+                  $ref: "#/components/schemas/Image"
           description: images linked to video
         default:
           description: Default error sample response
@@ -145,28 +145,38 @@ paths:
       operationId: addImageToVideo
       summary: Upload an image linked to a video
       parameters:
-      - description: Numeric ID of the video
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-        style: simple
+        - description: Numeric ID of the video
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
       requestBody:
         description: Data of this new iamge
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Image'
+              type: object
+              properties:
+                name:
+                  type: string
+                fileName:
+                  type: string
+                  format: binary
+                secteur_id:
+                  type: string
+                time:
+                  type: string
       responses:
         "200":
           description: Newly uploaded image
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Image'
+                $ref: "#/components/schemas/Image"
         default:
           description: Default error sample response
   /images/{id}:
@@ -174,20 +184,20 @@ paths:
       operationId: getImage
       summary: Retrieve an image
       parameters:
-      - description: Numeric ID of the image
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-        style: simple
+        - description: Numeric ID of the image
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Image'
+                $ref: "#/components/schemas/Image"
           description: An image
         default:
           description: Default error sample response
@@ -195,45 +205,45 @@ paths:
       operationId: updateImage
       summary: update an image
       parameters:
-      - description: Numeric ID of the image
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-        style: simple
-      
+        - description: Numeric ID of the image
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+
       requestBody:
         description: New data of image
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Image'
-              
+              $ref: "#/components/schemas/Image"
+
       responses:
         "200":
           description: Newly update image
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Image'
+                $ref: "#/components/schemas/Image"
         default:
           description: Default error sample response
-      
+
     delete:
       operationId: deleteImage
       summary: Deletes an image
       parameters:
-      - description: Numeric ID of the image
-        explode: false
-        in: path
-        name: id
-        required: true
-        schema:
-          type: integer
-        style: simple
+        - description: Numeric ID of the image
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
       responses:
         "200":
           description: Delete went fine
@@ -253,50 +263,45 @@ components:
     VideoState:
       description: State of a video
       enum:
-      - imported
-      - segmented
-      - annotated
+        - imported
+        - segmented
+        - annotated
       nullable: false
       type: string
     Video:
       description: A video stored
-      example:
-        id: abc4
-        url: https://www.youtube.com/watch?v=-5KAN9_CzSA
-        date: '2017-07-21T17:32:28Z'
-        scorePci: 14.5
-        title: A great video
-        state: imported
       nullable: false
       type: object
       properties:
         id:
           type: string
         state:
-          $ref: '#/components/schemas/VideoState'
-        annotated_by: 
+          $ref: "#/components/schemas/VideoState"
+        annotated_by:
           type: string
-        date: 
+        date:
           type: string
           format: date-time
-        score_pci: 
+        score_pci:
           type: number
-        url:         
+        url:
           type: string
-        title: 
+        title:
           type: string
     Image:
       description: An extracted image from a video
       type: object
       nullable: false
       properties:
-        id: 
-          type: number
-        secteur_id: 
-          type: number
-        name:  
+        id:
           type: string
-        time:  
+        secteur_id:
           type: string
-        video_id:  
-          type: number
+        name:
+          type: string
+        time:
+          type: string
+        video_id:
+          type: string
+        url:
+          type: string
