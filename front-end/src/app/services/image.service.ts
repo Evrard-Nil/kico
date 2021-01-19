@@ -9,15 +9,15 @@ import { ApiService } from './api.service'
 export class ImageService {
   constructor(private apiService: ApiService) {   }
 
-  getImages(idVideo: number) {
+  getImages(idVideo: String) {
     return this.apiService.doGet<Array<Image>>(`${environment.apiBaseUrl}/video/${idVideo}/images`)
   }
 
-  getImage(idImage: number) {
+  getImage(idImage: String) {
     return this.apiService.doGet<Image>(`${environment.apiBaseUrl}/images/${idImage}`)
   }
 
-  saveImage(idVideo: number, formData: FormData) {
+  saveImage(idVideo: String, formData: FormData) {
     return this.apiService.doPost<Image>(`${environment.apiBaseUrl}/video/${idVideo}/images`, formData)
   }
 
@@ -25,7 +25,7 @@ export class ImageService {
     this.apiService.doPut<Image>(`${environment.apiBaseUrl}/images/${image.id}`, image)
   }
 
-  deleteImage(idImage: number) {
+  deleteImage(idImage: String) {
     this.apiService.doDelete<Image>(`${environment.apiBaseUrl}/image/${idImage}`)
   }
 }
