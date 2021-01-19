@@ -98,6 +98,7 @@ func (c *DefaultAPIController) Routes() Routes {
 
 // AddImageToVideo - Upload an image linked to a video
 func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Print(err)
@@ -140,6 +141,7 @@ func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 
 // AddVideo - Add a  video
 func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	r.ParseMultipartForm(500 << 20)
 	err := r.ParseForm()
 	if err != nil {
@@ -170,6 +172,7 @@ func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) 
 
 // DeleteImage - Deletes an image
 func (c *DefaultAPIController) DeleteImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
 	id := params["id"]
 
@@ -184,6 +187,7 @@ func (c *DefaultAPIController) DeleteImage(w http.ResponseWriter, r *http.Reques
 
 // DeleteVideo - delete a video
 func (c *DefaultAPIController) DeleteVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
 	id := params["id"]
 
@@ -198,6 +202,7 @@ func (c *DefaultAPIController) DeleteVideo(w http.ResponseWriter, r *http.Reques
 
 // GetImage - Retrieve an image
 func (c *DefaultAPIController) GetImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
 	id := params["id"]
 
@@ -212,6 +217,7 @@ func (c *DefaultAPIController) GetImage(w http.ResponseWriter, r *http.Request) 
 
 // GetImagesFromVideo - Retrieve all images linked to a video
 func (c *DefaultAPIController) GetImagesFromVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
 	id := params["id"]
 
@@ -226,6 +232,7 @@ func (c *DefaultAPIController) GetImagesFromVideo(w http.ResponseWriter, r *http
 
 // GetVideo - Retrieve a single video
 func (c *DefaultAPIController) GetVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
 	id := params["id"]
 
@@ -240,6 +247,7 @@ func (c *DefaultAPIController) GetVideo(w http.ResponseWriter, r *http.Request) 
 
 // GetVideos - Retrieve all videos
 func (c *DefaultAPIController) GetVideos(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	result, err := c.service.GetVideos(r.Context())
 	if err != nil {
 		w.WriteHeader(500)
@@ -251,6 +259,7 @@ func (c *DefaultAPIController) GetVideos(w http.ResponseWriter, r *http.Request)
 
 // UpdateImage - update an image
 func (c *DefaultAPIController) UpdateImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
 	id := params["id"]
 
@@ -271,6 +280,7 @@ func (c *DefaultAPIController) UpdateImage(w http.ResponseWriter, r *http.Reques
 
 // UpdateVideo - Update a video
 func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
 	id := params["id"]
 

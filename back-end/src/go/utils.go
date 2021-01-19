@@ -41,6 +41,7 @@ func ReadFormFileToFileserver(r *http.Request, key string, path string) (string,
 // EncodeJSONResponse uses the json encoder to write an interface to the http response with an optional status code
 func EncodeJSONResponse(i interface{}, status *int, w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if status != nil {
 		w.WriteHeader(*status)
 	} else {
