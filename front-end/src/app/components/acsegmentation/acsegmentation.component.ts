@@ -40,9 +40,11 @@ export class ACSegmentationComponent implements OnInit {
 
   deleteCurrentImage() {
     let indexFound = this.images.indexOf(this.currentImage)
-    this.images.splice(indexFound,1)
-    this.changeCurrentImageOnDelete(indexFound)
-    // TODO : Appel au service pour supprimer l'image
+    this.imageService.deleteImage(this.currentImage.id).subscribe((image : Image) => {
+      console.log(image)
+      this.images.splice(indexFound,1)
+      this.changeCurrentImageOnDelete(indexFound)
+    })
   }
 
   /**
@@ -80,12 +82,10 @@ export class ACSegmentationComponent implements OnInit {
   loadImages() {
     this.imageService.getImages(this.idVideo)
       .subscribe((images) => {
-        console.log("IMAGES RECUES:", images)
         images.forEach((image) => {
           image.url = environment.fileBaseUrl + image.url
           this.images.push(image)
         })
-        console.log(images)
     })
   }
 
