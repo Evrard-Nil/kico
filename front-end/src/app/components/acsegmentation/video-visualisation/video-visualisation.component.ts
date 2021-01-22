@@ -62,7 +62,7 @@ export class VideoVisualisationComponent implements OnInit {
       console.log(url);
 
       const formData = new FormData()
-      formData.append('name', "undefined");
+      formData.append('name', "Nouvelle image ("+ this.getDurationFromSeconds(time) + ")");
       formData.append('fileName', blob);
       formData.append('secteur_id', "0");
       formData.append('time', this.getDurationFromSeconds(time));
@@ -75,10 +75,20 @@ export class VideoVisualisationComponent implements OnInit {
     },"image/jpeg")
   }
 
+  /**
+   * Retourne une chaine de caractères représentant la durée à partir des secondes passés en paramètre
+   * @param time : Chaine de caractère du format "minutes:secondes"
+   */
   private getDurationFromSeconds(time) {
     var minutes = Math.floor(time / 60);
     var seconds = time - minutes * 60;
-    return minutes+ ":" + seconds
+
+    var secondsString = seconds.toString()
+    // Ajoute le 0 avant les secondes si besoin (6:5 --> 6:05)
+    if(seconds.toString().length == 1){
+      secondsString = "0" + seconds
+    }
+    return minutes+ ":" + secondsString
   }
 
 }
