@@ -35,6 +35,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-radius: 2em;
 }
 
+.button-vert {
+    text-align: center;
+    background-color: green;
+    color: white;
+    padding: 1em;
+    display: block;
+    border-radius: 2em;
+}
+
 .w-full {
     width: 100%;
 }
