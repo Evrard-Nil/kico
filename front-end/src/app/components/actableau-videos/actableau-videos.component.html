@@ -41,7 +41,10 @@
                         <td>{{video.state}}</td>
                         <td>{{video.scorePci}}/39</td>
                         <td>Progression</td>
-                        <td>Segmenter Supprimer</td>
+                        <td><button class="button-gris w-half m-auto my-1"
+                                (click)="segmentate(video.id)">Segmenter</button>
+                            <button class="button-gris w-half m-auto my-1"
+                                (click)="deleteVideo(video.id)">Supprimer</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -49,7 +52,8 @@
     </div>
 
     <div class="center-wrapper">
-        <button id="btn-ajouter-video"><img src="assets/img/iconAdd.png" width=16 height=16 /> Ajouter une
+        <button id="btn-ajouter-video"><img src="assets/img/iconAdd.png" width=16 height=16 (click)="addVideo()" />
+            Ajouter une
             vidéo</button>
     </div>
 </div>
