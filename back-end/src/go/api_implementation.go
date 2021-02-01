@@ -40,11 +40,11 @@ func (s *APIService) AddImageToVideo(ctx context.Context, videoID string, name s
 	log.Print("AddImageToVideo")
 	err := isValidUUID(videoID, "Video ID")
 	if err != nil {
-		return "Video UUID reading error", err
+		return nil, err
 	}
 	err = isValidUUID(imageID, "Image ID")
 	if err != nil {
-		return "Image UUID reading error", err
+		return nil, err
 	}
 	url := "/images/" + imageID + "." + ext
 
@@ -74,7 +74,7 @@ func (s *APIService) AddVideo(ctx context.Context, title string, videoID string,
 	log.Printf("AddVideo")
 	err := isValidUUID(videoID, "Video ID")
 	if err != nil {
-		return "Video UUID reading error", err
+		return nil, err
 	}
 
 	url := "/videos/" + videoID + "." + ext
@@ -104,7 +104,7 @@ func (s *APIService) DeleteImage(ctx context.Context, imageID string, dataFolder
 	log.Printf("DeleteImage")
 	err := isValidUUID(imageID, "Image ID")
 	if err != nil {
-		return "Image UUID reading error", err
+		return nil, err
 	}
 
 	collection := s.dbClient.Database("ico").Collection("images")
@@ -139,7 +139,7 @@ func (s *APIService) DeleteVideo(ctx context.Context, videoID string, dataFolder
 	log.Printf("DeleteVideo")
 	err := isValidUUID(videoID, "video ID")
 	if err != nil {
-		return "video UUID reading error", err
+		return nil, err
 	}
 
 	collection := s.dbClient.Database("ico").Collection("videos")
@@ -174,7 +174,7 @@ func (s *APIService) GetImage(ctx context.Context, imageID string) (interface{},
 	log.Printf("GetImage")
 	err := isValidUUID(imageID, "imageID")
 	if err != nil {
-		return "Image UUID reading error", err
+		return nil, err
 	}
 
 	result := *s.dbClient.Database("ico").Collection("images").FindOne(ctx, bson.M{"_id": imageID})
@@ -197,7 +197,6 @@ func (s *APIService) GetImage(ctx context.Context, imageID string) (interface{},
 func (s *APIService) GetImagesFromVideo(ctx context.Context, videoID string) (interface{}, error) {
 	log.Printf("GetImagesFromVideo")
 	result, err := s.dbClient.Database("ico").Collection("images").Find(ctx, bson.M{"video_id": videoID})
-
 	if err != nil {
 		fmt.Print(err)
 		return nil, err
