@@ -71,7 +71,7 @@ export class ACSegmentationComponent implements OnInit {
         this.video = receivedVideo
         console.log(this.video)
       });
-      
+
       this.video = {
         date : new Date(),
         annotated_by : "Me",
@@ -80,7 +80,7 @@ export class ACSegmentationComponent implements OnInit {
         url : "../../../../assets/videos/patient.mp4",
         state : "en cours",
         title : "Ma video"
-      };  
+      };
   }
 
   /**
@@ -102,26 +102,29 @@ export class ACSegmentationComponent implements OnInit {
       name: "testeur",
       time: "12:09:09",
       video_id: 2,
-      url: '../../../assets/images/tsconfig.app.jpg'
+      url: '../../../assets/images/tsconfig.app.jpg',
+      annotations: []
     }, {
       id: 2,
       secteur_id: 2,
       name: "testeur",
       time: "15:09:29",
       video_id: 2,
-      url: '../../../assets/images/tsconfig.app.jpg'
+      url: '../../../assets/images/tsconfig.app.jpg',
+      annotations: []
     }, {
       id: 3,
       secteur_id: 2,
       name: "testeur",
       time: "09:37:09",
       video_id: 2,
-      url: '../../../assets/images/tsconfig.app.jpg'
+      url: '../../../assets/images/tsconfig.app.jpg',
+      annotations: []
     });
   }
 
   /**
-   * Action du bouton permettant de quitter la page, redirige vers la page d'accueil.  
+   * Action du bouton permettant de quitter la page, redirige vers la page d'accueil.
    * Cette action déclenche également la sauvegarde des images
    */
   terminateSegmentation() {

@@ -1,4 +1,10 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ImageService } from 'src/app/services/image.service';
+import { VideoService } from 'src/app/services/video.service';
+import {
+  Image as CustomImage
+} from 'src/app/model/image';
+import { environment } from 'src/environments/environment'
 
 
 @Component({
@@ -11,6 +17,7 @@ export class ACImageAnnotatorComponent implements OnInit {
   @ViewChild('canvas', {static : true}) public canvas: ElementRef;
   @Input() public width = 1200;
   @Input() public height = 600;
+  @Input() public idVideo;
   // @Input() image: ImageBitmap;
 
 
@@ -33,19 +40,29 @@ export class ACImageAnnotatorComponent implements OnInit {
   private states : Array<ImageData>;
   private increment : number;
   private state:ImageData;
+  private deletedPolygons : Array<Array<([number, number])>>;
 
   private image;
 
+  private receivedImage : Array<CustomImage>;
 
 
-  constructor() {
+
+  constructor(private imageService: ImageService, private videoService : VideoService) {
     this.coordinates = new Array<[number, number]>();
     this.increment = 1;
     this.states = new Array<ImageData>();
     this.polygons =[];
+    this.deletedPolygons = new Array<Array<([number, number])>>();
     this.polygonsByState= new Map<ImageData, Array<Array<([number, number])>>>();
     this.numbers = [0,1,2,3,4,5,6,7,8,5,5,5,5,5];
-    this.images = ['https://picsum.photos/id/237/1200/600', 'https://picsum.photos/id/238/1200/600', 'https://picsum.photos/id/239/1200/600', 'https://picsum.photos/id/240/1200/600'];
+    this.receivedImage = new Array();
+    this.images = new Array();
+    this.idVideo = 'b50905c7-de74-40c6-9d7f-bbedafc98c9f';
+    this.loadImages();
+    console.log(this.images);
+    // this.images = ['https://picsum.photos/id/237/1200/600', 'https://picsum.photos/id/238/1200/600', 'https://picsum.photos/id/239/1200/600', 'https://picsum.photos/id/240/1200/600'];
+
     // this.numbers = Array(5).fill(4); // [4,4,4,4,4]
   }
 
@@ -81,25 +98,43 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   }
 
-  //Permet de revenir en avant sur les états du canvas.
-  redoAction(): void {
-    this.increment-1 < 1 ? 1 : this.increment--;
-    this.state = this.states[this.states.length-this.increment > this.states.length-1 ? this.states.length+1 : this.states.length-this.increment];
-    this.ctx.putImageData(this.state,0,0);
+
+   /**
+   * Charge les images de la vidéo, depuis le serveur
+   */
+  async loadImages() {
+    await this.imageService.getImages(this.idVideo)
+      .subscribe((receivedImage) => {
+        receivedImage.forEach((image) => {
+          this.receivedImage.push(image)
+        })
+        receivedImage.forEach(image => {
+          this.images.push(environment.fileServerBaseUrl+image.url);
+        })
+        console.log(receivedImage)
+    })
+
   }
 
+  //Permet de revenir en avant sur les états du canvas.
+  // redoAction(): void {
+  //   this.increment-1 < 1 ? 1 : this.increment--;
+  //   this.state = this.states[this.states.length-this.increment > this.states.length-1 ? this.states.length+1 : this.states.length-this.increment];
+  //   this.ctx.putImageData(this.state,0,0);
+  // }
+
   //Permet de faire retour arrière sur les états précédents.
-  undoAction(): void {
-    if(this.increment==1){
-      this.ctx.drawImage(this.image, 0,0);
-    } else {
-      this.increment+1>this.states.length ? this.increment = this.states.length : this.increment++;
-      this.state = this.states[this.states.length-this.increment < 0 ? 0 : this.states.length-this.increment];
-      // console.log(this.states.length-this.increment < 0);
-      // console.log(this.states.length-this.increment);
-      this.ctx.putImageData(this.state,0,0);
-    }
-  }
+  // undoAction(): void {
+  //   if(this.increment==1){
+  //     this.ctx.drawImage(this.image, 0,0);
+  //   } else {
+  //     this.increment+1>this.states.length ? this.increment = this.states.length : this.increment++;
+  //     this.state = this.states[this.states.length-this.increment < 0 ? 0 : this.states.length-this.increment];
+  //     // console.log(this.states.length-this.increment < 0);
+  //     // console.log(this.states.length-this.increment);
+  //     this.ctx.putImageData(this.state,0,0);
+  //   }
+  // }
 
 
   //Sauve l'état du canvas.
@@ -111,19 +146,22 @@ export class ACImageAnnotatorComponent implements OnInit {
   saveCanvas():void{
     this.increment=1;
     let state = this.ctx.getImageData(0,0, this.width, this.height);
+    this.state = state;
     this.states.push(state);
+    console.log("this.states : ", this.states);
     this.isDrawing = false;
     let polygon = Array.from(this.coordinates); //Clone de l'array.
     this.polygons.push(polygon);
     let polygons = Array.from(this.polygons);
     this.polygonsByState.set(state, polygons);
     this.coordinates.splice(0, this.coordinates.length); //On remet le tableau de coordonnées du polygone à vide.
-
+    console.log(" (saveCanvas) this polygons : ", this.polygons);
   }
 
   //Permet de passer en mode dessin.
   drawCanvas():void{
     this.polygons = this.polygonsByState.get(this.state);
+    console.log("this polygons state : ", this.polygonsByState);
     console.log("this polygons : ", this.polygons);
     this.increment=1;
     this.isDrawing = true;
@@ -161,6 +199,7 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.ctx.drawImage(this.image, 0,0);
     this.drawPreviousPolygons();
     this.ctx.beginPath();
+    console.log(this.coordinates);
     ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
     for(let i = 1; i < this.coordinates.length; i++){
       ctx.lineTo(this.coordinates[i][0] , this.coordinates[i][1] );
@@ -184,13 +223,41 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.coordinates = [];
     this.states = [];
 
-    this.states.push(this.ctx.getImageData(0,0, this.width, this.height));
-    this.state = this.states[0]
-    this.polygonsByState.set(this.state, []);
+    // this.states.push(this.ctx.getImageData(0,0, this.width, this.height));
+    // this.state = this.states[0]
+    // this.polygonsByState.set(this.state, []);
 
     this.image.src = image;
-    this.ctx.drawImage(this.image, 0, 0);
+    this.receivedImage.forEach(image => {
+      let cutUrl = this.image.src.substring(environment.fileServerBaseUrl.length);
+      if(image.url == cutUrl && image.annotations != undefined){
+        this.coordinates = Array.from(image.annotations);
+        this.drawPolygon(this.ctx);
+        // let state = this.ctx.getImageData(0,0, this.width, this.height);
+        // this.state = state;
+        // this.polygons.push(Array.from(image.annotations));
+        // this.polygonsByState.set(state, Array.from(this.polygons));
+        this.saveCanvas();
+        console.log("this polygons : ", this.polygons);
+      }
+    })
+    // this.ctx.drawImage(this.image, 0, 0);
   }
+
+
+  // undoPolygon(){
+  //   if(this.polygons.length>0){
+  //     // console.log("this polygons :::: ", this.polygons[this.polygons.length-1]);
+  //     this.deletedPolygons.push(Array.from(this.polygons[this.polygons.length-1]));
+  //     this.polygons.pop();
+  //     this.coordinates = this.polygons[0];
+  //     this.drawPolygon(this.ctx);
+  //   }
+  // }
+
+  // redoPolygons(){
+  //   this.polygons.concat(this.deletedPolygons);
+  // }
 
 
   updateState(){
