@@ -1,4 +1,4 @@
-import { ElementRef } from '@angular/core';
+import { AfterViewInit, ElementRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Output } from '@angular/core';
@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './video-visualisation.component.html',
   styleUrls: ['./video-visualisation.component.css']
 })
-export class VideoVisualisationComponent implements OnInit {
+export class VideoVisualisationComponent implements OnInit, AfterViewInit {
 
   @Input() video : Video
   @ViewChild("videoRef") videoReference: ElementRef
