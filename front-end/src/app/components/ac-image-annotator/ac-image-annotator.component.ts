@@ -8,7 +8,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 })
 export class ACImageAnnotatorComponent implements OnInit {
 
-  @ViewChild('canvas', {static : true}) public canvas: ElementRef;
+  @ViewChild('canvas', { static: true }) public canvas: ElementRef;
   @Input() public width = window.innerWidth;
   @Input() public height = 600;
   // @Input() image: ImageBitmap;
@@ -20,13 +20,13 @@ export class ACImageAnnotatorComponent implements OnInit {
   private isDrawing: Boolean;
   private coordinates: Array<([number, number])>;
   private polygons: Array<Array<([number, number])>>;
-  private polygonsByState : Map<ImageData, Array<Array<([number, number])>>>;
+  private polygonsByState: Map<ImageData, Array<Array<([number, number])>>>;
 
 
   //Paramètres pour gérer les undo/redo
-  private states : Array<ImageData>;
-  private increment : number;
-  private state:ImageData;
+  private states: Array<ImageData>;
+  private increment: number;
+  private state: ImageData;
 
   private image;
 
@@ -35,8 +35,8 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.coordinates = new Array<[number, number]>();
     this.increment = 1;
     this.states = new Array<ImageData>();
-    this.polygons =[];
-    this.polygonsByState= new Map<ImageData, Array<Array<([number, number])>>>();
+    this.polygons = [];
+    this.polygonsByState = new Map<ImageData, Array<Array<([number, number])>>>();
 
 
   }
@@ -53,18 +53,18 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.canvas.nativeElement.height = this.height;
 
     this.image = new Image();
-    this.image.src = "../../../assets/tsconfig.app.jpg";
+    //this.image.src = "../../../assets/tsconfig.app.jpg";
 
     this.image.onload = () => {
-      this.ctx.drawImage(this.image, 0,0);
+      this.ctx.drawImage(this.image, 0, 0);
     }
 
-    this.states.push(this.ctx.getImageData(0,0, this.width, this.height));
+    this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
     this.state = this.states[0]
     this.polygonsByState.set(this.state, []);
     this.canvas.nativeElement.addEventListener('mousedown', (e) => {
-      if(this.isDrawing){
-        this.coordinates.push([e.clientX - this.canvas.nativeElement.offsetLeft , e.clientY - this.canvas.nativeElement.offsetTop ]);
+      if (this.isDrawing) {
+        this.coordinates.push([e.clientX - this.canvas.nativeElement.offsetLeft, e.clientY - this.canvas.nativeElement.offsetTop]);
         this.drawPolygon(this.ctx);
       }
     });
@@ -74,18 +74,18 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   //Permet de revenir en avant sur les états du canvas.
   redoAction(): void {
-    this.increment-1 < 1 ? 1 : this.increment--;
-    this.state = this.states[this.states.length-this.increment > this.states.length-1 ? this.states.length+1 : this.states.length-this.increment];
-    this.ctx.putImageData(this.state,0,0);
+    this.increment - 1 < 1 ? 1 : this.increment--;
+    this.state = this.states[this.states.length - this.increment > this.states.length - 1 ? this.states.length + 1 : this.states.length - this.increment];
+    this.ctx.putImageData(this.state, 0, 0);
   }
 
   //Permet de faire retour arrière sur les états précédents.
   undoAction(): void {
-    this.increment+1>this.states.length ? this.increment = this.states.length : this.increment++;
-    this.state = this.states[this.states.length-this.increment < 0 ? 0 : this.states.length-this.increment];
-    console.log(this.states.length-this.increment < 0);
-    console.log(this.states.length-this.increment);
-    this.ctx.putImageData(this.state,0,0);
+    this.increment + 1 > this.states.length ? this.increment = this.states.length : this.increment++;
+    this.state = this.states[this.states.length - this.increment < 0 ? 0 : this.states.length - this.increment];
+    console.log(this.states.length - this.increment < 0);
+    console.log(this.states.length - this.increment);
+    this.ctx.putImageData(this.state, 0, 0);
   }
 
 
@@ -95,9 +95,9 @@ export class ACImageAnnotatorComponent implements OnInit {
    * On récupère l'état actuel du canvas et on le met dans un array qui contient les états précédents
    * On récupère le polygone fraichement dessiné et on le met dans un tableau de polygones qui sera redessiné à chaque fois qu'on repasse en mode dessin.
   */
-  saveCanvas():void{
-    this.increment=1;
-    let state = this.ctx.getImageData(0,0, this.width, this.height);
+  saveCanvas(): void {
+    this.increment = 1;
+    let state = this.ctx.getImageData(0, 0, this.width, this.height);
     this.states.push(state);
     this.isDrawing = false;
     let polygon = Array.from(this.coordinates); //Clone de l'array.
@@ -108,23 +108,23 @@ export class ACImageAnnotatorComponent implements OnInit {
   }
 
   //Permet de passer en mode dessin.
-  drawCanvas():void{
+  drawCanvas(): void {
     this.polygons = this.polygonsByState.get(this.state);
-    this.increment=1;
+    this.increment = 1;
     this.isDrawing = true;
   }
 
   //Permet de garder affiché les polygones précédemment dessinés.
-  drawPreviousPolygons():void{
+  drawPreviousPolygons(): void {
     console.log(this.polygons);
     this.polygons.forEach(polygon => {
-      this.ctx.clearRect(0,0, this.width, this.height);
-      this.ctx.drawImage(this.image, 0,0);
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.ctx.drawImage(this.image, 0, 0);
       this.ctx.beginPath();
-      if(polygon.length>0){
+      if (polygon.length > 0) {
         this.ctx.moveTo(polygon[0][0], polygon[0][1]);
-        for(let i = 1; i < polygon.length; i++){
-          this.ctx.lineTo(polygon[i][0] , polygon[i][1] );
+        for (let i = 1; i < polygon.length; i++) {
+          this.ctx.lineTo(polygon[i][0], polygon[i][1]);
         }
       }
       this.ctx.closePath();
@@ -137,20 +137,20 @@ export class ACImageAnnotatorComponent implements OnInit {
   /*
    * On redessine les polygones précédents à chaque clic, car on doit nettoyer le canvas à chaque clic afin d'obtenir le rendu souhaité.
   */
-  drawPolygon(ctx : CanvasRenderingContext2D): void{
-    ctx.clearRect(0,0, this.width, this.height);
+  drawPolygon(ctx: CanvasRenderingContext2D): void {
+    ctx.clearRect(0, 0, this.width, this.height);
     this.drawPreviousPolygons();
-    this.ctx.drawImage(this.image, 0,0);
+    this.ctx.drawImage(this.image, 0, 0);
     ctx.beginPath();
     ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
-    for(let i = 1; i < this.coordinates.length; i++){
-      ctx.lineTo(this.coordinates[i][0] , this.coordinates[i][1] );
+    for (let i = 1; i < this.coordinates.length; i++) {
+      ctx.lineTo(this.coordinates[i][0], this.coordinates[i][1]);
     }
     ctx.closePath();
     ctx.stroke();
   }
 
-  updateState(){
+  updateState() {
 
   }
 

@@ -37,14 +37,17 @@
                     <tr *ngFor="let video of videos">
                         <td>{{video.title}}</td>
                         <td>{{video.date | date:'dd/MM/yyyy'}}</td>
-                        <td>{{video.annotatedBy}}</td>
+                        <td>{{video.annotate_by}}</td>
                         <td>{{video.state}}</td>
-                        <td>{{video.scorePci}}/39</td>
+                        <td>{{video.score_pci}}/39</td>
                         <td>Progression</td>
-                        <td><button class="button-gris w-half m-auto my-1"
+                        <td><button class="button-action w-half m-auto my-1"
                                 (click)="segmentate(video.id)">Segmenter</button>
-                            <button class="button-gris w-half m-auto my-1"
-                                (click)="deleteVideo(video.id)">Supprimer</button></td>
+                            <button class="button-action w-half m-auto my-1"
+                                (click)="annotate(video.id)">Annoter</button>
+                            <button class="button-action w-half m-auto my-1"
+                                (click)="deleteVideo(video.id)">Supprimer</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -22,26 +22,26 @@ export class ActableauVideosComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadVideos();
-    this.videos.push({
-      id: '91',
-      scorePci: 12,
-      annotatedBy: 'Jean',
-      date: new Date(),
-      state: 'Annoté',
-      title: 'test',
-      url: 'url',
-      path: 'path',
-    }, {
-      id: '92',
-      scorePci: 15,
-      annotatedBy: 'Pierre',
-      date: new Date(),
-      state: 'Annoté',
-      title: 'test',
-      url: 'url',
-      path: 'path',
-    }
-    );
+    /* this.videos.push({
+       id: '91',
+       score_pci: 12,
+       annotated_by: 'Jean',
+       date: new Date(),
+       state: 'Annoté',
+       title: 'test',
+       url: 'url',
+       path: 'path',
+     }, {
+       id: '92',
+       score_pci: 15,
+       annotated_by: 'Pierre',
+       date: new Date(),
+       state: 'Annoté',
+       title: 'test',
+       url: 'url',
+       path: 'path',
+     }
+     );*/
   }
 
   deleteVideo(id): void {
@@ -53,8 +53,8 @@ export class ActableauVideosComponent implements OnInit {
     console.log('add video');
     this.videoService.addVideo({
       id: '92',
-      scorePci: 15,
-      annotatedBy: 'Pierre',
+      score_pci: 15,
+      annotated_by: 'Pierre',
       date: new Date(),
       state: 'Annoté',
       title: 'test',
@@ -99,12 +99,12 @@ export class ActableauVideosComponent implements OnInit {
 
   segmentate(id): void {
     console.log('segmentate ' + id);
-    this.router.navigate(['/segmentation/:id', { queryParams: { id } }]);
+    this.router.navigate(['/segmentation/' + id]);
   }
 
   annotate(id): void {
     console.log('annotate ' + id);
-    this.router.navigate(['/annotation/:id', { queryParams: { id } }]);
+    this.router.navigate(['/annotation/' + id]);
   }
 
   /**
@@ -115,6 +115,9 @@ export class ActableauVideosComponent implements OnInit {
       .subscribe((videos) => {
         console.log('VIDEOS RECUE :', videos);
         videos.forEach((video) => {
+          console.log('video loaded:');
+          console.log(video);
+
           this.videos.push(video);
         });
         console.log(videos);
