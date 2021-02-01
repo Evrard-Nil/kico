@@ -1,0 +1,16 @@
+<div class="flex w-full">
+    <div class="w-2 flex flex-column mx-1">
+        <div class="py-1">
+            <span class="redirection">Retour à la liste des vidéos</span>
+        </div>
+        <div class="w-full">
+            <app-video-visualisation [video]="video" (eventCreateImage)="addImageToList($event)"></app-video-visualisation>
+        </div>
+        <hr width="90%">
+        <app-form-image-information [currentImage]="currentImage" (eventDeleteImage)="deleteCurrentImage()"></app-form-image-information>
+    </div>
+    <div class="w-1 flex flex-column mx-1">
+        <app-list-image [images]="images" (eventSelectedImage)="changeCurrentImage($event)"></app-list-image>
+        <button class="button-gris w-half m-auto my-1" (click)="terminateSegmentation()">Finir la segmentation</button>
+    </div>
+</div>

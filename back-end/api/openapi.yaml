@@ -1,0 +1,335 @@
+openapi: 3.0.0
+info:
+  title: Kico API
+  version: 0.0.0
+servers:
+  - url: http://localhost.com/api/v1
+paths:
+  /videos:
+    summary: Operations on videos
+    description: Path for operations concerning all videos
+    get:
+      summary: Retrieve all videos
+      operationId: getVideos
+      responses:
+        "200":
+          description: List of all videos in db
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Video"
+        default:
+          description: Default error sample response
+
+  /video/{id}:
+    summary: Operation on a single video
+    description: Path for operation concerning the specific video id
+    delete:
+      summary: delete a video
+      operationId: deleteVideo
+      parameters:
+        - description: Numeric ID of the video to delete
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          description: Deletion sucessful
+        default:
+          description: Default error sample response
+    get:
+      operationId: getVideo
+      summary: Retrieve a single video
+      parameters:
+        - description: Numeric ID of the video to get
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+          description: A video
+        default:
+          description: Default error sample response
+    put:
+      operationId: updateVideo
+      summary: Update a video
+      parameters:
+        - description: Numeric ID of the video to update
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      requestBody:
+        description: new data of this video
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Video"
+      responses:
+        "200":
+          description: The updated data for this video
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+        default:
+          description: Default error sample response
+
+  /video:
+    summary: Operation on a single video
+    description: Path for operation concerning the specific video id
+    post:
+      operationId: addVideo
+      summary: Add a video
+      requestBody:
+        description: Videos files
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Video"
+          description: A video
+        default:
+          description: Default error sample response
+
+  /video/{id}/images:
+    summary: Operation on images linked to a video
+    description: Path for operation concerning the images of a specific video id
+    get:
+      operationId: getImagesFromVideo
+      summary: Retrieve all images linked to a video
+      parameters:
+        - description: Numeric ID of the video
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Image"
+          description: images linked to video
+        default:
+          description: Default error sample response
+    post:
+      operationId: addImageToVideo
+      summary: Upload an image linked to a video
+      parameters:
+        - description: Numeric ID of the video
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      requestBody:
+        description: Data of this new iamge
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                fileName:
+                  type: string
+                  format: binary
+                secteur_id:
+                  type: string
+                time:
+                  type: string
+      responses:
+        "200":
+          description: Newly uploaded image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Image"
+        default:
+          description: Default error sample response
+
+  /images/{id}:
+    summary: Operation on a single image
+    description: Path for operation concerning the specific image id
+    get:
+      operationId: getImage
+      summary: Retrieve an image
+      parameters:
+        - description: Numeric ID of the image
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Image"
+          description: An image
+        default:
+          description: Default error sample response
+    put:
+      operationId: updateImage
+      summary: update an image
+      parameters:
+        - description: Numeric ID of the image
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      requestBody:
+        description: New data of image
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Image"
+      responses:
+        "200":
+          description: Newly update image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Image"
+        default:
+          description: Default error sample response
+    delete:
+      operationId: deleteImage
+      summary: Deletes an image
+      parameters:
+        - description: Numeric ID of the image
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          style: simple
+      responses:
+        "200":
+          description: Delete went fine
+        default:
+          description: Default error sample response
+
+components:
+  schemas:
+    Secteur:
+      description: A secteur in abdomen
+      type: object
+      properties:
+        index:
+          type: number
+        name:
+          type: string
+    VideoState:
+      description: State of a video
+      enum:
+        - imported
+        - segmented
+        - annotated
+      nullable: false
+      type: string
+    Video:
+      description: A video stored
+      nullable: false
+      type: object
+      example:
+        id: 5e749324-eb03-4c43-adee-4c2a31c8a999
+        state: imported
+        date: "2021-01-12T14:35:50.756Z"
+        url: "/videos/5e749324-eb03-4c43-adee-4c2a31c8a999.avi"
+        title: greattitle
+      properties:
+        id:
+          type: string
+        state:
+          $ref: "#/components/schemas/VideoState"
+        annotated_by:
+          type: string
+        date:
+          type: string
+          format: date-time
+        score_pci:
+          type: number
+        url:
+          type: string
+        title:
+          type: string
+    Image:
+      description: An extracted image from a video
+      type: object
+      nullable: false
+      example:
+        id: 5093fe4d-b4a6-4bdc-a4d3-1f25890c89e8
+        name: gfhbjknl,
+        video_id: 71a0b60b-0085-4693-805c-47a1bff41e91
+        url: "/images/5093fe4d-b4a6-4bdc-a4d3-1f25890c89e8.svg"
+        annotations:
+          - - 1
+            - 2
+          - - 3
+            - 4
+      properties:
+        id:
+          type: string
+        secteur_id:
+          type: string
+        name:
+          type: string
+        time:
+          type: string
+        video_id:
+          type: string
+        url:
+          type: string
+        annotations:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer

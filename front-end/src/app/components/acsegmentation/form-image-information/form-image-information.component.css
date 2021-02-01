@@ -1,0 +1,42 @@
+.w-2 {
+    width: 66%;
+}
+
+.w-1 {
+    width: 33%;
+}
+
+.h-half {
+    height: 50%;
+}
+
+.m-auto {
+    margin: auto;
+}
+
+.py-1 {
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+.px-1 {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.my-1 {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+img {
+    display: block;
+}
+
+.redirection {
+    font-size: larger;
+}
+
+.no-scroll {
+    overflow: hidden;
+}

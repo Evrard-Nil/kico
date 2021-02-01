@@ -1,0 +1,23 @@
+.titre-rubrique {
+    font-size: x-large;
+    margin-left: auto;
+}
+
+.py-1 {
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+.overflow-y {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.h-half {
+    height: 50%;
+}
+
+.images {
+    height: 45em;
+}
