@@ -136,6 +136,13 @@ export class ACImageAnnotatorComponent implements OnInit {
   //   }
   // }
 
+  arrayEquals(a, b) {
+  return Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index]);
+}
+
 
   //Sauve l'état du canvas.
   /*
@@ -150,10 +157,25 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.states.push(state);
     console.log("this.states : ", this.states);
     this.isDrawing = false;
+    this.receivedImage.forEach(image => {
+      let cutUrl = this.image.src.substring(environment.fileServerBaseUrl.length);
+      if(image.url == cutUrl ){
+        console.log("image annotations : ", image.annotations);
+        console.log("this polygons : ", this.polygons);
+        if(!this.arrayEquals(image.annotations, this.polygons)){
+          console.log("rentre dedans!!!!");
+          image.annotations = this.polygons;
+          this.imageService.updateImage(image);
+        }
+      }
+
+    });
     let polygon = Array.from(this.coordinates); //Clone de l'array.
     this.polygons.push(polygon);
     let polygons = Array.from(this.polygons);
     this.polygonsByState.set(state, polygons);
+
+    console.log("receivedImage : ", this.receivedImage);
     this.coordinates.splice(0, this.coordinates.length); //On remet le tableau de coordonnées du polygone à vide.
     console.log(" (saveCanvas) this polygons : ", this.polygons);
   }
@@ -231,7 +253,8 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.receivedImage.forEach(image => {
       let cutUrl = this.image.src.substring(environment.fileServerBaseUrl.length);
       if(image.url == cutUrl && image.annotations != undefined){
-        this.coordinates = Array.from(image.annotations);
+        this.coordinates = Array.from(image.annotations[0]);
+        this.polygons = Array.from(image.annotations);
         this.drawPolygon(this.ctx);
         // let state = this.ctx.getImageData(0,0, this.width, this.height);
         // this.state = state;
@@ -257,6 +280,16 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   // redoPolygons(){
   //   this.polygons.concat(this.deletedPolygons);
+  // }
+
+  /*
+  *
+  * Sauvegarde les annotations de l'image, et fait un PUT sur l'API pour mettre à jour l'image.
+  *
+  *
+  */
+  // saveImage(){
+
   // }
 
 

@@ -25,7 +25,7 @@ export class ApiService {
   }
 
   doPut<T>(endpoint: string, body: any, options?: object) {
-    return this.http.post<T>(endpoint, body, options)
+    return this.http.put<T>(endpoint, body, options)
     .pipe(
       catchError(this.handleError)
     )
@@ -42,6 +42,6 @@ export class ApiService {
     console.error(error)
     return throwError(
       'Erreur lors de l\'appel à l\'API');
-    
+
   }
 }

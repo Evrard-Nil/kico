@@ -5,7 +5,7 @@ export class Image {
   time: string
   video_id: number
   url: String
-  annotations: Array<([number, number])>
+  annotations: Array<Array<([number, number])>>;
 
   constructor() {}
 }
