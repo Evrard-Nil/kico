@@ -48,6 +48,7 @@ export class FormImageInformationComponent implements OnInit {
     image.time = currentImage.time
     image.url = "/" + this.currentImage.url.match(/images\/(.)*/)[0]
     image.video_id = currentImage.video_id
+    image.annotations = currentImage.annotations
 
     return image
     
