@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/imdario/mergo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -265,6 +266,16 @@ func (s *APIService) GetVideos(ctx context.Context) (interface{}, error) {
 // UpdateImage - update an image
 func (s *APIService) UpdateImage(ctx context.Context, imageID string, image Image) (interface{}, error) {
 	log.Printf("UpdateImage")
+	currentData, err := s.GetImage(ctx, imageID)
+	if err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+	currentImage := currentData.(Image)
+	if err := mergo.Merge(&currentImage, image, mergo.WithOverride); err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
 
 	result, err := s.dbClient.Database("ico").Collection("images").ReplaceOne(ctx, bson.M{"_id": imageID}, image)
 	if err != nil {
