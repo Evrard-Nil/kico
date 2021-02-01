@@ -71,7 +71,8 @@ func main() {
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 		AllowedMethods:   []string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"X-Requested-With"},
+		AllowedHeaders:   []string{"X-Requested-With","Content-Type"},
+		
 	})
 
 	handler := c.Handler(router)
