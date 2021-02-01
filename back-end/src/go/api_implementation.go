@@ -272,7 +272,7 @@ func (s *APIService) UpdateImage(ctx context.Context, imageID string, image Imag
 		return nil, err
 	}
 	currentImage := currentData.(Image)
-	if err := mergo.Merge(&currentImage, image, mergo.WithOverride); err != nil {
+	if err := mergo.Merge(&image, currentImage, mergo.WithOverride); err != nil {
 		fmt.Print(err)
 		return nil, err
 	}
