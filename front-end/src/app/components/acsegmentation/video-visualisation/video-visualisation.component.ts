@@ -25,13 +25,15 @@ export class VideoVisualisationComponent implements OnInit {
     this.eventCreateImage = new EventEmitter()
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     
   }
 
   ngAfterViewInit() {
-    this.videoElement = this.videoReference.nativeElement
-    this.videoElement.crossOrigin = "anonymous"
+    if(this.video) {
+      this.videoElement = this.videoReference.nativeElement
+      this.videoElement.crossOrigin = "anonymous"
+    }
   }
 
   /**

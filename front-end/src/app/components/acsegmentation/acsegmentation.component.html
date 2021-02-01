@@ -3,9 +3,7 @@
         <div class="py-1">
             <span class="redirection">Retour à la liste des vidéos</span>
         </div>
-        <div class="w-full">
-            <app-video-visualisation [video]="video" (eventCreateImage)="addImageToList($event)"></app-video-visualisation>
-        </div>
+        <app-video-visualisation [video]="video" (eventCreateImage)="addImageToList($event)"></app-video-visualisation>
         <hr width="90%">
         <app-form-image-information [currentImage]="currentImage" (eventDeleteImage)="deleteCurrentImage()"></app-form-image-information>
     </div>
