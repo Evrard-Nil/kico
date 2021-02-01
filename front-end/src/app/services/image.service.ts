@@ -7,7 +7,7 @@ import { ApiService } from './api.service'
   providedIn: 'root'
 })
 export class ImageService {
-  constructor(private apiService: ApiService) {   }
+  constructor(private apiService: ApiService) { }
 
   getImages(idVideo: number) {
     return this.apiService.doGet<Array<Image>>(`${environment.apiBaseUrl}/video/${idVideo}/images`)
@@ -22,7 +22,7 @@ export class ImageService {
   }
 
   updateImage(image: Image) {
-    this.apiService.doPut<Image>(`${environment.apiBaseUrl}/images/${image.id}`, image)
+    return this.apiService.doPut<Image>(`${environment.apiBaseUrl}/images/${image.id}`, image)
   }
 
   deleteImage(idImage: number) {
