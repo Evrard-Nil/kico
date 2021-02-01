@@ -57,9 +57,7 @@ export class VideoVisualisationComponent implements OnInit {
   saveImage(canvasElement: HTMLCanvasElement) {
     canvasElement.toBlob((blob) => {
       const time = Math.round(this.videoElement.currentTime)
-      console.log(blob)
       var url = URL.createObjectURL(blob)
-      console.log(url);
 
       const formData = new FormData()
       formData.append('name', "Nouvelle image ("+ this.getDurationFromSeconds(time) + ")");
@@ -67,7 +65,6 @@ export class VideoVisualisationComponent implements OnInit {
       formData.append('secteur_id', "0");
       formData.append('time', this.getDurationFromSeconds(time));
 
-      console.log(this.getDurationFromSeconds(time))
       this.imageService.saveImage(this.video.id, formData).subscribe((image) => {
         image.url = environment.fileBaseUrl + image.url
         this.eventCreateImage.emit(image)
