@@ -23,11 +23,12 @@ import (
 type DefaultAPIController struct {
 	service    DefaultAPIServicer
 	dataFolder string
+	errStatus  int
 }
 
 // NewDefaultAPIController creates a default api controller
 func NewDefaultAPIController(s DefaultAPIServicer, df string) Router {
-	return &DefaultAPIController{service: s, dataFolder: df}
+	return &DefaultAPIController{service: s, dataFolder: df, errStatus: 500}
 }
 
 // Routes returns all of the api route for the DefaultApiController
@@ -103,7 +104,7 @@ func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Print(err)
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -124,16 +125,15 @@ func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 
 	ext, err := ReadFormFileToFileserver(r, "fileName", filepath)
 	if err != nil {
-
 		fmt.Print(err)
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
 	result, err := c.service.AddImageToVideo(r.Context(), id, name, secteurID, time, pid, ext)
 	if err != nil {
 		fmt.Print(err)
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -147,7 +147,7 @@ func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) 
 	err := r.ParseForm()
 	if err != nil {
 		print(err)
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 	title := r.FormValue("title")
@@ -157,14 +157,14 @@ func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) 
 	ext, err := ReadFormFileToFileserver(r, "fileName", filepath)
 	if err != nil {
 		print(err)
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
 	result, err := c.service.AddVideo(r.Context(), title, vid, ext)
 	if err != nil {
 		print(err)
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -179,7 +179,7 @@ func (c *DefaultAPIController) DeleteImage(w http.ResponseWriter, r *http.Reques
 
 	result, err := c.service.DeleteImage(r.Context(), id, c.dataFolder)
 	if err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -194,7 +194,7 @@ func (c *DefaultAPIController) DeleteVideo(w http.ResponseWriter, r *http.Reques
 
 	result, err := c.service.DeleteVideo(r.Context(), id, c.dataFolder)
 	if err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -224,7 +224,7 @@ func (c *DefaultAPIController) GetImagesFromVideo(w http.ResponseWriter, r *http
 
 	result, err := c.service.GetImagesFromVideo(r.Context(), id)
 	if err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -239,7 +239,7 @@ func (c *DefaultAPIController) GetVideo(w http.ResponseWriter, r *http.Request) 
 
 	result, err := c.service.GetVideo(r.Context(), id)
 	if err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -251,7 +251,7 @@ func (c *DefaultAPIController) GetVideos(w http.ResponseWriter, r *http.Request)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	result, err := c.service.GetVideos(r.Context())
 	if err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -266,13 +266,13 @@ func (c *DefaultAPIController) UpdateImage(w http.ResponseWriter, r *http.Reques
 
 	image := &Image{}
 	if err := json.NewDecoder(r.Body).Decode(&image); err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
 	result, err := c.service.UpdateImage(r.Context(), id, *image)
 	if err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
@@ -287,13 +287,13 @@ func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Reques
 
 	video := &Video{}
 	if err := json.NewDecoder(r.Body).Decode(&video); err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
 	result, err := c.service.UpdateVideo(r.Context(), id, *video)
 	if err != nil {
-		w.WriteHeader(500)
+		EncodeJSONResponse(err, &c.errStatus, w)
 		return
 	}
 
