@@ -289,7 +289,17 @@ func (s *APIService) UpdateImage(ctx context.Context, imageID string, image Imag
 // UpdateVideo - Update a video
 func (s *APIService) UpdateVideo(ctx context.Context, videoID string, video Video) (interface{}, error) {
 	log.Printf("UpdateVideo")
-	result, err := s.dbClient.Database("ico").Collection("videos").ReplaceOne(ctx, bson.M{"_id": videoID}, video)
+	currentData, err := s.GetImage(ctx, videoID)
+	if err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+	currentVideo := currentData.(Image)
+	if err := mergo.Merge(&currentVideo, video, mergo.WithOverride); err != nil {
+		fmt.Print(err)
+		return nil, err
+	}
+	result, err := s.dbClient.Database("ico").Collection("videos").ReplaceOne(ctx, bson.M{"_id": videoID}, currentVideo)
 	if err != nil {
 		fmt.Print(err)
 		return nil, err
