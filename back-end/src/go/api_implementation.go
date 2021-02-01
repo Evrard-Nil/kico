@@ -38,8 +38,14 @@ func NewAPIService(client mongo.Client) DefaultAPIServicer {
 // AddImageToVideo - Upload an image linked to a video
 func (s *APIService) AddImageToVideo(ctx context.Context, videoID string, name string, secteurID string, time string, imageID string, ext string) (interface{}, error) {
 	log.Print("AddImageToVideo")
-	isValidUUID(videoID, "Video ID")
-	isValidUUID(imageID, "Image ID")
+	err := isValidUUID(videoID, "Video ID")
+	if err != nil {
+		return "Video UUID reading error", err
+	}
+	err = isValidUUID(imageID, "Image ID")
+	if err != nil {
+		return "Image UUID reading error", err
+	}
 	url := "/images/" + imageID + "." + ext
 
 	image := Image{
@@ -66,7 +72,10 @@ func (s *APIService) AddImageToVideo(ctx context.Context, videoID string, name s
 // AddVideo - Add a  video
 func (s *APIService) AddVideo(ctx context.Context, title string, videoID string, ext string) (interface{}, error) {
 	log.Printf("AddVideo")
-	isValidUUID(videoID, "Video ID")
+	err := isValidUUID(videoID, "Video ID")
+	if err != nil {
+		return "Video UUID reading error", err
+	}
 
 	url := "/videos/" + videoID + "." + ext
 
@@ -93,7 +102,10 @@ func (s *APIService) AddVideo(ctx context.Context, title string, videoID string,
 // DeleteImage - Deletes an image
 func (s *APIService) DeleteImage(ctx context.Context, imageID string, dataFolder string) (interface{}, error) {
 	log.Printf("DeleteImage")
-	isValidUUID(imageID, "Image ID")
+	err := isValidUUID(imageID, "Image ID")
+	if err != nil {
+		return "Image UUID reading error", err
+	}
 
 	collection := s.dbClient.Database("ico").Collection("images")
 	result, err := collection.DeleteOne(ctx, bson.M{"_id": imageID})
@@ -125,7 +137,10 @@ func (s *APIService) DeleteImage(ctx context.Context, imageID string, dataFolder
 // DeleteVideo - delete a video
 func (s *APIService) DeleteVideo(ctx context.Context, videoID string, dataFolder string) (interface{}, error) {
 	log.Printf("DeleteVideo")
-	isValidUUID(videoID, "video ID")
+	err := isValidUUID(videoID, "video ID")
+	if err != nil {
+		return "video UUID reading error", err
+	}
 
 	collection := s.dbClient.Database("ico").Collection("videos")
 	result, err := collection.DeleteOne(ctx, bson.M{"_id": videoID})
@@ -157,10 +172,13 @@ func (s *APIService) DeleteVideo(ctx context.Context, videoID string, dataFolder
 // GetImage - Retrieve an image
 func (s *APIService) GetImage(ctx context.Context, imageID string) (interface{}, error) {
 	log.Printf("GetImage")
-	isValidUUID(imageID, "imageID")
+	err := isValidUUID(imageID, "imageID")
+	if err != nil {
+		return "Image UUID reading error", err
+	}
 
 	result := *s.dbClient.Database("ico").Collection("images").FindOne(ctx, bson.M{"_id": imageID})
-	err := result.Err()
+	err = result.Err()
 	if err != nil {
 		fmt.Print(err)
 		return "", err
@@ -271,9 +289,11 @@ func (s *APIService) UpdateVideo(ctx context.Context, videoID string, video Vide
 }
 
 // isValidUUID - Check if id is a valid uuid
-func isValidUUID(id string, parameterName string) {
+func isValidUUID(id string, parameterName string) error {
 	_, err := uuid.Parse(id)
 	if err != nil {
-		log.Fatalf("%s should be of UUID form. Found: %s", parameterName, id)
+		fmt.Printf("%s should be of UUID form. Found: %s", parameterName, id)
+		return err
 	}
+	return nil
 }
