@@ -1,9 +1,9 @@
 <div class="flex w-full">
     <div class="w-2 flex flex-column mx-1">
-        <div class="py-1">
-            <span class="redirection">Retour à la liste des vidéos</span>
+        <div class="pb-1">
+            <span class="bold titre-rubrique">Segmentation</span>
         </div>
-        <app-video-visualisation [video]="video" (eventCreateImage)="addImageToList($event)"></app-video-visualisation>
+        <app-video-visualisation *ngIf="video" [video]="video" (eventCreateImage)="addImageToList($event)"></app-video-visualisation>
         <hr width="90%">
         <app-form-image-information [currentImage]="currentImage" (eventDeleteImage)="deleteCurrentImage()"></app-form-image-information>
     </div>
