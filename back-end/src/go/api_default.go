@@ -109,10 +109,6 @@ func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 
 	params := mux.Vars(r)
 	id := params["id"]
-	if err != nil {
-		handleError(w, err)
-		return
-	}
 
 	// Parse params
 	time := r.FormValue("time")
@@ -300,6 +296,6 @@ func handleError(w http.ResponseWriter, err error) {
 		w.Write([]byte(fmt.Sprintf("%d - %s", e.code, e.message)))
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprintf("500 - %s", err)))
+		w.Write([]byte(fmt.Sprintf("500 - %v", err)))
 	}
 }
