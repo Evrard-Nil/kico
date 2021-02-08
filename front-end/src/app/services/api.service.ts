@@ -42,6 +42,6 @@ export class ApiService {
     console.error(error)
     return throwError(
       'Erreur lors de l\'appel à l\'API');
-    
+
   }
 }

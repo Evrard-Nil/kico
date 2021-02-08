@@ -1,0 +1,15 @@
+:host {
+  display: grid;
+
+  /*Defaults for Host Binding */
+  gap: 5px;
+  grid-template-rows: repeat(5, 1fr);
+
+  grid-auto-flow: column;
+  height: 50%;
+  max-height: 50%;
+  position: absolute;
+  padding: 10px;
+  margin-bottom: 5px;
+  width: max-content;
+}

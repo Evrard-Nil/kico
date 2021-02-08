@@ -6,6 +6,6 @@ export class Image {
   video_id: String
   url: String
   annotations: Array<Array<([number, number])>>;
-  
+
   constructor() {}
 }

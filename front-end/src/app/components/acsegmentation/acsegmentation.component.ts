@@ -94,7 +94,7 @@ export class ACSegmentationComponent implements OnInit {
   }
 
   /**
-   * Action du bouton permettant de quitter la page, redirige vers la page d'accueil.  
+   * Action du bouton permettant de quitter la page, redirige vers la page d'accueil.
    * Cette action déclenche également la sauvegarde des images
    */
   terminateSegmentation() {

@@ -6,25 +6,31 @@ import { ACImageAnnotatorComponent } from './components/ac-image-annotator/ac-im
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ACImageViewComponent } from './components/ac-image-view/ac-image-view.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
-import { ACSegmentationComponent } from './components/acsegmentation/acsegmentation.component';
-import { ACHeaderComponent } from './components/acheader/acheader.component';
-import { ImageThumbnailComponent } from './components/acsegmentation/image-thumbnail/image-thumbnail.component';
-import { ListImageComponent } from './components/acsegmentation/list-image/list-image.component';
-import { FormImageInformationComponent } from './components/acsegmentation/form-image-information/form-image-information.component';
-import { VideoVisualisationComponent } from './components/acsegmentation/video-visualisation/video-visualisation.component';
+import { ContainerComponent } from './components/ac-image-annotator/container/container.component';
+import { ItemComponent } from './components/ac-image-annotator/container/item/item.component';
+import { ConnectorDirective } from './components/ac-image-annotator/container/connector.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { FormImageInformationComponent } from './components/acsegmentation/form-image-information/form-image-information.component';
+import { ACHeaderComponent } from './components/acheader/acheader.component'
+import { ListImageComponent } from './components/acsegmentation/list-image/list-image.component'
+import { ImageThumbnailComponent } from './components/acsegmentation/image-thumbnail/image-thumbnail.component';
+import { ACSegmentationComponent } from './components/acsegmentation/acsegmentation.component'
+import { VideoVisualisationComponent } from './components/acsegmentation/video-visualisation/video-visualisation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ACImageAnnotatorComponent,
     ACImageViewComponent,
-    ACSegmentationComponent,
-    ACHeaderComponent,
-    ImageThumbnailComponent,
-    ListImageComponent,
+    ContainerComponent,
+    ItemComponent,
+    ConnectorDirective,
     FormImageInformationComponent,
+    ACHeaderComponent,
+    ListImageComponent,
+    ImageThumbnailComponent,
+    ACSegmentationComponent,
     VideoVisualisationComponent
   ],
   imports: [
