@@ -16,6 +16,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/rs/cors"
+
 	openapi "github.com/evrard-nil/kico/back-end/src/go"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -25,14 +27,22 @@ const (
 	// IcoDataFolderEnv represents the name of the environnement variable defining
 	// where images and videos should be stored
 	IcoDataFolderEnv = "ICO_DATA_STORAGE"
+	// MondoDB adress (localhost for dev)
+	dbAdress = "mongo"
+	// MondoDB port (27100 for dev)
+	dbPort = "27017"
+	// MongoDB user
+	dbUser = "mongoadmin"
+	// MongoDB password
+	dbPassword = "secret"
 	// Port defines the listening port number
 	port = "8080"
 )
 
 func main() {
 	log.Printf("Server started")
-
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongoadmin:secret@localhost:27017"))
+	uri := "mongodb://" + dbUser + ":" + dbPassword + "@" + dbAdress + ":" + dbPort
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,11 +63,18 @@ func main() {
 		log.Fatalf("Data folder is not set up in environement variables. Check %s variable to set it up.", IcoDataFolderEnv)
 	}
 
-	APIService := openapi.NewAPIService(*client, dataFolder)
-	APIController := openapi.NewDefaultApiController(APIService)
+	APIService := openapi.NewAPIService(*client)
+	APIController := openapi.NewDefaultAPIController(APIService, dataFolder)
 
 	router := openapi.NewRouter(APIController)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"X-Requested-With", "Content-Type"},
+	})
 
+	handler := c.Handler(router)
 	log.Printf("Starting to listen on %s.", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }

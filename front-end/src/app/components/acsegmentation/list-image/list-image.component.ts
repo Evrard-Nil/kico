@@ -19,11 +19,14 @@ export class ListImageComponent implements OnInit {
   @Input() images: Array <Image>;
   @Output() eventSelectedImage: EventEmitter<Image>;
 
+  imageSelected : Image
+
   constructor() {
 	this.eventSelectedImage = new EventEmitter();
   }
 
   changeSelectedImage(image: Image) {
+    this.imageSelected = image
 	  this.eventSelectedImage.emit(image);
   }
 

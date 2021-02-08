@@ -11,24 +11,27 @@ package openapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
-// A DefaultApiController binds http requests to an api service and writes the service results to the http response
-type DefaultApiController struct {
-	service DefaultApiServicer
+// A DefaultAPIController binds http requests to an api service and writes the service results to the http response
+type DefaultAPIController struct {
+	service    DefaultAPIServicer
+	dataFolder string
 }
 
-// NewDefaultApiController creates a default api controller
-func NewDefaultApiController(s DefaultApiServicer) Router {
-	return &DefaultApiController{service: s}
+// NewDefaultAPIController creates a default api controller
+func NewDefaultAPIController(s DefaultAPIServicer, df string) Router {
+	return &DefaultAPIController{service: s, dataFolder: df}
 }
 
 // Routes returns all of the api route for the DefaultApiController
-func (c *DefaultApiController) Routes() Routes {
+func (c *DefaultAPIController) Routes() Routes {
 	return Routes{
 		{
 			"AddImageToVideo",
@@ -94,32 +97,38 @@ func (c *DefaultApiController) Routes() Routes {
 }
 
 // AddImageToVideo - Upload an image linked to a video
-func (c *DefaultApiController) AddImageToVideo(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	r.ParseMultipartForm(5 << 20)
 	err := r.ParseForm()
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
 	params := mux.Vars(r)
-	id, err := parseInt32Parameter(params["id"])
+	id := params["id"]
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
-	name := r.FormValue("name")
-	fileName, err := ReadFormFileToTempFile(r, "fileName")
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
-
-	secteurId := r.FormValue("secteurId")
+	// Parse params
 	time := r.FormValue("time")
-	result, err := c.service.AddImageToVideo(r.Context(), id, name, fileName, secteurId, time)
+	name := r.FormValue("name")
+	secteurID := r.FormValue("secteurId")
+	pid := uuid.New().String()
+	filepath := c.dataFolder + "/images/" + pid
+
+	ext, err := ReadFormFileToFileserver(r, "fileName", filepath)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
+		return
+	}
+
+	result, err := c.service.AddImageToVideo(r.Context(), id, name, secteurID, time, pid, ext)
+	if err != nil {
+		handleError(w, err)
 		return
 	}
 
@@ -127,23 +136,27 @@ func (c *DefaultApiController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 }
 
 // AddVideo - Add a  video
-func (c *DefaultApiController) AddVideo(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	r.ParseMultipartForm(500 << 20)
 	err := r.ParseForm()
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
-
 	title := r.FormValue("title")
-	fileName, err := ReadFormFileToTempFile(r, "fileName")
+
+	vid := uuid.New().String()
+	filepath := c.dataFolder + "/videos/" + vid
+	ext, err := ReadFormFileToFileserver(r, "fileName", filepath)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
-	result, err := c.service.AddVideo(r.Context(), title, fileName)
+	result, err := c.service.AddVideo(r.Context(), title, vid, ext)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
@@ -151,17 +164,14 @@ func (c *DefaultApiController) AddVideo(w http.ResponseWriter, r *http.Request) 
 }
 
 // DeleteImage - Deletes an image
-func (c *DefaultApiController) DeleteImage(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) DeleteImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
-	id, err := parseInt32Parameter(params["id"])
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
+	id := params["id"]
 
-	result, err := c.service.DeleteImage(r.Context(), id)
+	result, err := c.service.DeleteImage(r.Context(), id, c.dataFolder)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
@@ -169,17 +179,14 @@ func (c *DefaultApiController) DeleteImage(w http.ResponseWriter, r *http.Reques
 }
 
 // DeleteVideo - delete a video
-func (c *DefaultApiController) DeleteVideo(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) DeleteVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
-	id, err := parseInt32Parameter(params["id"])
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
+	id := params["id"]
 
-	result, err := c.service.DeleteVideo(r.Context(), id)
+	result, err := c.service.DeleteVideo(r.Context(), id, c.dataFolder)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
@@ -187,17 +194,14 @@ func (c *DefaultApiController) DeleteVideo(w http.ResponseWriter, r *http.Reques
 }
 
 // GetImage - Retrieve an image
-func (c *DefaultApiController) GetImage(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) GetImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
-	id, err := parseInt32Parameter(params["id"])
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
+	id := params["id"]
 
 	result, err := c.service.GetImage(r.Context(), id)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
@@ -205,17 +209,13 @@ func (c *DefaultApiController) GetImage(w http.ResponseWriter, r *http.Request) 
 }
 
 // GetImagesFromVideo - Retrieve all images linked to a video
-func (c *DefaultApiController) GetImagesFromVideo(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) GetImagesFromVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
-	id, err := parseInt32Parameter(params["id"])
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
-
+	id := params["id"]
 	result, err := c.service.GetImagesFromVideo(r.Context(), id)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
@@ -223,17 +223,14 @@ func (c *DefaultApiController) GetImagesFromVideo(w http.ResponseWriter, r *http
 }
 
 // GetVideo - Retrieve a single video
-func (c *DefaultApiController) GetVideo(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) GetVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
-	id, err := parseInt32Parameter(params["id"])
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
+	id := params["id"]
 
 	result, err := c.service.GetVideo(r.Context(), id)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
@@ -241,10 +238,11 @@ func (c *DefaultApiController) GetVideo(w http.ResponseWriter, r *http.Request) 
 }
 
 // GetVideos - Retrieve all videos
-func (c *DefaultApiController) GetVideos(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) GetVideos(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	result, err := c.service.GetVideos(r.Context())
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
@@ -252,23 +250,20 @@ func (c *DefaultApiController) GetVideos(w http.ResponseWriter, r *http.Request)
 }
 
 // UpdateImage - update an image
-func (c *DefaultApiController) UpdateImage(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) UpdateImage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
-	id, err := parseInt32Parameter(params["id"])
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
+	id := params["id"]
 
 	image := &Image{}
 	if err := json.NewDecoder(r.Body).Decode(&image); err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
 	result, err := c.service.UpdateImage(r.Context(), id, *image)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
@@ -276,25 +271,28 @@ func (c *DefaultApiController) UpdateImage(w http.ResponseWriter, r *http.Reques
 }
 
 // UpdateVideo - Update a video
-func (c *DefaultApiController) UpdateVideo(w http.ResponseWriter, r *http.Request) {
+func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
-	id, err := parseInt32Parameter(params["id"])
-	if err != nil {
-		w.WriteHeader(500)
-		return
-	}
+	id := params["id"]
 
 	video := &Video{}
 	if err := json.NewDecoder(r.Body).Decode(&video); err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
 	result, err := c.service.UpdateVideo(r.Context(), id, *video)
 	if err != nil {
-		w.WriteHeader(500)
+		handleError(w, err)
 		return
 	}
 
 	EncodeJSONResponse(result, nil, w)
+}
+
+func handleError(w http.ResponseWriter, err error) {
+	fmt.Print(err)
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write([]byte(fmt.Sprintf("500 - %s", err)))
 }

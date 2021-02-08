@@ -11,8 +11,7 @@ package openapi
 
 // Secteur - A secteur in abdomen
 type Secteur struct {
+	Index float32 `json:"index,omitempty" bson:"age"`
 
-	Index float32 `json:"index,omitempty"`
-
-	Name string `json:"name,omitempty"`
+	Name string `json:"name,omitempty" bson:"age"`
 }

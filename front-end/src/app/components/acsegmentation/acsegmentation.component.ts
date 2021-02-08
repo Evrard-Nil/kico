@@ -11,6 +11,7 @@ import {
 } from 'src/app/model/video';
 import { ImageService } from 'src/app/services/image.service';
 import { VideoService } from 'src/app/services/video.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-acsegmentation',
@@ -21,11 +22,11 @@ export class ACSegmentationComponent implements OnInit {
   images: Array <Image> ;
   video: Video;
   currentImage: Image;
-  private idVideo: number;
+  private idVideo: String;
 
   constructor(private videoService : VideoService, private imageService: ImageService, private route: ActivatedRoute) {
     this.images = new Array();
-    this.idVideo = +this.route.snapshot.paramMap.get('id');
+    this.idVideo = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit(): void {
@@ -39,9 +40,11 @@ export class ACSegmentationComponent implements OnInit {
 
   deleteCurrentImage() {
     let indexFound = this.images.indexOf(this.currentImage)
-    this.images.splice(indexFound,1)
-    this.changeCurrentImageOnDelete(indexFound)
-    // TODO : Appel au service pour supprimer l'image
+    this.imageService.deleteImage(this.currentImage.id).subscribe((image : Image) => {
+      console.log(image)
+      this.images.splice(indexFound,1)
+      this.changeCurrentImageOnDelete(indexFound)
+    })
   }
 
   /**
@@ -67,20 +70,10 @@ export class ACSegmentationComponent implements OnInit {
   loadVideo() {
     this.videoService.getVideo(this.idVideo)
       .subscribe((receivedVideo: Video) => {
-        console.log("VIDEO RECUE :",receivedVideo)
         this.video = receivedVideo
-        console.log(this.video)
+        // Ajoute la base de l'url pour permettre la lecture
+        this.video.url = environment.fileBaseUrl + this.video.url
       });
-      
-      this.video = {
-        date : new Date(),
-        annotated_by : "Me",
-        score_pci : 3,
-        id : 23,
-        url : "../../../../assets/videos/patient.mp4",
-        state : "en cours",
-        title : "Ma video"
-      };  
   }
 
   /**
@@ -89,35 +82,15 @@ export class ACSegmentationComponent implements OnInit {
   loadImages() {
     this.imageService.getImages(this.idVideo)
       .subscribe((images) => {
-        console.log("IMAGES RECUES:", images)
         images.forEach((image) => {
+          image.url = environment.fileBaseUrl + image.url
           this.images.push(image)
         })
-        console.log(images)
     })
+  }
 
-    this.images.push({
-      id: 1,
-      secteur_id: 1,
-      name: "testeur",
-      time: "12:09:09",
-      video_id: 2,
-      url: '../../../assets/images/tsconfig.app.jpg'
-    }, {
-      id: 2,
-      secteur_id: 2,
-      name: "testeur",
-      time: "15:09:29",
-      video_id: 2,
-      url: '../../../assets/images/tsconfig.app.jpg'
-    }, {
-      id: 3,
-      secteur_id: 2,
-      name: "testeur",
-      time: "09:37:09",
-      video_id: 2,
-      url: '../../../assets/images/tsconfig.app.jpg'
-    });
+  addImageToList(newImage: Image) {
+    this.images.push(newImage)
   }
 
   /**

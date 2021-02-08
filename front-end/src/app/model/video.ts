@@ -1,5 +1,5 @@
 export class Video {
-  id: number
+  id: String
   annotated_by: string
   date: Date
   score_pci: number

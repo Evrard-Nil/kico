@@ -1,4 +1,4 @@
-<div class="block-image flex flex-column" (click)="selectThisImage()">
-    <img class="thumbnail" [src]="image.url">
+<div class="block-image flex flex-column" (click)="selectThisImage()" [ngStyle]="isSelected ? {'border' : 'solid', 'border-color' : 'red'} : {}">
+    <img class="w-full" [src]="image.url">
     <span class="description-image">{{image.name}}</span>
 </div>
