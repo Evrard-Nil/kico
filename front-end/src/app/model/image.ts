@@ -1,9 +1,9 @@
 export class Image {
-  id: number
-  secteur_id: number
+  id: String
+  secteur_id: String
   name: String
-  time: string
-  video_id: number
+  time: String
+  video_id: String
   url: String
   annotations: Array<Array<([number, number])>>;
 

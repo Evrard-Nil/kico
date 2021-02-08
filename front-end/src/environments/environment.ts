@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiBaseUrl: 'http://90.105.212.252:8080/api/v1',
-  fileServerBaseUrl : 'http://90.105.212.252:8082'
+  fileBaseUrl: 'http://90.105.212.252:8082'
 };
 
 /*

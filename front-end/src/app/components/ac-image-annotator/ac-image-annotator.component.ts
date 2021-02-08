@@ -110,7 +110,7 @@ export class ACImageAnnotatorComponent implements OnInit {
           this.receivedImage.push(image)
         })
         receivedImage.forEach(image => {
-          this.images.push(environment.fileServerBaseUrl + image.url);
+          this.images.push(environment.fileBaseUrl + image.url);
         })
       })
 
@@ -177,7 +177,7 @@ export class ACImageAnnotatorComponent implements OnInit {
     }
 
     this.receivedImage.forEach(image => {
-      let cutUrl = this.image.src.substring(environment.fileServerBaseUrl.length);
+      let cutUrl = this.image.src.substring(environment.fileBaseUrl.length);
       if (image.url == cutUrl) {
         if (!this.arrayEquals(image.annotations, this.polygons)) {
           let tempImage = new CustomImage();
@@ -274,7 +274,7 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.image.onload = () => {
       this.ctx.drawImage(this.image, 0, 0);
       this.receivedImage.forEach(image => {
-        let cutUrl = this.image.src.substring(environment.fileServerBaseUrl.length);
+        let cutUrl = this.image.src.substring(environment.fileBaseUrl.length);
         if (image.url == cutUrl && image.annotations != undefined) {
           // this.coordinates = Array.from(image.annotations[0]);
           this.polygons = Array.from(image.annotations);

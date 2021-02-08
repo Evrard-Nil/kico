@@ -16,6 +16,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/rs/cors"
+
 	openapi "github.com/evrard-nil/kico/back-end/src/go"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -65,7 +67,14 @@ func main() {
 	APIController := openapi.NewDefaultAPIController(APIService, dataFolder)
 
 	router := openapi.NewRouter(APIController)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"X-Requested-With", "Content-Type"},
+	})
 
+	handler := c.Handler(router)
 	log.Printf("Starting to listen on %s.", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }

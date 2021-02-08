@@ -23,5 +23,5 @@ type Image struct {
 
 	URL string `json:"url,omitempty" bson:"url"`
 
-	Annotations [][2]int `json:"annotations,omitempty" bson:"annotations"`
+	Annotations [][][2]int `json:"annotations,omitempty" bson:"annotations"`
 }

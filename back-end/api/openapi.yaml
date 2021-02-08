@@ -327,3 +327,9 @@ components:
           type: string
         url:
           type: string
+        annotations:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
