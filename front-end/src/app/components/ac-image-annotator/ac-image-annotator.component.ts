@@ -5,6 +5,7 @@ import {
   Image as CustomImage
 } from 'src/app/model/image';
 import { environment } from 'src/environments/environment'
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -48,7 +49,7 @@ export class ACImageAnnotatorComponent implements OnInit {
 
 
 
-  constructor(private imageService: ImageService, private videoService: VideoService) {
+  constructor(private imageService: ImageService, private route: ActivatedRoute) {
     this.coordinates = new Array<[number, number]>();
     this.increment = 1;
     this.states = new Array<ImageData>();
@@ -60,7 +61,7 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.images = new Array();
     this.idVideo = 'b50905c7-de74-40c6-9d7f-bbedafc98c9f';
     this.loadImages();
-    console.log(this.images);
+    this.idVideo = +this.route.snapshot.paramMap.get('id');
     // this.images = ['https://picsum.photos/id/237/1200/600', 'https://picsum.photos/id/238/1200/600', 'https://picsum.photos/id/239/1200/600', 'https://picsum.photos/id/240/1200/600'];
 
     // this.numbers = Array(5).fill(4); // [4,4,4,4,4]
@@ -111,7 +112,6 @@ export class ACImageAnnotatorComponent implements OnInit {
         receivedImage.forEach(image => {
           this.images.push(environment.fileServerBaseUrl + image.url);
         })
-        console.log(receivedImage)
       })
 
   }
@@ -169,22 +169,16 @@ export class ACImageAnnotatorComponent implements OnInit {
     let state = this.ctx.getImageData(0, 0, this.width, this.height);
     this.state = state;
     this.states.push(state);
-    console.log("this.states : ", this.states);
     this.isDrawing = false;
 
     let polygon = Array.from(this.coordinates); //Clone de l'array.
-    console.log("polygon :", polygon);
-    if (polygon != []) {
-      console.log("rentre dedans mais devrait pas");
+    if (polygon.length !== 0) {
       this.polygons.push(polygon);
     }
 
     this.receivedImage.forEach(image => {
       let cutUrl = this.image.src.substring(environment.fileServerBaseUrl.length);
       if (image.url == cutUrl) {
-        console.log("image annotations : ", image.annotations);
-        console.log("this polygons : ", this.polygons);
-        console.log("sont ils égaux ? ", this.arrayEquals(image.annotations, this.polygons));
         if (!this.arrayEquals(image.annotations, this.polygons)) {
           let tempImage = new CustomImage();
           tempImage.id = image.id;
@@ -197,11 +191,8 @@ export class ACImageAnnotatorComponent implements OnInit {
             image.annotations = [];
           }
           tempImage.annotations = image.annotations.concat(Array.from(this.polygons));
-          console.log("tempImage :::", tempImage);
           // console.log("Image avant update : ", image);
-          console.log("this polygons avant update : ", this.polygons);
           this.imageService.updateImage(tempImage).subscribe((img) => {
-            console.log("image modifiée : ", img);
           });
         }
       }
@@ -210,17 +201,12 @@ export class ACImageAnnotatorComponent implements OnInit {
 
     let polygons = Array.from(this.polygons);
     this.polygonsByState.set(state, polygons);
-
-    console.log("receivedImage : ", this.receivedImage);
     this.coordinates.splice(0, this.coordinates.length); //On remet le tableau de coordonnées du polygone à vide.
-    console.log(" (saveCanvas) this polygons : ", this.polygons);
   }
 
   //Permet de passer en mode dessin.
   drawCanvas(): void {
     this.polygons = this.polygonsByState.get(this.state);
-    console.log("this polygons state : ", this.polygonsByState);
-    console.log("this polygons : ", this.polygons);
     this.increment = 1;
     this.isDrawing = true;
   }
@@ -257,7 +243,6 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.ctx.drawImage(this.image, 0, 0);
     this.drawPreviousPolygons();
     this.ctx.beginPath();
-    console.log(this.coordinates);
     ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
     for (let i = 1; i < this.coordinates.length; i++) {
       ctx.lineTo(this.coordinates[i][0], this.coordinates[i][1]);
@@ -299,7 +284,6 @@ export class ACImageAnnotatorComponent implements OnInit {
           // this.polygons.push(Array.from(image.annotations));
           // this.polygonsByState.set(state, Array.from(this.polygons));
           this.saveCanvas();
-          console.log("this polygons : ", this.polygons);
         } else {
           this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
           this.state = this.states[0]
