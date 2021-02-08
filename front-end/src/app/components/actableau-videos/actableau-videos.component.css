@@ -138,4 +138,11 @@ h1{
     -o-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
     -ms-box-shadow: 0 0px 40px 0px rgba(0, 0, 0, 0.15);
   }
-  
+  .button-action{
+    text-align: center;
+    background-color: gray;
+    color: white;
+    padding: 0.5em;
+    display: inline-block;
+    margin:1px;
+  }
