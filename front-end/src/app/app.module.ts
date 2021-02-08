@@ -11,6 +11,11 @@ import { ItemComponent } from './components/ac-image-annotator/container/item/it
 import { ConnectorDirective } from './components/ac-image-annotator/container/connector.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { FormImageInformationComponent } from './components/acsegmentation/form-image-information/form-image-information.component';
+import { ACHeaderComponent } from './components/acheader/acheader.component'
+import { ListImageComponent } from './components/acsegmentation/list-image/list-image.component'
+import { ImageThumbnailComponent } from './components/acsegmentation/image-thumbnail/image-thumbnail.component';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +24,11 @@ import { HttpClientModule } from '@angular/common/http';
     ACImageViewComponent,
     ContainerComponent,
     ItemComponent,
-    ConnectorDirective
+    ConnectorDirective,
+    FormImageInformationComponent,
+    ACHeaderComponent,
+    ListImageComponent,
+    ImageThumbnailComponent
   ],
   imports: [
     BrowserModule,
