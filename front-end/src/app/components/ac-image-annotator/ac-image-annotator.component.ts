@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ImageService } from 'src/app/services/image.service';
+import { VideoService } from 'src/app/services/video.service';
 import {
   Image as CustomImage
 } from 'src/app/model/image';
@@ -61,6 +62,9 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.idVideo = 'b50905c7-de74-40c6-9d7f-bbedafc98c9f';
     this.loadImages();
     this.idVideo = +this.route.snapshot.paramMap.get('id');
+    // this.images = ['https://picsum.photos/id/237/1200/600', 'https://picsum.photos/id/238/1200/600', 'https://picsum.photos/id/239/1200/600', 'https://picsum.photos/id/240/1200/600'];
+
+    // this.numbers = Array(5).fill(4); // [4,4,4,4,4]
   }
 
   //Méthode faisant partie du cycle angular : Lancée à l'initialisation du composant.
@@ -133,6 +137,10 @@ export class ACImageAnnotatorComponent implements OnInit {
   // }
 
   arrayEquals(a, b) {
+    // console.log("is array : ", Array.isArray(a) &&
+    //   Array.isArray(b));
+    // console.log("length : ", a.length === b.length);
+    // console.log("val : ", a.every((val, index) => val === b[index]));
     return Array.isArray(a) &&
       Array.isArray(b) &&
       a.length === b.length &&
@@ -142,6 +150,10 @@ export class ACImageAnnotatorComponent implements OnInit {
         } else {
           return val === b[index];
         }
+
+        // val === b[index]
+        // console.log("val : ", val);
+        // console.log("bindex : ", b[index]);
       });
   }
 
@@ -179,6 +191,7 @@ export class ACImageAnnotatorComponent implements OnInit {
             image.annotations = [];
           }
           tempImage.annotations = image.annotations.concat(Array.from(this.polygons));
+          // console.log("Image avant update : ", image);
           this.imageService.updateImage(tempImage).subscribe((img) => {
           });
         }
@@ -200,9 +213,12 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   //Permet de garder affiché les polygones précédemment dessinés.
   drawPreviousPolygons(): void {
+    // console.log(this.polygons);
     this.polygons.forEach(polygon => {
       this.ctx.clearRect(0, 0, this.width, this.height);
+      // console.log(this.image);
       this.ctx.drawImage(this.image, 0, 0);
+      // this.ctx.beginPath();
       if (polygon.length > 0) {
         this.ctx.moveTo(polygon[0][0], polygon[0][1]);
         for (let i = 1; i < polygon.length; i++) {
@@ -260,8 +276,13 @@ export class ACImageAnnotatorComponent implements OnInit {
       this.receivedImage.forEach(image => {
         let cutUrl = this.image.src.substring(environment.fileBaseUrl.length);
         if (image.url == cutUrl && image.annotations != undefined) {
+          // this.coordinates = Array.from(image.annotations[0]);
           this.polygons = Array.from(image.annotations);
           this.drawPreviousPolygons();
+          // let state = this.ctx.getImageData(0,0, this.width, this.height);
+          // this.state = state;
+          // this.polygons.push(Array.from(image.annotations));
+          // this.polygonsByState.set(state, Array.from(this.polygons));
           this.saveCanvas();
         } else {
           this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
@@ -271,6 +292,13 @@ export class ACImageAnnotatorComponent implements OnInit {
       })
     }
 
+    // this.states.push(this.ctx.getImageData(0,0, this.width, this.height));
+    // this.state = this.states[0]
+    // this.polygonsByState.set(this.state, []);
+
+    // this.image.src = image;
+
+    // this.ctx.drawImage(this.image, 0, 0);
   }
 
 
@@ -288,6 +316,15 @@ export class ACImageAnnotatorComponent implements OnInit {
   //   this.polygons.concat(this.deletedPolygons);
   // }
 
+  /*
+  *
+  * Sauvegarde les annotations de l'image, et fait un PUT sur l'API pour mettre à jour l'image.
+  *
+  *
+  */
+  // saveImage(){
+
+  // }
 
 
   updateState() {
