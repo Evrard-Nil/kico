@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -37,18 +38,21 @@ func NewAPIService(client mongo.Client) DefaultAPIServicer {
 }
 
 // AddImageToVideo - Upload an image linked to a video
-func (s *APIService) AddImageToVideo(ctx context.Context, videoID string, name string, secteurID string, time string, imageID string, ext string) (interface{}, error) {
-	log.Print("AddImageToVideo")
-	err := isValidUUID(videoID, "Video ID")
-	if err != nil {
-		return nil, err
-	}
-	err = isValidUUID(imageID, "Image ID")
-	if err != nil {
-		return nil, err
-	}
-	url := "/images/" + imageID + "." + ext
+func (s *APIService) AddImageToVideo(ctx context.Context, videoID string, name string, secteurID string, time string, imageID string, ext string) (interface{}, *APIError) {
+	methodName := "AddImageToVideo"
+	log.Printf("%s - Adding image (%s) to video (%s)...", methodName, imageID, videoID)
 
+	_, aerr := s.GetVideo(ctx, videoID)
+	if aerr == nil {
+		return nil, aerr
+	}
+
+	err := isValidUUID(imageID, "Image ID")
+	if err != nil {
+		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
+	}
+
+	url := "/images/" + imageID + "." + ext
 	image := Image{
 		ID:        imageID,
 		Name:      name,
@@ -57,29 +61,29 @@ func (s *APIService) AddImageToVideo(ctx context.Context, videoID string, name s
 		URL:       url,
 		VideoID:   videoID,
 	}
+	log.Printf("%s - Image to be inserted: %v \n", methodName, image)
 
 	collection := s.dbClient.Database("ico").Collection("images")
-	insertResult, err := collection.InsertOne(ctx, image)
-
+	_, err = collection.InsertOne(ctx, image)
 	if err != nil {
-		fmt.Print(err)
-		return "Insertion error", err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
-	fmt.Println("Inserted post with ID:", insertResult.InsertedID)
+	log.Printf("%s - Insert successful", methodName)
 
 	return image, nil
 }
 
 // AddVideo - Add a  video
-func (s *APIService) AddVideo(ctx context.Context, title string, videoID string, ext string) (interface{}, error) {
-	log.Printf("AddVideo")
+func (s *APIService) AddVideo(ctx context.Context, title string, videoID string, ext string) (interface{}, *APIError) {
+	methodName := "AddVideo"
+	log.Printf("%s - Adding video (%s)...", methodName, videoID)
+
 	err := isValidUUID(videoID, "Video ID")
 	if err != nil {
-		return nil, err
+		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
 
 	url := "/videos/" + videoID + "." + ext
-
 	video := Video{
 		ID:    videoID,
 		State: IMPORTED,
@@ -87,233 +91,277 @@ func (s *APIService) AddVideo(ctx context.Context, title string, videoID string,
 		Title: title,
 		URL:   url,
 	}
+	log.Printf("%s - Video to be inserted: %v \n", methodName, video)
 
 	collection := s.dbClient.Database("ico").Collection("videos")
-	insertResult, err := collection.InsertOne(ctx, video)
-
+	_, err = collection.InsertOne(ctx, video)
 	if err != nil {
-		print(err)
-		return "Insertion error", err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
-	fmt.Println("Inserted post with ID:", insertResult.InsertedID)
+	log.Printf("%s - Insert successful", methodName)
 
 	return video, nil
 }
 
 // DeleteImage - Deletes an image
-func (s *APIService) DeleteImage(ctx context.Context, imageID string, dataFolder string) (interface{}, error) {
-	log.Printf("DeleteImage")
+func (s *APIService) DeleteImage(ctx context.Context, imageID string, dataFolder string) (interface{}, *APIError) {
+	methodName := "DeleteImage"
+	log.Printf("%s - Deleting image (%s)...", methodName, imageID)
+
 	err := isValidUUID(imageID, "Image ID")
 	if err != nil {
-		return nil, err
+		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
 
 	collection := s.dbClient.Database("ico").Collection("images")
 	result, err := collection.DeleteOne(ctx, bson.M{"_id": imageID})
 	if err != nil {
-		log.Fatal(err)
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
-	fmt.Printf("DeleteOne removed %v document(s)\n", result.DeletedCount)
+	if result.DeletedCount < 1 {
+		return nil, &APIError{code: http.StatusNotFound, message: "Document did not exist"}
+	}
+	log.Printf("%s - Delete successful (%d documents deleted)", methodName, result.DeletedCount)
 
 	files, err := ioutil.ReadDir(dataFolder + "/images/")
 	if err != nil {
-		log.Fatal(err)
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
+
 	for _, f := range files {
-		// if a filename
+		// Look for files matching imageID
 		if strings.Split(f.Name(), ".")[0] == imageID {
 			pathToRemove := dataFolder + "/images/" + f.Name()
-			fmt.Printf("Removing at: %s\n", pathToRemove)
+			log.Printf("%s - Removing file at: %s\n", methodName, pathToRemove)
 			err = os.Remove(pathToRemove)
 			if err != nil {
-				log.Fatal(err)
+				return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 			}
 			break
 		}
 	}
 
-	return "OK", nil
+	return "", nil
 }
 
 // DeleteVideo - delete a video
-func (s *APIService) DeleteVideo(ctx context.Context, videoID string, dataFolder string) (interface{}, error) {
-	log.Printf("DeleteVideo")
+func (s *APIService) DeleteVideo(ctx context.Context, videoID string, dataFolder string) (interface{}, *APIError) {
+	methodName := "DeleteVideo"
+	log.Printf("%s - Deleting video (%s)...", methodName, videoID)
+
 	err := isValidUUID(videoID, "video ID")
 	if err != nil {
-		return nil, err
+		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
 
 	collection := s.dbClient.Database("ico").Collection("videos")
 	result, err := collection.DeleteOne(ctx, bson.M{"_id": videoID})
 	if err != nil {
-		log.Fatal(err)
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
-	fmt.Printf("DeleteOne removed %v document(s)\n", result.DeletedCount)
+	if result.DeletedCount < 1 {
+		return nil, &APIError{code: http.StatusNotFound, message: "Document did not exist"}
+	}
+	log.Printf("%s - Delete successful (%d documents deleted)", methodName, result.DeletedCount)
 
 	files, err := ioutil.ReadDir(dataFolder + "/videos/")
 	if err != nil {
-		log.Fatal(err)
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
+
 	for _, f := range files {
-		// if a filename
+		// Look for file that matches videoID
 		if strings.Split(f.Name(), ".")[0] == videoID {
 			pathToRemove := dataFolder + "/videos/" + f.Name()
-			fmt.Printf("Removing at: %s\n", pathToRemove)
+			log.Printf("%s - Removing file at: %s\n", methodName, pathToRemove)
 			err = os.Remove(pathToRemove)
 			if err != nil {
-				log.Fatal(err)
+				return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 			}
 			break
 		}
 	}
 
-	return "OK", nil
+	return "", nil
 }
 
 // GetImage - Retrieve an image
-func (s *APIService) GetImage(ctx context.Context, imageID string) (interface{}, error) {
-	log.Printf("GetImage")
+func (s *APIService) GetImage(ctx context.Context, imageID string) (interface{}, *APIError) {
+	methodName := "GetImage"
+	log.Printf("%s - Getting image (%s)...", methodName, imageID)
+
 	err := isValidUUID(imageID, "imageID")
 	if err != nil {
-		return nil, err
+		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
 
 	result := *s.dbClient.Database("ico").Collection("images").FindOne(ctx, bson.M{"_id": imageID})
 	err = result.Err()
 	if err != nil {
-		fmt.Print(err)
-		return "", err
+		switch err {
+		case mongo.ErrNoDocuments:
+			return nil, &APIError{code: http.StatusNotFound, message: "Image not found"}
+		default:
+			return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
+		}
 	}
+
 	image := &Image{}
 	err = result.Decode(image)
 	if err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
+	log.Printf("%s - Get image successful", methodName)
 
 	return *image, nil
 }
 
 // GetImagesFromVideo - Retrieve all images linked to a video
-func (s *APIService) GetImagesFromVideo(ctx context.Context, videoID string) (interface{}, error) {
-	log.Printf("GetImagesFromVideo")
+func (s *APIService) GetImagesFromVideo(ctx context.Context, videoID string) (interface{}, *APIError) {
+	methodName := "GetImagesFromVideo"
+	log.Printf("%s - Getting images from video (%s)...", methodName, videoID)
+
 	result, err := s.dbClient.Database("ico").Collection("images").Find(ctx, bson.M{"video_id": videoID})
 	if err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
 	defer result.Close(context.Background())
+
 	images := []Image{}
 	for result.Next(context.Background()) {
 		i := &Image{}
-
 		err := result.Decode(i)
 		if err != nil {
-			fmt.Print(err)
-			return nil, err
+			return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 		}
 		images = append(images, *i)
-
 	}
+	log.Printf("%s - Success", methodName)
 
 	return images, nil
 }
 
 // GetVideo - Retrieve a single video
-func (s *APIService) GetVideo(ctx context.Context, videoID string) (interface{}, error) {
-	log.Printf("GetVideo")
-	result := *s.dbClient.Database("ico").Collection("videos").FindOne(ctx, bson.M{"_id": videoID})
-	err := result.Err()
+func (s *APIService) GetVideo(ctx context.Context, videoID string) (interface{}, *APIError) {
+	methodName := "GetVideo"
+	log.Printf("%s - Getting images from video (%s)...", methodName, videoID)
+
+	err := isValidUUID(videoID, "Video ID")
 	if err != nil {
-		fmt.Print(err)
-		return "", err
+		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
+
+	result := *s.dbClient.Database("ico").Collection("videos").FindOne(ctx, bson.M{"_id": videoID})
+	err = result.Err()
+	if err != nil {
+		switch err {
+		case mongo.ErrNoDocuments:
+			return nil, &APIError{code: http.StatusNotFound, message: "Video not found"}
+		default:
+			return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
+		}
+	}
+
 	video := &Video{}
 	err = result.Decode(video)
 	if err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
 
+	log.Printf("%s - Success", methodName)
 	return video, nil
 }
 
 // GetVideos - Retrieve all videos
-func (s *APIService) GetVideos(ctx context.Context) (interface{}, error) {
-	log.Printf("GetVideos")
-	result, err := s.dbClient.Database("ico").Collection("videos").Find(ctx, bson.M{})
+func (s *APIService) GetVideos(ctx context.Context) (interface{}, *APIError) {
+	methodName := "GetVideos"
+	log.Printf("%s - Getting all videos...", methodName)
 
+	result, err := s.dbClient.Database("ico").Collection("videos").Find(ctx, bson.M{})
 	if err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
 	defer result.Close(context.Background())
+
 	videos := []Video{}
 	for result.Next(context.Background()) {
 		i := &Video{}
-
 		err := result.Decode(i)
 		if err != nil {
-			fmt.Print(err)
-			return nil, err
+			return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 		}
 		videos = append(videos, *i)
-
 	}
+
+	log.Printf("%s - Success", methodName)
 	return videos, nil
 }
 
 // UpdateImage - update an image
-func (s *APIService) UpdateImage(ctx context.Context, imageID string, image Image) (interface{}, error) {
-	log.Printf("UpdateImage")
-	currentData, err := s.GetImage(ctx, imageID)
+func (s *APIService) UpdateImage(ctx context.Context, imageID string, image Image) (interface{}, *APIError) {
+	methodName := "UpdateImage"
+	log.Printf("%s - Updating image (%s)...", methodName, imageID)
+
+	err := isValidUUID(imageID, "Image ID")
 	if err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
+	}
+
+	currentData, aerr := s.GetImage(ctx, imageID)
+	if aerr != nil {
+		return nil, aerr
 	}
 	currentImage := currentData.(Image)
 	if err := mergo.Merge(&currentImage, image, mergo.WithOverride); err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
 
-	result, err := s.dbClient.Database("ico").Collection("images").ReplaceOne(ctx, bson.M{"_id": imageID}, currentImage)
+	log.Printf("%s - Image to be inserted: %v \n", methodName, currentImage)
+	_, err = s.dbClient.Database("ico").Collection("images").ReplaceOne(ctx, bson.M{"_id": imageID}, currentImage)
 	if err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
-	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
+
+	log.Printf("%s - Success", methodName)
 	return "OK", nil
 }
 
 // UpdateVideo - Update a video
-func (s *APIService) UpdateVideo(ctx context.Context, videoID string, video Video) (interface{}, error) {
-	log.Printf("UpdateVideo")
-	currentData, err := s.GetImage(ctx, videoID)
+func (s *APIService) UpdateVideo(ctx context.Context, videoID string, video Video) (interface{}, *APIError) {
+	methodName := "UpdateVideo"
+	log.Printf("%s - Updating video (%s)...", methodName, videoID)
+
+	err := isValidUUID(videoID, "Video ID")
 	if err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
-	currentVideo := currentData.(Image)
+
+	currentData, aerr := s.GetVideo(ctx, videoID)
+	if aerr != nil {
+		return nil, aerr
+	}
+
+	currentVideo := currentData.(Video)
 	if err := mergo.Merge(&currentVideo, video, mergo.WithOverride); err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
-	result, err := s.dbClient.Database("ico").Collection("videos").ReplaceOne(ctx, bson.M{"_id": videoID}, currentVideo)
+
+	log.Printf("%s - Video to be inserted: %v \n", methodName, currentVideo)
+	_, err = s.dbClient.Database("ico").Collection("videos").ReplaceOne(ctx, bson.M{"_id": videoID}, currentVideo)
 	if err != nil {
-		fmt.Print(err)
-		return nil, err
+		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
-	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
-	return "OK", nil
+
+	log.Printf("%s - Success", methodName)
+	return "", nil
 }
 
 // isValidUUID - Check if id is a valid uuid
 func isValidUUID(id string, parameterName string) error {
 	_, err := uuid.Parse(id)
 	if err != nil {
-		fmt.Printf("%s should be of UUID form. Found: %s", parameterName, id)
-		return err
+		fmt.Print(err)
+		return fmt.Errorf("%s should be of UUID form. Found: %s", parameterName, id)
 	}
 	return nil
 }

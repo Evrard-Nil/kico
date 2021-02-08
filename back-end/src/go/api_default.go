@@ -12,6 +12,7 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -292,7 +293,13 @@ func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Reques
 }
 
 func handleError(w http.ResponseWriter, err error) {
-	fmt.Print(err)
-	w.WriteHeader(http.StatusInternalServerError)
-	w.Write([]byte(fmt.Sprintf("500 - %s", err)))
+	log.Println(err.Error())
+	switch e := err.(type) {
+	case *APIError:
+		w.WriteHeader(e.code)
+		w.Write([]byte(fmt.Sprintf("%d - %s", e.code, e.message)))
+	default:
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf("500 - %s", err)))
+	}
 }

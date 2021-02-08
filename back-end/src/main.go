@@ -28,9 +28,9 @@ const (
 	// where images and videos should be stored
 	IcoDataFolderEnv = "ICO_DATA_STORAGE"
 	// MondoDB adress (localhost for dev)
-	dbAdress = "mongo"
+	dbAdress = "localhost"
 	// MondoDB port (27100 for dev)
-	dbPort = "27017"
+	dbPort = "27100"
 	// MongoDB user
 	dbUser = "mongoadmin"
 	// MongoDB password
@@ -49,6 +49,11 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = client.Ping(context.Background(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
