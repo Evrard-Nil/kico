@@ -293,7 +293,7 @@ func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Reques
 }
 
 func handleError(w http.ResponseWriter, err error) {
-	log.Println(err.Error())
+	log.Print(err)
 	switch e := err.(type) {
 	case *APIError:
 		w.WriteHeader(e.code)
