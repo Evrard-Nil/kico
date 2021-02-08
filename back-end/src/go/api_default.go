@@ -279,9 +279,9 @@ func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	result, err := c.service.UpdateVideo(r.Context(), id, *video)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.UpdateVideo(r.Context(), id, *video)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -290,10 +290,10 @@ func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Reques
 
 func handleError(w http.ResponseWriter, err error) {
 	log.Print(err)
-	switch e := err.(type) {
+	switch err.(type) {
 	case *APIError:
-		w.WriteHeader(e.code)
-		w.Write([]byte(fmt.Sprintf("%d - %s", e.code, e.message)))
+		w.WriteHeader(err.(*APIError).code)
+		w.Write([]byte(fmt.Sprintf("%d - %s", err.(*APIError).code, err.(*APIError).message)))
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(fmt.Sprintf("500 - %v", err)))
