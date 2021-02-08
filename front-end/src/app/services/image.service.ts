@@ -7,7 +7,7 @@ import { ApiService } from './api.service'
   providedIn: 'root'
 })
 export class ImageService {
-  constructor(private apiService: ApiService) {   }
+  constructor(private apiService: ApiService) { }
 
   getImages(idVideo: String) {
     return this.apiService.doGet<Array<Image>>(`${environment.apiBaseUrl}/video/${idVideo}/images`)

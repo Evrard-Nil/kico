@@ -1,18 +1,8 @@
 
 .description-image {
-    padding-top: 1em;
+    padding: 1em;
 }
 
 .block-image {
-    margin: 1em;
-}
-
-.block-image:hover {
-    border: 1px;
-    border-color: cyan;
-}
-
-
-.thumbnail {
-    width: 66%;
+    margin: 3em;
 }

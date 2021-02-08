@@ -15,6 +15,9 @@ import { ImageThumbnailComponent } from './components/acsegmentation/image-thumb
 import { ListImageComponent } from './components/acsegmentation/list-image/list-image.component';
 import { FormImageInformationComponent } from './components/acsegmentation/form-image-information/form-image-information.component';
 import { VideoVisualisationComponent } from './components/acsegmentation/video-visualisation/video-visualisation.component';
+import { ContainerComponent } from './components/ac-image-annotator/container/container.component';
+import { ItemComponent } from './components/ac-image-annotator/container/item/item.component';
+import { ConnectorDirective } from './components/ac-image-annotator/container/connector.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -24,11 +27,14 @@ import { HttpClientModule } from '@angular/common/http';
     ActableauVideosComponent,
     ACImageAnnotatorComponent,
     ACImageViewComponent,
-    ACSegmentationComponent,
-    ACHeaderComponent,
-    ImageThumbnailComponent,
-    ListImageComponent,
+    ContainerComponent,
+    ItemComponent,
+    ConnectorDirective,
     FormImageInformationComponent,
+    ACHeaderComponent,
+    ListImageComponent,
+    ImageThumbnailComponent,
+    ACSegmentationComponent,
     VideoVisualisationComponent
   ],
   imports: [

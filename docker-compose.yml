@@ -10,6 +10,7 @@ services:
       - '8080:8080'
     depends_on:
       - 'mongo'
+      - 'fileserver'
     environment:
       ICO_DATA_STORAGE: /ico-data/storage
     volumes:

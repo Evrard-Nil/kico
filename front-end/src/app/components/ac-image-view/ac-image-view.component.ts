@@ -10,27 +10,27 @@ import { ViewChild } from '@angular/core';
 export class ACImageViewComponent implements OnInit {
 
 
-  @ViewChild(ACImageAnnotatorComponent) imageAnnotator:ACImageAnnotatorComponent;
+  @ViewChild(ACImageAnnotatorComponent) imageAnnotator: ACImageAnnotatorComponent;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  Draw() : void {
+  Draw(): void {
     this.imageAnnotator.drawCanvas();
   }
 
-  Save() : void {
+  Save(): void {
     this.imageAnnotator.saveCanvas();
   }
 
-  Undo(): void{
-    this.imageAnnotator.undoAction();
+  Undo(): void {
+    // this.imageAnnotator.undoAction();
   }
 
-  Redo() : void {
-    this.imageAnnotator.redoAction();
+  Redo(): void {
+    // this.imageAnnotator.redoAction();
   }
 
 

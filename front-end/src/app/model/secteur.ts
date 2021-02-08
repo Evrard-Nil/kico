@@ -1,4 +1,4 @@
 export class Secteur {
-    index: number;
+    index: String;
     name: string;
 }

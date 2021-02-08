@@ -34,12 +34,24 @@ export class FormImageInformationComponent implements OnInit {
   }
 
   onUpdateImage() {
-    console.log("UPDATE...",this.currentImage)
-    this.imageService.updateImage(this.currentImage).subscribe((image) => {
-      console.log("UPDATED : ", image)
+    const image = this.cloneImageToUpdate(this.currentImage)
+    this.imageService.updateImage(image).subscribe((image) => {
+      console.log("Image modifiée : ", image)
     })
   }
 
-  
+  cloneImageToUpdate(currentImage: Image) {
+    var image = new Image();
+    image.id = currentImage.id
+    image.name = currentImage.name
+    image.secteur_id = currentImage.secteur_id
+    image.time = currentImage.time
+    image.url = "/" + this.currentImage.url.match(/images\/(.)*/)[0]
+    image.video_id = currentImage.video_id
+    image.annotations = currentImage.annotations
+
+    return image
+    
+  }
 
 }
