@@ -51,27 +51,40 @@ export class ActableauVideosComponent implements OnInit {
 
   addVideo(): void {
     console.log('add video');
-    this.videoService.addVideo({
-      id: '92',
-      score_pci: 15,
-      annotated_by: 'Pierre',
-      date: new Date(),
-      state: 'Annoté',
-      title: 'test',
-      url: 'url',
-      path: 'path',
-    });
-    /*const fileUpload = this.fileUpload.nativeElement; fileUpload.onchange = () => {
-      // tslint:disable-next-line:prefer-for-of
-      for (let index = 0; index < fileUpload.files.length; index++) {
-        const file = fileUpload.files[index];
-        this.files.push({ data: file, inProgress: false, progress: 0 });
-        this.uploadFile(file);
-      }
-      // this.uploadFiles();
-    }; */
-    // fileUpload.click();
+    /* const fileUpload = this.fileUpload.nativeElement; fileUpload.onchange = () => {
+       // tslint:disable-next-line:prefer-for-of
+       for (let index = 0; index < fileUpload.files.length; index++) {
+         const file = fileUpload.files[index];
+         this.files.push({ data: file, inProgress: false, progress: 0 });
+         this.uploadFile(file);
+       }
+       // this.uploadFiles();
+     };
+ */
+
+    //this.videoService.addVideo();
+    /*
+        let video = new Video();
+        video.id = '92';
+        video.score_pci = 15;
+        video.annotated_by = 'Pierre';
+        video.date = new Date();
+        video.state = 'Annoté';
+        video.title = 'test';
+        //video.url = '';// /videos/{id}
+        //video.path = '';// 
+    
+    
+        this.videoService.addVideo(video)
+          .subscribe((videos) => {
+            console.log('VIDEOS RECUE :', videos);
+    
+          });*/
+
+
   }
+
+
 
   uploadFile(file): void {
     /* const formData = new FormData();

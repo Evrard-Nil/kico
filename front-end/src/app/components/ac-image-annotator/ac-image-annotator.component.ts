@@ -4,7 +4,7 @@ import { VideoService } from 'src/app/services/video.service';
 import {
   Image as CustomImage
 } from 'src/app/model/image';
-import { environment } from 'src/environments/environment'
+import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 
 
