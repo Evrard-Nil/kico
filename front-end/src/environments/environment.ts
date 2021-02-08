@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8080/api/v1',
-  fileBaseUrl: 'http://localhost:8082' 
+  apiBaseUrl: 'http://90.105.212.252:8080/api/v1',
+  fileBaseUrl: 'http://90.105.212.252:8082'
 };
 
 /*

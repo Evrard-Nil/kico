@@ -1,10 +1,11 @@
 export class Image {
   id: String
-  secteur_id: number
+  secteur_id: String
   name: String
   time: String
-  video_id: number
+  video_id: String
   url: String
-  
+  annotations: Array<Array<([number, number])>>;
+
   constructor() {}
 }

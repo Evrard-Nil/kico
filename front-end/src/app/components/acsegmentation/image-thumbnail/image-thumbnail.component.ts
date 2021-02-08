@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import {Image} from 'src/app/model/image'
 
 @Component({
@@ -6,21 +6,34 @@ import {Image} from 'src/app/model/image'
   templateUrl: './image-thumbnail.component.html',
   styleUrls: ['./image-thumbnail.component.css']
 })
-export class ImageThumbnailComponent implements OnInit {
+export class ImageThumbnailComponent implements OnInit, OnChanges {
 
   @Input() image: Image;
   @Output() eventImageSelected: EventEmitter<Image>;
+  @Input() imageSelected : Image
+
+  isSelected : Boolean
 
   constructor() { 
     this.eventImageSelected = new EventEmitter();
+    
   }
 
   ngOnInit(): void {
-    
+    this.isSelected = false
   }
 
   selectThisImage(){
     this.eventImageSelected.emit(this.image)
+  }
+
+  ngOnChanges() {
+    if(this.image === this.imageSelected) {
+      this.isSelected = true
+    }
+    else {
+      this.isSelected = false
+    }
   }
 
 }
