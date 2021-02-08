@@ -43,7 +43,7 @@ func (s *APIService) AddImageToVideo(ctx context.Context, videoID string, name s
 	log.Printf("%s - Adding image (%s) to video (%s)...", methodName, imageID, videoID)
 
 	_, aerr := s.GetVideo(ctx, videoID)
-	if aerr == nil {
+	if aerr != nil {
 		return nil, aerr
 	}
 
