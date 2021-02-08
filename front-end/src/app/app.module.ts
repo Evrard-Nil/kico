@@ -15,7 +15,8 @@ import { FormImageInformationComponent } from './components/acsegmentation/form-
 import { ACHeaderComponent } from './components/acheader/acheader.component'
 import { ListImageComponent } from './components/acsegmentation/list-image/list-image.component'
 import { ImageThumbnailComponent } from './components/acsegmentation/image-thumbnail/image-thumbnail.component';
-
+import { ACSegmentationComponent } from './components/acsegmentation/acsegmentation.component'
+import { VideoVisualisationComponent } from './components/acsegmentation/video-visualisation/video-visualisation.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,9 @@ import { ImageThumbnailComponent } from './components/acsegmentation/image-thumb
     FormImageInformationComponent,
     ACHeaderComponent,
     ListImageComponent,
-    ImageThumbnailComponent
+    ImageThumbnailComponent,
+    ACSegmentationComponent,
+    VideoVisualisationComponent
   ],
   imports: [
     BrowserModule,
