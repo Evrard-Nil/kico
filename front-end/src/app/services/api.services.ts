@@ -38,7 +38,6 @@ export class ApiService {
             );
     }
 
-    // tslint:disable-next-line:typedef
     private handleError(error: HttpErrorResponse) {
         console.error(error);
         return throwError(

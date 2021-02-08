@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { UploadService } from 'src/app/services/upload.service';
 
 @Component({
   selector: 'app-actableau-videos',
@@ -17,8 +16,7 @@ export class ActableauVideosComponent implements OnInit {
 
   videos: Array<Video>;
 
-  // tslint:disable-next-line:max-line-length
-  constructor(private videoService: VideoService, private uploadService: UploadService, private router: Router) { this.videos = new Array<Video>(); }
+  constructor(private videoService: VideoService, private router: Router) { this.videos = new Array<Video>(); }
 
   ngOnInit(): void {
     this.loadVideos();
@@ -52,7 +50,6 @@ export class ActableauVideosComponent implements OnInit {
   addVideo(): void {
     console.log('add video');
     /* const fileUpload = this.fileUpload.nativeElement; fileUpload.onchange = () => {
-       // tslint:disable-next-line:prefer-for-of
        for (let index = 0; index < fileUpload.files.length; index++) {
          const file = fileUpload.files[index];
          this.files.push({ data: file, inProgress: false, progress: 0 });
