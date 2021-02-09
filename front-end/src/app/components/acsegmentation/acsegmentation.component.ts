@@ -93,14 +93,4 @@ export class ACSegmentationComponent implements OnInit {
     this.images.push(newImage)
   }
 
-  /**
-   * Action du bouton permettant de quitter la page, redirige vers la page d'accueil.
-   * Cette action déclenche également la sauvegarde des images
-   */
-  terminateSegmentation() {
-    console.log("Segmentation terminée")
-    // TODO : Sauvegarder la liste des images
-    // TODO : Redirection
-  }
-
 }
