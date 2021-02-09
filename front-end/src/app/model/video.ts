@@ -1,12 +1,13 @@
 export class Video {
-  id: String
-  annotated_by: string
-  date: Date
-  score_pci: number
-  state: string
-  url: string
-  title: string
+  id: string;
+  annotated_by: string;
+  date: Date;
+  score_pci: number;
+  state: string;
+  url: string;
+  path: string;
+  title: string;
 
-  constructor() {}
+  constructor() { }
 
 }
