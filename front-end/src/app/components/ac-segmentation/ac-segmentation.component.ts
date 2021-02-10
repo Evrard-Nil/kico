@@ -15,8 +15,8 @@ import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-acsegmentation',
-  templateUrl: './acsegmentation.component.html',
-  styleUrls: ['./acsegmentation.component.css']
+  templateUrl: './ac-segmentation.component.html',
+  styleUrls: ['./ac-segmentation.component.css']
 })
 export class ACSegmentationComponent implements OnInit {
   images: Array <Image> ;
@@ -41,7 +41,6 @@ export class ACSegmentationComponent implements OnInit {
   deleteCurrentImage() {
     let indexFound = this.images.indexOf(this.currentImage)
     this.imageService.deleteImage(this.currentImage.id).subscribe((image : Image) => {
-      console.log(image)
       this.images.splice(indexFound,1)
       this.changeCurrentImageOnDelete(indexFound)
     })

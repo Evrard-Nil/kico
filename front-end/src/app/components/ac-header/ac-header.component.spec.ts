@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ACHeaderComponent } from './acheader.component';
+import { ACHeaderComponent } from './ac-header.component';
 
 describe('ACHeaderComponent', () => {
   let component: ACHeaderComponent;
