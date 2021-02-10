@@ -22,7 +22,15 @@
             <button class="button-vert" (click)="onUpdateImage()">Sauvegarder</button>
         </div>
         <div class="flex flex-column">
-            <button class="button-rouge" (click)="onDeleteImage()">Supprimer la capture</button>
+            <modal id="confirmation-delete-image">
+                <h1>Suppression d'une image</h1>
+                <p>Êtes-vous sur de vouloir supprimer cette image ?</p>
+                <div class="flex flex-row space-between">
+                    <button class="button-rouge" (click)="closeModal('confirmation-delete-image')">Non</button>
+                    <button class="button-vert" (click)="modalOnDeleteImage('confirmation-delete-image')">Oui</button>
+                </div>
+            </modal>
+            <button class="button-rouge" (click)="openModal('confirmation-delete-image')">Supprimer la capture</button>
         </div>
         
     </div>

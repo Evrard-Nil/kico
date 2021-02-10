@@ -20,6 +20,7 @@ import { ItemComponent } from './components/ac-image-annotator/container/item/it
 import { ConnectorDirective } from './components/ac-image-annotator/container/connector.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ModalModule } from './components/modules/modal';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatSidenavModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ModalModule
   ],
   providers: [],
   bootstrap: [AppComponent]
