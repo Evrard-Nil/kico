@@ -36,7 +36,6 @@ export class FormImageInformationComponent implements OnInit {
   onUpdateImage() {
     const image = this.cloneImageToUpdate(this.currentImage)
     this.imageService.updateImage(image).subscribe((image) => {
-      console.log("Image modifiée : ", image)
     })
   }
 

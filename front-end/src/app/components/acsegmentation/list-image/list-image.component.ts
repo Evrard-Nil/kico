@@ -16,7 +16,7 @@ import {
   templateUrl: './list-image.component.html',
   styleUrls: ['./list-image.component.css']
 })
-export class ListImageComponent implements OnInit, OnChanges {
+export class ListImageComponent implements OnInit {
 
   @Input() images: Array <Image>;
   @Output() eventSelectedImage: EventEmitter<Image>;
@@ -34,10 +34,6 @@ export class ListImageComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 	  
-  }
-
-  ngOnChanges() {
-    console.log("Changement !")
   }
 
 }
