@@ -17,7 +17,7 @@
 
       <ng-container appConnector>
         <app-container>
-          <app-item *ngFor="let image of images" [url]="image"
+          <app-item *ngFor="let image of receivedImages" [url]="image.url"
             (click)="clickImage(image)">
           </app-item>
         </app-container>
