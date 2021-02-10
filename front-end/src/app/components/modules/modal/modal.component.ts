@@ -5,7 +5,7 @@ import { ModalService } from './modal.service';
 @Component({ 
     selector: 'modal', 
     templateUrl: 'modal.component.html', 
-    styleUrls: ['modal.component.less'],
+    styleUrls: ['modal.component.css'],
     encapsulation: ViewEncapsulation.None
 })
 export class ModalComponent implements OnInit, OnDestroy {
@@ -19,7 +19,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // ensure id attribute exists
         if (!this.id) {
-            console.error('modal must have an id');
+            console.error('La modal doit avoir un id !');
             return;
         }
 
