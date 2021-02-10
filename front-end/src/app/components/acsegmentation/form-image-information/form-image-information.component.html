@@ -1,9 +1,9 @@
 <div class="flex flex-row" *ngIf="currentImage !== undefined">
-    <form>
+    <form class="px-1"> 
         <div class="flex flex-column">
             <div class="py-1">
                 <label for="nom-image">Nom : </label>
-                <input id="nom-image" type="text" value="{{currentImage.name}}" (input)="onChangeName($event.target.value)">
+                <input id="nom-image" type="text" value="{{currentImage.name}}" (input)="onChangeName($event.target.value)" size="30">
             </div>
             <div class="py-1">
                 <label for="zone-image">Secteur : </label>
@@ -17,8 +17,13 @@
             </div>
         </div>
     </form>
-    <div>
-        <button class="button-vert" (click)="onUpdateImage()">Sauvegarder</button>
-        <button class="button-rouge" (click)="onDeleteImage()">Supprimer la capture</button>
+    <div class="flex space-between w-full align-items-center px-1">
+        <div class="flex flex-column">
+            <button class="button-vert" (click)="onUpdateImage()">Sauvegarder</button>
+        </div>
+        <div class="flex flex-column">
+            <button class="button-rouge" (click)="onDeleteImage()">Supprimer la capture</button>
+        </div>
+        
     </div>
 </div>
