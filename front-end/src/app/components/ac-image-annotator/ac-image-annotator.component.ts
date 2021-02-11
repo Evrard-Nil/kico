@@ -62,9 +62,7 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.loadImages();
     this.idVideo = +this.route.snapshot.paramMap.get('id');
     this.currentImage = new CustomImage()
-    // this.images = ['https://picsum.photos/id/237/1200/600', 'https://picsum.photos/id/238/1200/600', 'https://picsum.photos/id/239/1200/600', 'https://picsum.photos/id/240/1200/600'];
 
-    // this.numbers = Array(5).fill(4); // [4,4,4,4,4]
   }
 
   //Méthode faisant partie du cycle angular : Lancée à l'initialisation du composant.
@@ -209,11 +207,9 @@ export class ACImageAnnotatorComponent implements OnInit {
       if (this.currentImage.annotations == undefined) {
         this.currentImage.annotations = [];
       }
-      // tempImage.annotations = this.currentImage.annotations.concat(
-      //   Array.from(this.polygons) // Gérer les doublons
-      // );
-      tempImage.annotations = Array.from(new Set(this.currentImage.annotations.concat(
-        Array.from(this.polygons) // Gérer les doublons
+
+      tempImage.annotations = Array.from(new Set(this.currentImage.annotations.concat( //Permet de gérer les doublons
+        Array.from(this.polygons)
       )));
       this.currentImage.annotations = tempImage.annotations;
       this.imageService.updateImage(tempImage).subscribe((img) => {});
@@ -288,16 +284,12 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.image.crossOrigin = 'anonymous';
     this.image.src = localStorage.getItem(image.id.toString());
     this.currentImage = image
-    console.log("This current image : ",this.currentImage);
 
     this.image.onload = () => {
       this.ctx.drawImage(this.image, 0, 0);
       this.receivedImages.forEach(image => {
         if (image === this.currentImage && image.annotations != undefined) {
-          // this.polygons.splice(0, this.polygons.length);
           this.polygons = Array.from(this.currentImage.annotations);
-          // this.polygons = Array.from(image.annotations);
-
           this.drawPolygon();
           this.state = this.ctx.getImageData(0, 0, this.width, this.height);
           this.polygonsByState.set(this.state, this.polygons);
