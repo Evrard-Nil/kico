@@ -161,6 +161,12 @@ export class ACImageAnnotatorComponent implements OnInit {
     }
   }
 
+
+  /**
+   * Retourne vrai si les deux tableaux en paramètre sont égaux
+   * @param a Array
+   * @param b Array
+   */
   arrayEquals(a, b) {
     return (
       Array.isArray(a) &&
@@ -206,7 +212,6 @@ export class ACImageAnnotatorComponent implements OnInit {
       tempImage.annotations = this.currentImage.annotations.concat(
         Array.from(this.polygons)
       );
-      // console.log("Image avant update : ", image);
       this.imageService.updateImage(tempImage).subscribe((img) => {});
     }
 
@@ -217,10 +222,7 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   //Permet de passer en mode dessin.
   drawCanvas(): void {
-    // console.log(this.polygonsByState);
-    // console.log(this.polygons);
     // this.polygons = this.polygonsByState.get(this.state);
-    // console.log("this polygons : ", this.polygons);
     this.increment = 1;
     this.isDrawing = true;
 
@@ -228,13 +230,9 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   //Permet de garder affiché les polygones précédemment dessinés.
   drawPreviousPolygons(): void {
-    console.log("drawPreviousPolygons (this.polygons) :", this.polygons);
     this.polygons.forEach((polygon) => {
-      console.log("polygons foreach polygon : ", polygon);
       this.ctx.clearRect(0, 0, this.width, this.height);
-      // console.log(this.image);
       this.ctx.drawImage(this.image, 0, 0);
-      // this.ctx.beginPath();
       if (polygon.length > 0) {
         this.ctx.moveTo(polygon[0][0], polygon[0][1]);
         for (let i = 1; i < polygon.length; i++) {
@@ -297,7 +295,6 @@ export class ACImageAnnotatorComponent implements OnInit {
           this.drawPolygon();
           this.state = this.ctx.getImageData(0, 0, this.width, this.height);
           this.polygonsByState.set(this.state, this.polygons);
-          console.log("thispolygonsbystate :",this.polygonsByState)
         } else {
           this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
           this.state = this.states[0]
