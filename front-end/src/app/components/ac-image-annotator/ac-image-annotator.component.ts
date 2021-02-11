@@ -209,9 +209,12 @@ export class ACImageAnnotatorComponent implements OnInit {
       if (this.currentImage.annotations == undefined) {
         this.currentImage.annotations = [];
       }
-      tempImage.annotations = this.currentImage.annotations.concat(
+      // tempImage.annotations = this.currentImage.annotations.concat(
+      //   Array.from(this.polygons) // Gérer les doublons
+      // );
+      tempImage.annotations = Array.from(new Set(this.currentImage.annotations.concat(
         Array.from(this.polygons) // Gérer les doublons
-      );
+      )));
       this.currentImage.annotations = tempImage.annotations;
       this.imageService.updateImage(tempImage).subscribe((img) => {});
     }
