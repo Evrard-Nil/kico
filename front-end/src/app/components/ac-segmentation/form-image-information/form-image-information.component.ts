@@ -4,6 +4,8 @@ import { Secteurs } from 'src/assets/data/secteurs';
 import { ImageService } from 'src/app/services/image.service';
 import { ModalService } from '../../modules/modal';
 
+const MESSAGE_SAVE_IMAGE = "Informations sauvegardées"
+
 @Component({
   selector: 'app-form-image-information',
   templateUrl: './form-image-information.component.html',
@@ -14,6 +16,7 @@ export class FormImageInformationComponent implements OnInit {
   @Output() eventNameImage: EventEmitter<Image>;
   @Output() eventDeleteImage: EventEmitter<Image>;
   secteurs = Secteurs;
+  messageSaveImage : string;
 
   constructor(
     private imageService: ImageService,
@@ -36,7 +39,11 @@ export class FormImageInformationComponent implements OnInit {
 
   onUpdateImage() {
     const image = this.cloneImageToUpdate(this.currentImage);
-    this.imageService.updateImage(image).subscribe((image) => {});
+    this.imageService.updateImage(image).subscribe((code) => {
+      if(code === "OK"){
+        this.displayMessageSaveImage()
+      }
+    });
   }
 
   cloneImageToUpdate(currentImage: Image) {
@@ -63,5 +70,12 @@ export class FormImageInformationComponent implements OnInit {
 
   closeModal(id: string) {
     this.modalService.close(id);
+  }
+
+  displayMessageSaveImage() {
+    this.messageSaveImage = MESSAGE_SAVE_IMAGE
+    setTimeout(() => {
+      this.messageSaveImage = ""
+    }, 3000)
   }
 }

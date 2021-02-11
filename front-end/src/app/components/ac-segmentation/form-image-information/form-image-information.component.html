@@ -18,8 +18,9 @@
         </div>
     </form>
     <div class="flex space-between w-full align-items-center px-1">
-        <div class="flex flex-column">
+        <div class="flex flex-row">
             <button class="button-vert" (click)="onUpdateImage()">Sauvegarder</button>
+            <span class="align-self-center mx-1">{{messageSaveImage}}</span>
         </div>
         <div class="flex flex-column">
             <modal id="confirmation-delete-image">
