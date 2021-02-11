@@ -99,7 +99,7 @@ export class ACImageAnnotatorComponent implements OnInit {
           e.clientX - this.canvas.nativeElement.offsetLeft,
           e.clientY - this.canvas.nativeElement.offsetTop,
         ]);
-        this.drawPolygon(this.ctx);
+        this.drawPolygon();
       }
     });
   }
@@ -192,7 +192,6 @@ export class ACImageAnnotatorComponent implements OnInit {
     if (polygon.length !== 0) {
       this.polygons.push(polygon);
     }
-    console.log(this.polygons)
     if (!this.arrayEquals(this.currentImage.annotations, this.polygons)) {
       let tempImage = new CustomImage();
       tempImage.id = this.currentImage.id;
@@ -225,7 +224,7 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   //Permet de garder affiché les polygones précédemment dessinés.
   drawPreviousPolygons(): void {
-    console.log("Poly : ", this.polygons);
+    console.log("drawPreviousPolygons (this.polygons) :", this.polygons);
     this.polygons.forEach((polygon) => {
       this.ctx.clearRect(0, 0, this.width, this.height);
       // console.log(this.image);
@@ -246,14 +245,19 @@ export class ACImageAnnotatorComponent implements OnInit {
   /*
    * On redessine les polygones précédents à chaque clic, car on doit nettoyer le canvas à chaque clic afin d'obtenir le rendu souhaité.
    */
-  drawPolygon(ctx: CanvasRenderingContext2D): void {
-    ctx.beginPath();
-    ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
+  drawPolygon(): void {
+    this.ctx.beginPath();
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    this.ctx.drawImage(this.image, 0, 0);
+    this.drawPreviousPolygons();
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
     for (let i = 1; i < this.coordinates.length; i++) {
-      ctx.lineTo(this.coordinates[i][0], this.coordinates[i][1]);
+      this.ctx.lineTo(this.coordinates[i][0], this.coordinates[i][1]);
     }
-    ctx.closePath();
-    ctx.stroke();
+    this.ctx.closePath();
+    this.ctx.stroke();
   }
 
   /*
@@ -274,19 +278,20 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.image = new Image();
     this.image.crossOrigin = 'anonymous';
     this.image.src = localStorage.getItem(image.id.toString());
+    this.currentImage = image
 
     this.image.onload = () => {
       this.ctx.drawImage(this.image, 0, 0);
-      if (image.annotations != undefined) {
-        this.polygons = Array.from(image.annotations);
-        this.drawPreviousPolygons();
-        // this.saveCanvas();
-      } else {
-        this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
-        this.state = this.states[0];
-        this.polygonsByState.set(this.state, []);
-      }
-      this.currentImage = image
-    };
+      this.receivedImages.forEach(image => {
+        if (image === this.currentImage && image.annotations != undefined) {
+          this.polygons = Array.from(image.annotations);
+          this.drawPreviousPolygons();
+        } else {
+          this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
+          this.state = this.states[0]
+          this.polygonsByState.set(this.state, []);
+        }
+      })
+    }
   }
 }
