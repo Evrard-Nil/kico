@@ -210,8 +210,9 @@ export class ACImageAnnotatorComponent implements OnInit {
         this.currentImage.annotations = [];
       }
       tempImage.annotations = this.currentImage.annotations.concat(
-        Array.from(this.polygons)
+        Array.from(this.polygons) // Gérer les doublons
       );
+      this.currentImage.annotations = tempImage.annotations;
       this.imageService.updateImage(tempImage).subscribe((img) => {});
     }
 
@@ -284,13 +285,15 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.image.crossOrigin = 'anonymous';
     this.image.src = localStorage.getItem(image.id.toString());
     this.currentImage = image
+    console.log("This current image : ",this.currentImage);
 
     this.image.onload = () => {
       this.ctx.drawImage(this.image, 0, 0);
       this.receivedImages.forEach(image => {
         if (image === this.currentImage && image.annotations != undefined) {
           // this.polygons.splice(0, this.polygons.length);
-          this.polygons = Array.from(image.annotations);
+          this.polygons = Array.from(this.currentImage.annotations);
+          // this.polygons = Array.from(image.annotations);
 
           this.drawPolygon();
           this.state = this.ctx.getImageData(0, 0, this.width, this.height);
