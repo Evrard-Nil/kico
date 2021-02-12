@@ -8,7 +8,7 @@
         <app-form-image-information [currentImage]="currentImage" (eventDeleteImage)="deleteCurrentImage()"></app-form-image-information>
     </div>
     <div class="w-1 flex flex-column mx-1">
-        <app-list-image [images]="images" (eventSelectedImage)="changeCurrentImage($event)"></app-list-image>
-        <button class="button-gris w-half m-auto my-1" (click)="terminateSegmentation()">Finir la segmentation</button>
+        <app-list-image [images]="images" [currentImage]="currentImage" (eventSelectedImage)="changeCurrentImage($event)"></app-list-image>
+        <button [routerLink]="['/']" routerLinkActive="router-link-active" class="button-gris w-half m-auto my-1">Finir la segmentation</button>
     </div>
 </div>

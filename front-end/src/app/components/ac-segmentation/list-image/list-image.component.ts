@@ -1,7 +1,9 @@
+import { ChangeDetectionStrategy } from '@angular/core';
 import {
   Component,
 	EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output
 } from '@angular/core';
@@ -19,14 +21,14 @@ export class ListImageComponent implements OnInit {
   @Input() images: Array <Image>;
   @Output() eventSelectedImage: EventEmitter<Image>;
 
-  imageSelected : Image
+  @Input() currentImage: Image;
 
   constructor() {
-	this.eventSelectedImage = new EventEmitter();
+	  this.eventSelectedImage = new EventEmitter();
   }
 
   changeSelectedImage(image: Image) {
-    this.imageSelected = image
+    this.currentImage = image
 	  this.eventSelectedImage.emit(image);
   }
 
