@@ -40,6 +40,20 @@ export class ActableauVideosComponent implements OnInit {
        path: 'path',
      }
      );*/
+
+
+    const fileInput = document.querySelector("#input-ajouter-video");
+    fileInput.addEventListener("change", event => {
+      console.log("file changed");
+      let formData = new FormData()
+      let files = event.target.files;//l'IDE souligne peut être mais ça marche
+      formData.append("title", "video test");
+      formData.append("filename", "vidtest.mp4");
+      formData.append("file", files[0]);
+      console.log(files);
+      console.log(formData);
+      this.videoService.addVideo(formData);
+    });
   }
 
   deleteVideo(id): void {
@@ -47,8 +61,9 @@ export class ActableauVideosComponent implements OnInit {
     // this.videoService.deleteVideo(id);
   }
 
+
+
   addVideo(): void {
-    console.log('add video');
 
     let video = new Video();
     video.id = '92';
@@ -60,27 +75,7 @@ export class ActableauVideosComponent implements OnInit {
     //video.url = '/videos/b50905c7-de74-40c6-9d7f-bbedafc98c9g';// /videos/{id}
     //video.path = '';// 
 
-
-    console.log('add video2');
-    /*
-        const formData = new FormData()
-        formData.append('name', "Nouvelle image (" + this.getDurationFromSeconds(time) + ")");
-        formData.append('fileName', blob);
-        formData.append('secteur_id', "0");
-        formData.append('time', this.getDurationFromSeconds(time));
-    
-        this.videoService.addVideo(formData).subscribe((video) => {
-          image.url = environment.fileBaseUrl + image.url
-          this.eventCreateImage.emit(image)
-        })*/
-
-    this.videoService.addVideo(video);/*
-      .subscribe((videos) => {
-        console.log('VIDEOS RECUE :', videos);
-
-      });
-*/
-    console.log('add video3');
+    //this.videoService.addVideo(video);
 
   }
 
