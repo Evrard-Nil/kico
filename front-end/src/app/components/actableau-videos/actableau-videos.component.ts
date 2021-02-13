@@ -49,62 +49,39 @@ export class ActableauVideosComponent implements OnInit {
 
   addVideo(): void {
     console.log('add video');
-    /* const fileUpload = this.fileUpload.nativeElement; fileUpload.onchange = () => {
-       for (let index = 0; index < fileUpload.files.length; index++) {
-         const file = fileUpload.files[index];
-         this.files.push({ data: file, inProgress: false, progress: 0 });
-         this.uploadFile(file);
-       }
-       // this.uploadFiles();
-     };
- */
 
-    //this.videoService.addVideo();
+    let video = new Video();
+    video.id = '92';
+    video.score_pci = 15;
+    video.annotated_by = 'Pierre';
+    video.date = new Date();
+    video.state = 'annotated';
+    video.title = 'test';
+    //video.url = '/videos/b50905c7-de74-40c6-9d7f-bbedafc98c9g';// /videos/{id}
+    //video.path = '';// 
+
+
+    console.log('add video2');
     /*
-        let video = new Video();
-        video.id = '92';
-        video.score_pci = 15;
-        video.annotated_by = 'Pierre';
-        video.date = new Date();
-        video.state = 'Annoté';
-        video.title = 'test';
-        //video.url = '';// /videos/{id}
-        //video.path = '';// 
+        const formData = new FormData()
+        formData.append('name', "Nouvelle image (" + this.getDurationFromSeconds(time) + ")");
+        formData.append('fileName', blob);
+        formData.append('secteur_id', "0");
+        formData.append('time', this.getDurationFromSeconds(time));
     
-    
-        this.videoService.addVideo(video)
-          .subscribe((videos) => {
-            console.log('VIDEOS RECUE :', videos);
-    
-          });*/
+        this.videoService.addVideo(formData).subscribe((video) => {
+          image.url = environment.fileBaseUrl + image.url
+          this.eventCreateImage.emit(image)
+        })*/
 
+    this.videoService.addVideo(video);/*
+      .subscribe((videos) => {
+        console.log('VIDEOS RECUE :', videos);
 
-  }
+      });
+*/
+    console.log('add video3');
 
-
-
-  uploadFile(file): void {
-    /* const formData = new FormData();
-    formData.append('file', file.data);
-    file.inProgress = true;
-    this.uploadService.upload(formData).pipe(
-      map(event => {
-        switch (event.type) {
-          case HttpEventType.UploadProgress:
-            file.progress = Math.round(event.loaded * 100 / event.total);
-            break;
-          case HttpEventType.Response:
-            return event;
-        }
-      }),
-      catchError((error: HttpErrorResponse) => {
-        file.inProgress = false;
-        return of(`Upload failed: ${file.data.name}`);
-      })).subscribe((event: any) => {
-        if (typeof (event) === 'object') {
-          console.log(event.body);
-        }
-      });*/
   }
 
   segmentate(id): void {
