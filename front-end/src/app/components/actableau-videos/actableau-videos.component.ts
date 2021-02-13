@@ -18,16 +18,21 @@ export class ActableauVideosComponent implements OnInit {
   videos: Array<Video>;
 
   constructor(private videoService: VideoService, private router: Router) {
-    this.videos = new Array<Video>();
   }
 
   ngOnInit(): void {
+    this.videos = new Array<Video>();
     this.loadVideos();
   }
 
   deleteVideo(id): void {
     console.log(id);
-    // this.videoService.deleteVideo(id);
+    this.videoService.deleteVideo(id).subscribe((code) => {
+      // TODO : Update du component pour ne pas avoir à recharger la page pour l'affichage de la vidéo ?
+      console.log(code);
+      this.ngOnInit();
+    });
+
   }
 
 
@@ -39,6 +44,7 @@ export class ActableauVideosComponent implements OnInit {
       this.videoService.addVideo(formData).subscribe((video) => {
         // TODO : Update du component pour ne pas avoir à recharger la page pour l'affichage de la vidéo ?
         console.log(video);
+        this.ngOnInit();
       });
     }
   }
@@ -67,12 +73,8 @@ export class ActableauVideosComponent implements OnInit {
     this.videoService.getVideos().subscribe((videos) => {
       console.log('VIDEOS RECUE :', videos);
       videos.forEach((video) => {
-        console.log('video loaded:');
-        console.log(video);
-
         this.videos.push(video);
       });
-      console.log(videos);
     });
   }
 }

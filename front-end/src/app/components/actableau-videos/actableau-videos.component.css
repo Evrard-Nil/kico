@@ -35,10 +35,17 @@ h1{
 }
 .center-wrapper{
     text-align:center;
+    display:flex;
+    flex-direction: column;
+}
+.center-wrapper>*{
+  width:fit-content;
+  display:inline-flex;
+  margin:auto;
+  margin-bottom:5px;
 }
 #btn-ajouter-video{
     font-size:1.3em;
-    display:inline-block;
     border:none;
     border-radius:5px;
     padding:20px 40px;
