@@ -30,6 +30,8 @@ export class ActableauVideosComponent implements OnInit {
     // this.videoService.deleteVideo(id);
   }
 
+
+
   addVideo(): void {
     this.files = this.fileUpload.nativeElement.files;
     for (let i = 0; i < this.files.length; i++) {
