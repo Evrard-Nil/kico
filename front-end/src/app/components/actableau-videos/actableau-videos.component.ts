@@ -36,10 +36,14 @@ export class ActableauVideosComponent implements OnInit {
 
   addVideo(): void {
     this.files = this.fileUpload.nativeElement.files;
+    if (this.files.length > 0) {
+      document.getElementById("loading-gif").style.visibility = "visible";
+    }
     for (let i = 0; i < this.files.length; i++) {
       var formData = this.createFormData(this.files[i]);
       this.videoService.addVideo(formData).subscribe((video) => {
         this.ngOnInit();
+        document.getElementById("loading-gif").style.visibility = "hidden";
       });
     }
   }
