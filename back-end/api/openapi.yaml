@@ -327,9 +327,59 @@ components:
           type: string
         url:
           type: string
+        nodule:
+          $ref: "#/components/schemas/Nodule"
         annotations:
           type: array
           items:
             type: array
             items:
               type: integer
+    NoduleColor:
+      description: Color of a nodule
+      enum:
+        - Jaunâtre
+      nullable: true
+      type: string
+    NoduleType:
+      description: Type of a nodule
+      enum:
+        - Hétérogène
+      nullable: true
+      type: string
+    NoduleSize:
+      description: Size of a nodule
+      enum:
+        - '0 cm'
+        - '< 0.5 cm'
+        - '> 5 cm'
+        - '< 5 cm or confluence'
+      nullable: true
+      type: string
+    NoduleProbability:
+      description: Size of a nodule
+      enum:
+        - 'Certain'
+        - 'Average'
+        - 'Low'
+      nullable: true
+      type: string
+    Nodule:
+      description: A nodule
+      nullable: true
+      type: object
+      properties:
+        color:
+          $ref: "#/components/schemas/NoduleColor"
+        type:
+          $ref: "#/components/schemas/NoduleType"
+        size:
+          $ref: "#/components/schemas/NoduleSize"
+        probability:
+          $ref: "#/components/schemas/NoduleProbability"
+        adherant:
+          type: boolean
+        retractile:
+          type: boolean
+        score:
+          type: number
