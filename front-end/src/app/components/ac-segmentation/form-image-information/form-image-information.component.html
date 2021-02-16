@@ -1,0 +1,38 @@
+<div class="flex flex-row" *ngIf="currentImage !== undefined">
+    <form class="px-1"> 
+        <div class="flex flex-column">
+            <div class="py-1">
+                <label for="nom-image">Nom : </label>
+                <input id="nom-image" type="text" value="{{currentImage.name}}" (input)="onChangeName($event.target.value)" size="30">
+            </div>
+            <div class="py-1">
+                <label for="zone-image">Secteur : </label>
+                <select name="zone-image" id="zone-image" [(ngModel)]="currentImage.secteur_id">
+                    <option *ngFor="let secteur of secteurs" [ngValue]="secteur.index">{{secteur.name}}</option>
+                </select>
+            </div>
+            <div class="py-1">
+                <span>Timer : </span>
+                <span>{{currentImage.time}}</span>
+            </div>
+        </div>
+    </form>
+    <div class="flex space-between w-full align-items-center px-1">
+        <div class="flex flex-row">
+            <button class="button-vert" (click)="onUpdateImage()">Sauvegarder</button>
+            <span class="align-self-center mx-1">{{messageSaveImage}}</span>
+        </div>
+        <div class="flex flex-column">
+            <modal id="confirmation-delete-image">
+                <h1>Suppression d'une image</h1>
+                <p>Êtes-vous sur de vouloir supprimer cette image ?</p>
+                <div class="flex flex-row space-between">
+                    <button class="button-rouge" (click)="closeModal('confirmation-delete-image')">Non</button>
+                    <button class="button-vert" (click)="modalOnDeleteImage('confirmation-delete-image')">Oui</button>
+                </div>
+            </modal>
+            <button class="button-rouge" (click)="openModal('confirmation-delete-image')">Supprimer la capture</button>
+        </div>
+        
+    </div>
+</div>
