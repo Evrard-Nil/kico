@@ -92,3 +92,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-size: x-large;
     margin-left: auto;
 }
+
+a, a:hover, a:focus, a:active {
+    text-decoration: none;
+    color: inherit;
+}
+.center-wrapper{
+    text-align:center;
+}
+
+.align-self-center {
+    align-self: center;
+}

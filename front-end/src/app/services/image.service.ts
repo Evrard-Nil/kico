@@ -22,7 +22,7 @@ export class ImageService {
   }
 
   updateImage(image: Image) {
-    return this.apiService.doPut<Image>(`${environment.apiBaseUrl}/images/${image.id}`, image)
+    return this.apiService.doPut(`${environment.apiBaseUrl}/images/${image.id}`, image)
   }
 
   deleteImage(idImage: String) {
