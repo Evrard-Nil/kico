@@ -52,7 +52,7 @@ type Nodule struct {
 
 	Score int `json:"score,omitempty" bson:"score"`
 
-	Probability int `json:"probability,omitempty" bson:"probability"`
+	Probability NoduleProbability `json:"probability,omitempty" bson:"probability"`
 
 	Size NoduleSize `json:"size,omitempty" bson:"size"`
 }
