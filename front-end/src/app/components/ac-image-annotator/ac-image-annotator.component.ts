@@ -11,6 +11,7 @@ import { VideoService } from 'src/app/services/video.service';
 import { Image as CustomImage } from 'src/app/model/image';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
+import { Nodule } from 'src/app/model/nodule';
 
 @Component({
   selector: 'app-ac-image-annotator',
@@ -41,6 +42,30 @@ export class ACImageAnnotatorComponent implements OnInit {
   private state: ImageData;
   private deletedPolygons: Array<Array<[number, number]>>;
 
+
+  //Paramètres pour gérer le nodule
+  public nodule : Nodule;
+  public noduleLoaded : Boolean;
+
+  defaultSize: string;
+  sizes: string[] = ['0 cm', '> 0.5cm', '> 5cm', '> 5cm or confluence'];
+
+  defaultScore: number;
+  scores: number[] = [0, 1, 2, 3];
+
+  defaultProbability: string;
+  probabilities: string[] = ['Certain', 'Average', 'Low'];
+
+  defaultRetractile: string;
+  retractiles: Boolean[] = [true, false];
+
+  defaultAdherant: string;
+  adherants: Boolean[] = [true, false];
+
+  colors: string[] = ["Jaunâtre", "Verdatre"];
+
+  types: string[] = ["Hétérogène", "Homogène"];
+
   private image: HTMLImageElement;
 
   receivedImages: Array<CustomImage>;
@@ -59,7 +84,7 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.receivedImages = new Array();
     this.idVideo = this.route.snapshot.paramMap.get('id');
     this.currentImage = new CustomImage()
-
+    this.noduleLoaded = false;
   }
 
   //Méthode faisant partie du cycle angular : Lancée à l'initialisation du composant.
@@ -97,6 +122,17 @@ export class ACImageAnnotatorComponent implements OnInit {
         this.drawPolygon();
       }
     });
+  }
+
+  logNodule(){
+    console.log("this nodule : ", this.nodule);
+  }
+
+  private initQualification(image : CustomImage){
+    // console.log("image : ,", image);
+    this.nodule = image.nodule;
+    console.log("this.nodule : ", this.nodule);
+    this.noduleLoaded = true;
   }
 
   /**
@@ -290,12 +326,14 @@ export class ACImageAnnotatorComponent implements OnInit {
           this.drawPolygon();
           this.state = this.ctx.getImageData(0, 0, this.width, this.height);
           this.polygonsByState.set(this.state, this.polygons);
+          this.initQualification(image);
         } else {
           this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
           this.state = this.states[0]
           this.polygonsByState.set(this.state, []);
         }
-      })
+      });
+
     }
   }
 }

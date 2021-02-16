@@ -11,9 +11,19 @@ div.sidebar {
   width: 25%;
 }
 
-div.div2 {
+/* div.div2 {
   background: white;
   height: 100%;
+} */
+
+.example-radio-group {
+  display: flex;
+  flex-direction: row;
+  margin: 15px 0;
+}
+
+.example-radio-button {
+  margin: 5px;
 }
 
 div.clear {

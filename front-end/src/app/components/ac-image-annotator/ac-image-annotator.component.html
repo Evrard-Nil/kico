@@ -26,10 +26,94 @@
 
   </div>
 
-  <div class="div2">
-    <canvas #canvas style="position: absolute;"></canvas>
+  <div class="flex flex-column">
+
+    <!-- <div class="div2"> -->
+    <canvas #canvas></canvas>
+    <!-- </div> -->
+
+    <div class="box" *ngIf="noduleLoaded">
+
+      <div style="float: left;">
+        <!-- Bloc pour la taille du nodule -->
+        <div>
+          <label id="example-radio-group-label"><b>Size</b></label>
+          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+            [(ngModel)]="nodule.size">
+            <mat-radio-button class="example-radio-button" *ngFor="let size of sizes" [value]="size">
+              {{size}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <!-- Bloc pour le score PCI du module -->
+        <div>
+          <label id="example-radio-group-label"><b>Score</b></label>
+          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+            [(ngModel)]="nodule.score">
+            <mat-radio-button class="example-radio-button" *ngFor="let score of scores" [value]="score">
+              {{score}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <!-- Bloc pour la probabilité du nodule -->
+        <div>
+          <label id="example-radio-group-label"><b>Probability</b></label>
+          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+            [(ngModel)]="nodule.probability">
+            <mat-radio-button class="example-radio-button" *ngFor="let prob of probabilities" [value]="prob">
+              {{prob}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div style="float:right; width: 50%;">
+
+        <!-- Bloc pour le retractile -->
+        <div>
+          <label id="example-radio-group-label"><b>Retractile</b></label>
+          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+            [(ngModel)]="nodule.retractile">
+            <mat-radio-button class="example-radio-button" *ngFor="let ret of retractiles" [value]="ret">
+              {{ret == true ? "Yes" : "No"}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <!-- Bloc pour l'adhérence -->
+        <div>
+          <label id="example-radio-group-label"><b>Adherant</b></label>
+          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+            [(ngModel)]="nodule.adherant">
+            <mat-radio-button class="example-radio-button" *ngFor="let adherant of adherants" [value]="adherant">
+              {{adherant == true ? "Yes" : "No"}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
 
 
+        <div>
+          <label id="example-radio-group-label"><b>Color</b></label>
+          <mat-form-field appearance="fill" style="display: flex;">
+            <mat-select [(value)]="nodule.color">
+              <mat-option [value]="color" *ngFor="let color of colors">{{ color }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <label id="example-radio-group-label"><b>Form</b></label>
+          <mat-form-field appearance="fill" style="display: flex;">
+            <mat-select [(value)]="nodule.type">
+              <mat-option [value]="type" *ngFor="let type of types">{{ type }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+    </div>
+    <button (click)="logNodule()">Test</button>
   </div>
+
   <div class="clear">
 </div>
