@@ -56,9 +56,7 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.polygons = [];
     this.deletedPolygons = new Array<Array<[number, number]>>();
     this.polygonsByState = new Map<ImageData, Array<Array<[number, number]>>>();
-    this.numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 5, 5, 5, 5, 5];
     this.receivedImages = new Array();
-    this.idVideo = 'b50905c7-de74-40c6-9d7f-bbedafc98c9f';
     this.loadImages();
     this.idVideo = +this.route.snapshot.paramMap.get('id');
     this.currentImage = new CustomImage()
