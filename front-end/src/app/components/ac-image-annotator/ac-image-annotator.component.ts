@@ -134,6 +134,7 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   private initQualification(image : CustomImage){
     // console.log("image : ,", image);
+    console.log("image nodule : ", image.nodule);
     this.nodule = Object.assign({}, image.nodule);
     console.log("this.nodule : ", this.nodule);
     this.noduleLoaded = true;
@@ -353,10 +354,11 @@ export class ACImageAnnotatorComponent implements OnInit {
           this.state = this.ctx.getImageData(0, 0, this.width, this.height);
           this.polygonsByState.set(this.state, this.polygons);
           this.initQualification(image);
-        } else {
+        } else if(image === this.currentImage && image.annotations == undefined) {
           this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
           this.state = this.states[0]
           this.polygonsByState.set(this.state, []);
+          this.initQualification(image);
         }
       });
 
