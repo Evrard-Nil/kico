@@ -1,10 +1,8 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ feat/CI-CD ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -12,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: self-hosted
+    env:
+      GIT_SERVER: /home/ubuntu/dev/kico
     steps:
       - name: deploy
         run: sh $GIT_SERVER/deploy.sh 
