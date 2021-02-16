@@ -1,6 +1,7 @@
 <div class="page">
     <h1>Toutes les vidéos</h1>
-    <div class="list-video-legend">
+    <!-- Décommenter quand il y aura réellement un code couleur
+        <div class="list-video-legend">
         <span>
             <div id="annote-color" class="list-video-legend-block"></div> Annotée
         </span>
@@ -13,7 +14,7 @@
         <span>
             <div id="enregistre-color" class="list-video-legend-block"></div> Enregistrée
         </span>
-    </div>
+    </div> -->
     <div class="table">
         <div class="table-head">
             <table>
@@ -55,9 +56,8 @@
     </div>
 
     <div class="center-wrapper">
-        <input type='file' id="btn-ajouter-video" placeholder="Ajouter une
-            vidéo" /><br />
-        <button id="btn-ajouter-video"><img src="assets/img/iconAdd.png" width=16 height=16 (click)="addVideo()" />
+        <input type='file' placeholder="Ajouter une vidéo" accept=".mp4" #inputVideo />
+        <button id="btn-ajouter-video" (click)="addVideo()"><img src="assets/img/iconAdd.png" width=16 height=16 />
             Ajouter une
             vidéo</button>
     </div>
