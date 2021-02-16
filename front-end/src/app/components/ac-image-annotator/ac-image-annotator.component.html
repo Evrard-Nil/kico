@@ -33,6 +33,14 @@
     <!-- </div> -->
 
     <div class="box" *ngIf="noduleLoaded">
+      <modal id="confirmation-save-annotations">
+        <h1>Sauvegarde</h1>
+        <p>Êtes-vous sur de vouloir sauvegarder ? Toutes les caractéristiques ne sont pas remplies</p>
+        <div class="flex flex-row space-between">
+          <button class="button-rouge" (click)="closeModal('confirmation-save-annotations')">Non</button>
+          <button class="button-vert" (click)="saveCanvasBis()">Oui</button>
+        </div>
+      </modal>
 
       <div style="float: left;">
         <!-- Bloc pour la taille du nodule -->

@@ -12,6 +12,8 @@ import { Image as CustomImage } from 'src/app/model/image';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { Nodule } from 'src/app/model/nodule';
+import { ModalService } from '../modules/modal';
+
 
 @Component({
   selector: 'app-ac-image-annotator',
@@ -73,7 +75,8 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   constructor(
     private imageService: ImageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: ModalService
   ) {
     this.coordinates = new Array<[number, number]>();
     this.increment = 1;
@@ -126,11 +129,12 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   logNodule(){
     console.log("this nodule : ", this.nodule);
+    console.log("size nodule : ", Object.keys(this.nodule).length);
   }
 
   private initQualification(image : CustomImage){
     // console.log("image : ,", image);
-    this.nodule = image.nodule;
+    this.nodule = Object.assign({}, image.nodule);
     console.log("this.nodule : ", this.nodule);
     this.noduleLoaded = true;
   }
@@ -221,6 +225,23 @@ export class ACImageAnnotatorComponent implements OnInit {
    */
   saveCanvas(): void {
     this.increment = 1;
+    if(Object.keys(this.nodule).length < 7){
+      this.openModal("confirmation-save-annotations");
+    } else {
+      this.saveCanvasBis();
+    }
+  }
+
+  openModal(id: string) {
+    this.modalService.open(id);
+  }
+
+  closeModal(id: string) {
+    this.modalService.close(id);
+  }
+
+  public saveCanvasBis() : void {
+    console.log("rentre ici");
     this.state = this.ctx.getImageData(0, 0, this.width, this.height);
     this.states.push(this.state);
     this.isDrawing = false;
@@ -229,7 +250,8 @@ export class ACImageAnnotatorComponent implements OnInit {
     if (polygon.length !== 0) {
       this.polygons.push(polygon);
     }
-    if (!this.arrayEquals(this.currentImage.annotations, this.polygons)) {
+
+    if (!this.arrayEquals(this.currentImage.annotations, this.polygons) || this.currentImage.nodule != this.nodule) {
       let tempImage = new CustomImage();
       tempImage.id = this.currentImage.id;
       tempImage.name = this.currentImage.name;
@@ -237,6 +259,8 @@ export class ACImageAnnotatorComponent implements OnInit {
       tempImage.time = this.currentImage.time;
       tempImage.url = "/" + this.currentImage.url.match(/images\/(.)*/)[0]
       tempImage.video_id = this.currentImage.video_id;
+      let clonedNodule = Object.assign({}, this.nodule);
+      tempImage.nodule = clonedNodule;
       if (this.currentImage.annotations == undefined) {
         this.currentImage.annotations = [];
       }
@@ -245,12 +269,14 @@ export class ACImageAnnotatorComponent implements OnInit {
         Array.from(this.polygons)
       )));
       this.currentImage.annotations = tempImage.annotations;
-      this.imageService.updateImage(tempImage).subscribe((img) => {});
+      this.imageService.updateImage(tempImage).subscribe((img) => {
+      });
     }
 
     let polygons = Array.from(this.polygons);
     this.polygonsByState.set(this.state, polygons);
     this.coordinates.splice(0, this.coordinates.length); //On remet le tableau de coordonnées du polygone à vide.
+    this.closeModal("confirmation-save-annotations");
   }
 
   //Permet de passer en mode dessin.
