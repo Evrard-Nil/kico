@@ -12,6 +12,7 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -108,10 +109,6 @@ func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 
 	params := mux.Vars(r)
 	id := params["id"]
-	if err != nil {
-		handleError(w, err)
-		return
-	}
 
 	// Parse params
 	time := r.FormValue("time")
@@ -126,9 +123,9 @@ func (c *DefaultAPIController) AddImageToVideo(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	result, err := c.service.AddImageToVideo(r.Context(), id, name, secteurID, time, pid, ext)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.AddImageToVideo(r.Context(), id, name, secteurID, time, pid, ext)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -154,9 +151,9 @@ func (c *DefaultAPIController) AddVideo(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	result, err := c.service.AddVideo(r.Context(), title, vid, ext)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.AddVideo(r.Context(), title, vid, ext)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -169,9 +166,9 @@ func (c *DefaultAPIController) DeleteImage(w http.ResponseWriter, r *http.Reques
 	params := mux.Vars(r)
 	id := params["id"]
 
-	result, err := c.service.DeleteImage(r.Context(), id, c.dataFolder)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.DeleteImage(r.Context(), id, c.dataFolder)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -184,9 +181,9 @@ func (c *DefaultAPIController) DeleteVideo(w http.ResponseWriter, r *http.Reques
 	params := mux.Vars(r)
 	id := params["id"]
 
-	result, err := c.service.DeleteVideo(r.Context(), id, c.dataFolder)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.DeleteVideo(r.Context(), id, c.dataFolder)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -199,9 +196,9 @@ func (c *DefaultAPIController) GetImage(w http.ResponseWriter, r *http.Request) 
 	params := mux.Vars(r)
 	id := params["id"]
 
-	result, err := c.service.GetImage(r.Context(), id)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.GetImage(r.Context(), id)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -213,9 +210,9 @@ func (c *DefaultAPIController) GetImagesFromVideo(w http.ResponseWriter, r *http
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	params := mux.Vars(r)
 	id := params["id"]
-	result, err := c.service.GetImagesFromVideo(r.Context(), id)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.GetImagesFromVideo(r.Context(), id)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -228,9 +225,9 @@ func (c *DefaultAPIController) GetVideo(w http.ResponseWriter, r *http.Request) 
 	params := mux.Vars(r)
 	id := params["id"]
 
-	result, err := c.service.GetVideo(r.Context(), id)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.GetVideo(r.Context(), id)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -240,9 +237,9 @@ func (c *DefaultAPIController) GetVideo(w http.ResponseWriter, r *http.Request) 
 // GetVideos - Retrieve all videos
 func (c *DefaultAPIController) GetVideos(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	result, err := c.service.GetVideos(r.Context())
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.GetVideos(r.Context())
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -261,9 +258,9 @@ func (c *DefaultAPIController) UpdateImage(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	result, err := c.service.UpdateImage(r.Context(), id, *image)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.UpdateImage(r.Context(), id, *image)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -282,9 +279,9 @@ func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	result, err := c.service.UpdateVideo(r.Context(), id, *video)
-	if err != nil {
-		handleError(w, err)
+	result, aerr := c.service.UpdateVideo(r.Context(), id, *video)
+	if aerr != nil {
+		handleError(w, aerr)
 		return
 	}
 
@@ -292,7 +289,14 @@ func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Reques
 }
 
 func handleError(w http.ResponseWriter, err error) {
-	fmt.Print(err)
-	w.WriteHeader(http.StatusInternalServerError)
-	w.Write([]byte(fmt.Sprintf("500 - %s", err)))
+	log.Print(err)
+	switch err.(type) {
+	case *APIError:
+		e := err.(*APIError)
+		w.WriteHeader(e.code)
+		w.Write([]byte(fmt.Sprintf("%d - %s", err.(*APIError).code, err.(*APIError).message)))
+	default:
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf("500 - %v", err)))
+	}
 }

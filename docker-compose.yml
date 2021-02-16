@@ -1,38 +1,37 @@
 # Use root/example as user/password credentials
-version: '3.1'
+version: "3.1"
 
 services:
-
   api:
     image: kico-api
     build: ./back-end/src
     ports:
-      - '8080:8080'
+      - "8080:8080"
     depends_on:
-      - 'mongo'
-      - 'fileserver'
+      - "mongo"
+      - "fileserver"
     environment:
       ICO_DATA_STORAGE: /ico-data/storage
     volumes:
       - ./data/storage:/ico-data/storage
-      
+
   web:
-    image: kico-front 
+    image: kico-front
     build: ./front-end
     ports:
-      - '3000:80'
+      - "80:80"
     depends_on:
-      - 'api'
-      
+      - "api"
+
   mongo:
-    image: 'mongo:latest'
-    container_name: 'mongo'
+    image: "mongo:latest"
+    container_name: "mongo"
     ports:
-      - '27100:27017'
+      - "27100:27017"
     environment:
-        MONGO_INITDB_ROOT_USERNAME: mongoadmin
-        MONGO_INITDB_ROOT_PASSWORD: secret
-        MONGO_INITDB_DATABASE: ico
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: ico
     volumes:
       - ./data/dbfile:/data/db
 
@@ -40,7 +39,7 @@ services:
     image: mongo-express
     restart: always
     depends_on:
-      - 'mongo'
+      - "mongo"
     ports:
       - 8081:8081
     environment:
@@ -53,7 +52,7 @@ services:
     ports:
       - 8082:8080
     environment:
-      CORS: 'true'
+      CORS: "true"
       FOLDER: /ico-data/storage
     volumes:
       - ./data/storage:/ico-data/storage

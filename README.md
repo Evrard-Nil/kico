@@ -1,4 +1,4 @@
-# KICO
+# KICO 
 
 ## Build this app
 
@@ -17,7 +17,7 @@ docker-compose up
 ```
 
 `ctrl^c` to stop.
-
+ 
 ## Dev environnement
 
 ### Set up a front dev env
