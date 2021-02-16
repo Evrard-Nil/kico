@@ -279,11 +279,11 @@ components:
       nullable: false
       type: object
       example:
-        id: 5e749324-eb03-4c43-adee-4c2a31c8a999
+        id: f6396d67-f415-4d6a-9b75-043386b3bead
         state: imported
-        date: "2021-01-12T14:35:50.756Z"
-        url: "/videos/5e749324-eb03-4c43-adee-4c2a31c8a999.avi"
-        title: greattitle
+        date: '2021-02-13T16:59:57.813Z'
+        url: /videos/f6396d67-f415-4d6a-9b75-043386b3bead.mp4
+        title: test.mp4
       properties:
         id:
           type: string
@@ -305,15 +305,23 @@ components:
       type: object
       nullable: false
       example:
-        id: 5093fe4d-b4a6-4bdc-a4d3-1f25890c89e8
-        name: gfhbjknl,
-        video_id: 71a0b60b-0085-4693-805c-47a1bff41e91
-        url: "/images/5093fe4d-b4a6-4bdc-a4d3-1f25890c89e8.svg"
+        id: 01ed79b9-dd02-4fdd-af0f-f1b3394a709d
+        secteur_id: '6'
+        name: 'Lyra ! 2'
+        time: '0:8'
+        video_id: b50905c7-de74-40c6-9d7f-bbedafc98c9f
+        url: /images/01ed79b9-dd02-4fdd-af0f-f1b3394a709d.png
         annotations:
-          - - 1
-            - 2
-          - - 3
-            - 4
+          - [[363, 217], [310, 354], [477, 381], [571, 203]]
+          - [[379, 89], [339, 151], [499, 174], [547, 82]]
+          - [[129, 252], [69, 368], [222, 424], [268, 232]]
+        nodule:
+          color: Jaunâtre
+          type: Hétérogène
+          adherant: true
+          score: 3
+          probability: Certain
+          size: '0 cm'
       properties:
         id:
           type: string
