@@ -19,7 +19,7 @@ services:
     image: kico-front
     build: ./front-end
     ports:
-      - "80:80"
+      - "8083:80"
     depends_on:
       - "api"
 
@@ -47,7 +47,7 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: secret
 
   fileserver:
-    image: halverneus/static-file-server
+    image: fileserver
     restart: always
     ports:
       - 8082:8080

@@ -9,6 +9,18 @@
 
 package openapi
 
+// NoduleColor : Color of a nodule
+type NoduleColor string
+
+// NoduleType : Type of a nodule
+type NoduleType string
+
+// NoduleSize : Size of a nodule
+type NoduleSize string
+
+// NoduleProbability : Probability of a nodule
+type NoduleProbability string
+
 // Image - An extracted image from a video
 type Image struct {
 	ID string `json:"id,omitempty" bson:"_id"`
@@ -24,4 +36,39 @@ type Image struct {
 	URL string `json:"url,omitempty" bson:"url"`
 
 	Annotations [][][2]int `json:"annotations,omitempty" bson:"annotations"`
+
+	NoduleInfos Nodule `json:"nodule,omitempty" bson:"nodule"`
 }
+
+// Nodule describe a nodule
+type Nodule struct {
+	Color NoduleColor `json:"color,omitempty" bson:"color"`
+
+	Type NoduleType `json:"type,omitempty" bson:"type"`
+
+	Adherant bool `json:"adherant,omitempty" bson:"adherant"`
+
+	Retractile bool `json:"retractile,omitempty" bson:"retractile"`
+
+	Score int `json:"score,omitempty" bson:"score"`
+
+	Probability NoduleProbability `json:"probability,omitempty" bson:"probability"`
+
+	Size NoduleSize `json:"size,omitempty" bson:"size"`
+}
+
+// Nodule colors, types, sizes and prob
+const (
+	JAUNATRE NoduleColor = "Jaunâtre"
+
+	HETEROGENE NoduleType = "Hétérogène"
+
+	SIZE1 NoduleSize = "0 cm"
+	SIZE2 NoduleSize = "< 0.5 cm"
+	SIZE3 NoduleSize = "> 5 cm"
+	SIZE4 NoduleSize = "< 5 cm or confluence"
+
+	CERTAIN NoduleProbability = "Certain"
+	AVERAGE NoduleProbability = "Average"
+	LOW     NoduleProbability = "Low"
+)
