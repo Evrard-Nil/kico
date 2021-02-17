@@ -4,9 +4,26 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://90.105.212.252:8080/api/v1',
-  fileBaseUrl: 'http://90.105.212.252:8082'
+  apiBaseUrl: 'http://82.120.104.161:8080/api/v1',
+  fileBaseUrl: 'http://82.120.104.161:8082'
 };
+
+export const zones = {
+  0 : 'Centrale',
+  1 : 'Hypochondre droit',
+  2 : 'Epigastre',
+  3 : 'Hypochondre gauche',
+  4 : 'Flanc gauche',
+  5 : 'Fosse iliaque gauche',
+  6 : 'Pelvis',
+  7 : 'Fosse iliaque droite',
+  8 : 'Flanc droit',
+  9 : 'Jéjunum proximal',
+  10 : 'Jéjunum distal',
+  11 : 'Iléon proximal',
+  12 : 'Iléon distal'
+}
+
 
 /*
  * For easier debugging in development mode, you can import the following file

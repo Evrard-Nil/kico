@@ -5,8 +5,8 @@
   <div class="sidebar">
 
     <div class="wrapper">
-      <!-- <div class="one"><input type="image" src="../../../assets/redo.jpg" id="redo" (click)="redoPolygons()" width="64px" height="64px"></div>
-      <div class="two"><input type="image" src="../../../assets/undo.jpg" id="undo" (click)="undoPolygon()" width="64px" height="64px"></div> -->
+      <!-- <div class="one"><input type="image" src="../../../assets/redo.jpg" id="redo" (click)="redoPolygons()" width="64px" height="64px"></div> -->
+      <div class="two"><input type="image" src="../../../assets/undo.jpg" id="undo" (click)="clearAnnotations()" width="64px" height="64px"></div>
       <div class="three"><input type="image" src="../../../assets/save.jpg" id="save" (click)="saveCanvas()" width="64px" height="64px"></div>
       <div class="four"><input type="image" src="../../../assets/draw.jpg" id="draw" (click)="drawCanvas()" width="64px" height="64px"></div>
     </div>
@@ -17,8 +17,8 @@
 
       <ng-container appConnector>
         <app-container>
-          <app-item *ngFor="let image of receivedImages" [url]="image.url"
-            (click)="clickImage(image)">
+          <app-item *ngFor="let image of receivedImages" [url]="image.url" id="image.id" [selected]="false"
+            (click)="clickImage(image, $event)">
           </app-item>
         </app-container>
       </ng-container>
@@ -28,9 +28,9 @@
 
   <div class="flex flex-column">
 
-    <!-- <div class="div2"> -->
+    <div class="div2">
     <canvas #canvas></canvas>
-    <!-- </div> -->
+    </div>
 
     <div class="box" *ngIf="noduleLoaded">
       <modal id="confirmation-save-annotations">
@@ -38,9 +38,12 @@
         <p>Êtes-vous sur de vouloir sauvegarder ? Toutes les caractéristiques ne sont pas remplies</p>
         <div class="flex flex-row space-between">
           <button class="button-rouge" (click)="closeModal('confirmation-save-annotations')">Non</button>
-          <button class="button-vert" (click)="saveCanvasBis()">Oui</button>
+          <button class="button-vert" (click)="saveImage()">Oui</button>
         </div>
       </modal>
+      <div>
+        <h1>Secteur {{currentImage.secteur_id}} : {{currentZone}}</h1>
+      </div>
 
       <div style="float: left;">
         <!-- Bloc pour la taille du nodule -->
@@ -120,7 +123,6 @@
       </div>
 
     </div>
-    <button (click)="logNodule()">Test</button>
   </div>
 
   <div class="clear">
