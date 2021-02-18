@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/imdario/mergo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -301,7 +300,7 @@ func (s *APIService) GetVideos(ctx context.Context) (interface{}, *APIError) {
 }
 
 // UpdateImage - update an image
-func (s *APIService) UpdateImage(ctx context.Context, imageID string, image Image) (interface{}, *APIError) {
+func (s *APIService) UpdateImage(ctx context.Context, imageID string, image interface{}) (interface{}, *APIError) {
 	methodName := "UpdateImage"
 	log.Printf("%s - Updating image (%s)...", methodName, imageID)
 
@@ -309,18 +308,8 @@ func (s *APIService) UpdateImage(ctx context.Context, imageID string, image Imag
 	if err != nil {
 		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
-
-	currentData, aerr := s.GetImage(ctx, imageID)
-	if aerr != nil {
-		return nil, aerr
-	}
-	currentImage := currentData.(Image)
-	if err := mergo.Merge(&currentImage, image, mergo.WithOverride); err != nil {
-		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
-	}
-
-	log.Printf("%s - Image to be inserted: %v \n", methodName, currentImage)
-	_, err = s.dbClient.Database("ico").Collection("images").ReplaceOne(ctx, bson.M{"_id": imageID}, currentImage)
+	log.Printf("%s - Image to be inserted: %v \n", methodName, image)
+	_, err = s.dbClient.Database("ico").Collection("images").UpdateOne(ctx, bson.M{"_id": imageID}, bson.M{"$set": image})
 	if err != nil {
 		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
@@ -330,7 +319,7 @@ func (s *APIService) UpdateImage(ctx context.Context, imageID string, image Imag
 }
 
 // UpdateVideo - Update a video
-func (s *APIService) UpdateVideo(ctx context.Context, videoID string, video Video) (interface{}, *APIError) {
+func (s *APIService) UpdateVideo(ctx context.Context, videoID string, video interface{}) (interface{}, *APIError) {
 	methodName := "UpdateVideo"
 	log.Printf("%s - Updating video (%s)...", methodName, videoID)
 
@@ -339,18 +328,8 @@ func (s *APIService) UpdateVideo(ctx context.Context, videoID string, video Vide
 		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
 
-	currentData, aerr := s.GetVideo(ctx, videoID)
-	if aerr != nil {
-		return nil, aerr
-	}
-
-	currentVideo := currentData.(Video)
-	if err := mergo.Merge(&currentVideo, video, mergo.WithOverride); err != nil {
-		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
-	}
-
-	log.Printf("%s - Video to be inserted: %v \n", methodName, currentVideo)
-	_, err = s.dbClient.Database("ico").Collection("videos").ReplaceOne(ctx, bson.M{"_id": videoID}, currentVideo)
+	log.Printf("%s - Video to be inserted: %v \n", methodName, video)
+	_, err = s.dbClient.Database("ico").Collection("videos").UpdateOne(ctx, bson.M{"_id": videoID}, bson.M{"$set": video})
 	if err != nil {
 		return nil, &APIError{code: http.StatusInternalServerError, message: err.Error()}
 	}
