@@ -7,8 +7,6 @@ import { AppConstants } from 'src/app/app.constants';
 import { Image } from 'src/app/model/image';
 import { Video } from 'src/app/model/video';
 import { ImageStore } from 'src/app/services/Store/image-store.service';
-import { ImageService } from 'src/app/services/API/image.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-video-visualisation',

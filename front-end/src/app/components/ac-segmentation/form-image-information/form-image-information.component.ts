@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Image } from 'src/app/model/image';
 import { Secteurs } from 'src/assets/data/secteurs';
-import { ImageService } from 'src/app/services/API/image.service';
 import { ModalService } from '../../modules/modal';
 import { ImageStore } from 'src/app/services/Store/image-store.service';
-import { Observable } from 'rxjs';
 
 const MESSAGE_SAVE_IMAGE = "Informations sauvegardées"
 

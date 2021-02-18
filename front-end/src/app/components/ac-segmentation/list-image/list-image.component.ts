@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy } from '@angular/core';
 import {
   Component,
 	EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output
 } from '@angular/core';
@@ -11,7 +9,6 @@ import { Observable } from 'rxjs';
 import {
   Image
 } from 'src/app/model/image'
-import { ImageStore } from 'src/app/services/Store/image-store.service';
 
 @Component({
   selector: 'app-list-image',
