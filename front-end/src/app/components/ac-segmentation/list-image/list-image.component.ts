@@ -7,9 +7,11 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   Image
 } from 'src/app/model/image'
+import { ImageStore } from 'src/app/services/Store/image-store.service';
 
 @Component({
   selector: 'app-list-image',
@@ -18,22 +20,20 @@ import {
 })
 export class ListImageComponent implements OnInit {
 
-  @Input() images: Array <Image>;
-  @Output() eventSelectedImage: EventEmitter<Image>;
-
+  @Input() images: Observable<Array<Image>>;
   @Input() currentImage: Image;
+
+  @Output() eventSelectedImage: EventEmitter<Image>;
 
   constructor() {
 	  this.eventSelectedImage = new EventEmitter();
   }
 
   changeSelectedImage(image: Image) {
-    this.currentImage = image
 	  this.eventSelectedImage.emit(image);
   }
 
   ngOnInit(): void {
 	  
   }
-
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment'
-import { Image } from '../model/image';
+import { environment } from '../../../environments/environment'
+import { Image } from '../../model/image';
 import { ApiService } from './api.service'
 
 @Injectable({

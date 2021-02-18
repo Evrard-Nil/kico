@@ -6,8 +6,8 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ImageService } from 'src/app/services/image.service';
-import { VideoService } from 'src/app/services/video.service';
+import { ImageService } from 'src/app/services/API/image.service';
+import { VideoService } from 'src/app/services/API/video.service';
 import { Image as CustomImage } from 'src/app/model/image';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
