@@ -3,6 +3,7 @@ import { ViewChild } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Output } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
+import { AppConstants } from 'src/app/app.constants';
 import { Image } from 'src/app/model/image';
 import { Video } from 'src/app/model/video';
 import { ImageStore } from 'src/app/services/Store/image-store.service';
@@ -22,7 +23,8 @@ export class VideoVisualisationComponent implements OnInit, AfterViewInit {
 
   @Output() eventCreateImage : EventEmitter<Image>;
 
-  constructor(private imageStore : ImageStore) { 
+
+  constructor(private imageStore : ImageStore, private constants : AppConstants) { 
     this.eventCreateImage = new EventEmitter()
   }
 
@@ -45,8 +47,8 @@ export class VideoVisualisationComponent implements OnInit, AfterViewInit {
     var canvasElement = document.createElement("canvas")
     var ctx = canvasElement.getContext('2d')
     
-    canvasElement.width = this.videoElement.clientWidth;
-    canvasElement.height = this.videoElement.clientHeight;
+    canvasElement.width = this.constants.image.WIDTH
+    canvasElement.height = this.constants.image.HEIGHT
     ctx.drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
 
     this.saveImage(canvasElement)

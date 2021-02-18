@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -11,16 +12,17 @@ import { VideoService } from 'src/app/services/API/video.service';
 import { Image as CustomImage } from 'src/app/model/image';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
+import { AppConstants } from 'src/app/app.constants';
 
 @Component({
   selector: 'app-ac-image-annotator',
   templateUrl: './ac-image-annotator.component.html',
   styleUrls: ['./ac-image-annotator.component.css'],
 })
-export class ACImageAnnotatorComponent implements OnInit {
+export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true }) public canvas: ElementRef;
-  @Input() public width = 1200;
-  @Input() public height = 600;
+  @Input() public width
+  @Input() public height
   @Input() public idVideo;
   // @Input() image: ImageBitmap;
 
@@ -48,7 +50,8 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   constructor(
     private imageService: ImageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private constants : AppConstants
   ) {
     this.coordinates = new Array<[number, number]>();
     this.increment = 1;
@@ -62,6 +65,17 @@ export class ACImageAnnotatorComponent implements OnInit {
 
   }
 
+  /**
+   * Supprime les images du localstorage, pour éviter la fuite mémoire
+   */
+  ngOnDestroy(): void {
+    this.receivedImages.forEach((image) => {
+      localStorage.removeItem(
+        image.id.toString()
+      );
+    })
+  }
+
   //Méthode faisant partie du cycle angular : Lancée à l'initialisation du composant.
   /*
    * On récupère les dimensions exactes de la photo //TODO
@@ -69,6 +83,8 @@ export class ACImageAnnotatorComponent implements OnInit {
    * On branche une méthode sur l'event "Clic du bouton de la souris" afin de dessiner au clic lorsqu'on est en mode dessin.
    */
   ngOnInit(): void {
+    this.width = this.constants.image.WIDTH;
+    this.height = this.constants.image.HEIGHT;
     this.loadImages();
     this.initImage();
     this.initCanvas();
@@ -297,5 +313,5 @@ export class ACImageAnnotatorComponent implements OnInit {
         }
       })
     }
-  }
+  } 
 }
