@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { ActableauVideosComponent } from './components/actableau-videos/actableau-videos.component';
-
+import {MatRadioModule} from '@angular/material/radio';
 import { ACImageAnnotatorComponent } from './components/ac-image-annotator/ac-image-annotator.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ACImageViewComponent } from './components/ac-image-view/ac-image-view.component';
@@ -21,6 +21,9 @@ import { ConnectorDirective } from './components/ac-image-annotator/container/co
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalModule } from './components/modules/modal';
+import {MatSelectModule} from '@angular/material/select';
+import {MatToolbarModule} from '@angular/material/toolbar';
+
 
 @NgModule({
   declarations: [
@@ -46,7 +49,10 @@ import { ModalModule } from './components/modules/modal';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ModalModule
+    ModalModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
