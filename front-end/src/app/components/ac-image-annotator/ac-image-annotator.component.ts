@@ -10,11 +10,10 @@ import {
 import { ImageService } from 'src/app/services/image.service';
 import { VideoService } from 'src/app/services/video.service';
 import { Image as CustomImage } from 'src/app/model/image';
-import { environment, zones } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { Nodule } from 'src/app/model/nodule';
 import { ModalService } from '../modules/modal';
-
 import { AppConstants } from 'src/app/app.constants';
 
 @Component({
@@ -359,7 +358,7 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     this.image.crossOrigin = 'anonymous';
     this.image.src = localStorage.getItem(image.id.toString());
     this.currentImage = image
-    this.currentZone = zones[+this.currentImage.secteur_id];
+    this.currentZone = this.constants.zones[+this.currentImage.secteur_id];
     this.erasedAnnotations = false;
 
     this.image.onload = () => {
