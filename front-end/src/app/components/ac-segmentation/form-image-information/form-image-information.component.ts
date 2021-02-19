@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Image } from 'src/app/model/image';
 import { Secteurs } from 'src/assets/data/secteurs';
-import { ImageService } from 'src/app/services/image.service';
 import { ModalService } from '../../modules/modal';
+import { ImageStore } from 'src/app/services/Store/image-store.service';
 
 const MESSAGE_SAVE_IMAGE = "Informations sauvegardées"
 
@@ -19,7 +19,7 @@ export class FormImageInformationComponent implements OnInit {
   messageSaveImage : string;
 
   constructor(
-    private imageService: ImageService,
+    private imageStore: ImageStore,
     private modalService: ModalService
   ) {
     this.eventNameImage = new EventEmitter();
@@ -38,25 +38,9 @@ export class FormImageInformationComponent implements OnInit {
   }
 
   onUpdateImage() {
-    const image = this.cloneImageToUpdate(this.currentImage);
-    this.imageService.updateImage(image).subscribe((code) => {
-      if(code === "OK"){
-        this.displayMessageSaveImage()
-      }
-    });
-  }
-
-  cloneImageToUpdate(currentImage: Image) {
-    var image = new Image();
-    image.id = currentImage.id;
-    image.name = currentImage.name;
-    image.secteur_id = currentImage.secteur_id;
-    image.time = currentImage.time;
-    image.url = '/' + this.currentImage.url.match(/images\/(.)*/)[0];
-    image.video_id = currentImage.video_id;
-    image.annotations = currentImage.annotations;
-
-    return image;
+    this.imageStore.updateImage(this.currentImage).then(() => {
+      this.displayMessageSaveImage()
+    })
   }
 
   openModal(id: string) {

@@ -3,7 +3,7 @@
         <div class="pb-1">
             <span class="bold titre-rubrique">Segmentation</span>
         </div>
-        <app-video-visualisation *ngIf="video" [video]="video" (eventCreateImage)="addImageToList($event)"></app-video-visualisation>
+        <app-video-visualisation *ngIf="video" [video]="video"></app-video-visualisation>
         <hr width="90%">
         <app-form-image-information [currentImage]="currentImage" (eventDeleteImage)="deleteCurrentImage()"></app-form-image-information>
     </div>

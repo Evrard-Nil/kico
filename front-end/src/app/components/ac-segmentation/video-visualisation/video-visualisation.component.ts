@@ -6,8 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/app.constants';
 import { Image } from 'src/app/model/image';
 import { Video } from 'src/app/model/video';
-import { ImageService } from 'src/app/services/image.service';
-import { environment } from 'src/environments/environment';
+import { ImageStore } from 'src/app/services/Store/image-store.service';
 
 @Component({
   selector: 'app-video-visualisation',
@@ -22,7 +21,8 @@ export class VideoVisualisationComponent implements OnInit, AfterViewInit {
 
   @Output() eventCreateImage : EventEmitter<Image>;
 
-  constructor(private imageService: ImageService, private constants : AppConstants) { 
+
+  constructor(private imageStore : ImageStore, private constants : AppConstants) { 
     this.eventCreateImage = new EventEmitter()
   }
 
@@ -58,20 +58,30 @@ export class VideoVisualisationComponent implements OnInit, AfterViewInit {
    * @param canvasElement : le canvas contenant l'image à sauvegarder 
    */
   saveImage(canvasElement: HTMLCanvasElement) {
-    canvasElement.toBlob((blob) => {
-      const time = Math.round(this.videoElement.currentTime)
-
+    const blob = this.getCanvasBlob(canvasElement);
+    
+    blob.then((blob) => {
+      const time = this.getDurationFromSeconds(Math.round(this.videoElement.currentTime))
       const formData = new FormData()
-      formData.append('name', "Nouvelle image ("+ this.getDurationFromSeconds(time) + ")");
+      formData.append('name', "Nouvelle image (" + time + ")");
       formData.append('fileName', blob);
       formData.append('secteur_id', "0");
-      formData.append('time', this.getDurationFromSeconds(time));
+      formData.append('time', time);
+      this.imageStore.createImage(this.video.id, formData)
+    })
 
-      this.imageService.saveImage(this.video.id, formData).subscribe((image) => {
-        image.url = environment.fileBaseUrl + image.url
-        this.eventCreateImage.emit(image)
-      })
-    },"image/jpeg")
+  }
+
+  /**
+   * Extrait le contenu du canvas sous forme de blob. L'extraction est asynchrone et retourne une promesse
+   * @param canvas 
+   */
+  private getCanvasBlob(canvas : HTMLCanvasElement) {
+    return new Promise<Blob>(function(resolve) {
+      canvas.toBlob(function(blob) {
+        resolve(blob)
+      },"image/jpeg")
+    })
   }
 
   /**

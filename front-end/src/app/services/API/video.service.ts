@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { catchError, retry } from 'rxjs/operators';
-import { environment } from '../../environments/environment'
-import { Video } from "../model/video"
+import { environment } from '../../../environments/environment'
+import { Video } from "../../model/video"
 import { ApiService } from './api.service';
 
 @Injectable({

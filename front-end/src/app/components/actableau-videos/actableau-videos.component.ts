@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Video } from 'src/app/model/video';
-import { VideoService } from 'src/app/services/video.service';
+import { VideoService } from 'src/app/services/API/video.service';
 import { Router } from '@angular/router';
 import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';

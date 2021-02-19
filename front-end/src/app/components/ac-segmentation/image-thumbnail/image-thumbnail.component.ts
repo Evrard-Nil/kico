@@ -9,8 +9,8 @@ import {Image} from 'src/app/model/image'
 export class ImageThumbnailComponent implements OnInit, OnChanges {
 
   @Input() image: Image;
-  @Output() eventImageSelected: EventEmitter<Image>;
   @Input() imageSelected : Image
+  @Output() eventImageSelected: EventEmitter<Image>;
 
   isSelected : Boolean
 
@@ -28,12 +28,7 @@ export class ImageThumbnailComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if(this.image === this.imageSelected) {
-      this.isSelected = true
-    }
-    else {
-      this.isSelected = false
-    }
+    this.isSelected = this.image === this.imageSelected
   }
 
 }
