@@ -252,13 +252,13 @@ func (c *DefaultAPIController) UpdateImage(w http.ResponseWriter, r *http.Reques
 	params := mux.Vars(r)
 	id := params["id"]
 
-	image := &Image{}
+	var image interface{}
 	if err := json.NewDecoder(r.Body).Decode(&image); err != nil {
 		handleError(w, err)
 		return
 	}
 
-	result, aerr := c.service.UpdateImage(r.Context(), id, *image)
+	result, aerr := c.service.UpdateImage(r.Context(), id, image)
 	if aerr != nil {
 		handleError(w, aerr)
 		return
@@ -273,13 +273,13 @@ func (c *DefaultAPIController) UpdateVideo(w http.ResponseWriter, r *http.Reques
 	params := mux.Vars(r)
 	id := params["id"]
 
-	video := &Video{}
+	var video interface{}
 	if err := json.NewDecoder(r.Body).Decode(&video); err != nil {
 		handleError(w, err)
 		return
 	}
 
-	result, aerr := c.service.UpdateVideo(r.Context(), id, *video)
+	result, aerr := c.service.UpdateVideo(r.Context(), id, video)
 	if aerr != nil {
 		handleError(w, aerr)
 		return

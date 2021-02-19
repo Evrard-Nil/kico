@@ -43,6 +43,6 @@ type DefaultAPIServicer interface {
 	GetImagesFromVideo(context.Context, string) (interface{}, *APIError)
 	GetVideo(context.Context, string) (interface{}, *APIError)
 	GetVideos(context.Context) (interface{}, *APIError)
-	UpdateImage(context.Context, string, Image) (interface{}, *APIError)
-	UpdateVideo(context.Context, string, Video) (interface{}, *APIError)
+	UpdateImage(context.Context, string, interface{}) (interface{}, *APIError)
+	UpdateVideo(context.Context, string, interface{}) (interface{}, *APIError)
 }
