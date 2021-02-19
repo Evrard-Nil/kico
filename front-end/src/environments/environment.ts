@@ -5,11 +5,8 @@
 export const environment = {
   production: false,
   apiBaseUrl: 'http://82.120.104.161:8080/api/v1',
-  fileBaseUrl: 'http://82.120.104.161:8082'
+  fileBaseUrl: 'http://82.120.104.161:8082',
 };
-
-
-
 
 /*
  * For easier debugging in development mode, you can import the following file

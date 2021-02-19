@@ -22,6 +22,7 @@ export class ActableauVideosComponent implements OnInit {
 
   ngOnInit(): void {
     this.videos = new Array<Video>();
+    console.log("avant log vidéo");
     this.loadVideos();
   }
 
@@ -36,10 +37,14 @@ export class ActableauVideosComponent implements OnInit {
 
   addVideo(): void {
     this.files = this.fileUpload.nativeElement.files;
+    if (this.files.length > 0) {
+      document.getElementById("loading-gif").style.visibility = "visible";
+    }
     for (let i = 0; i < this.files.length; i++) {
       var formData = this.createFormData(this.files[i]);
       this.videoService.addVideo(formData).subscribe((video) => {
         this.ngOnInit();
+        document.getElementById("loading-gif").style.visibility = "hidden";
       });
     }
   }
@@ -63,8 +68,11 @@ export class ActableauVideosComponent implements OnInit {
    * Charge les vidéos depuis le serveur
    */
   loadVideos(): void {
+    console.log("logvideos");
     this.videoService.getVideos().subscribe((videos) => {
+      console.log("videos : ", videos);
       videos.forEach((video) => {
+        console.log("video :", video);
         this.videos.push(video);
       });
     });

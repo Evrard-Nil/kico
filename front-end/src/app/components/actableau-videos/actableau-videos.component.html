@@ -22,10 +22,9 @@
                     <tr>
                         <th>Titre</th>
                         <th>Date</th>
-                        <th>Annotée par</th>
-                        <th>Etat</th>
+                        <th>Images segmentées</th>
+                        <th>Images annotées</th>
                         <th>Score PCI</th>
-                        <th>Progression</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -38,16 +37,13 @@
                     <tr *ngFor="let video of videos">
                         <td>{{video.title}}</td>
                         <td>{{video.date | date:'dd/MM/yyyy'}}</td>
-                        <td>{{video.annotate_by}}</td>
-                        <td>{{video.state}}</td>
+                        <td>{{video.segmentated}}/13</td>
+                        <td>{{video.annotated}}/13</td>
                         <td>{{video.score_pci}}/39</td>
-                        <td>Progression</td>
-                        <td><button class="button-action w-half m-auto my-1"
-                                (click)="segmentate(video.id)">Segmenter</button>
-                            <button class="button-action w-half m-auto my-1"
-                                (click)="annotate(video.id)">Annoter</button>
-                            <button class="button-action w-half m-auto my-1"
-                                (click)="deleteVideo(video.id)">Supprimer</button>
+                        <td><button class="btn-action" (click)="segmentate(video.id)">Segmenter</button>
+                            <button class="btn-action" (click)="annotate(video.id)">Annoter</button>
+                            <button id="delete-btn" (click)="deleteVideo(video.id)"><img
+                                    src="assets/img/trash.svg" /></button>
                         </td>
                     </tr>
                 </tbody>
@@ -60,5 +56,6 @@
         <button id="btn-ajouter-video" (click)="addVideo()"><img src="assets/img/iconAdd.png" width=16 height=16 />
             Ajouter une
             vidéo</button>
+        <img src="assets/img/loading.gif" id="loading-gif" style="width:32px;margin-top:10px;visibility:hidden" />
     </div>
 </div>
