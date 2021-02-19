@@ -141,7 +141,7 @@ func (s *APIService) DeleteImage(ctx context.Context, imageID string, dataFolder
 		}
 	}
 
-	return "", nil
+	return nil, nil
 }
 
 // DeleteVideo - delete a video
@@ -153,7 +153,10 @@ func (s *APIService) DeleteVideo(ctx context.Context, videoID string, dataFolder
 	if err != nil {
 		return nil, &APIError{code: http.StatusBadRequest, message: err.Error()}
 	}
-
+	aerr := s.deleteImagesOfVideo(ctx, videoID, dataFolder)
+	if aerr != nil {
+		return nil, aerr
+	}
 	collection := s.dbClient.Database("ico").Collection("videos")
 	result, err := collection.DeleteOne(ctx, bson.M{"_id": videoID})
 	if err != nil {
@@ -182,7 +185,7 @@ func (s *APIService) DeleteVideo(ctx context.Context, videoID string, dataFolder
 		}
 	}
 
-	return "", nil
+	return nil, nil
 }
 
 // GetImage - Retrieve an image
@@ -354,6 +357,34 @@ func (s *APIService) UpdateVideo(ctx context.Context, videoID string, video Vide
 
 	log.Printf("%s - Success", methodName)
 	return "", nil
+}
+
+// deleteImagesOfVideo - Deletes all images linked to a video
+func (s *APIService) deleteImagesOfVideo(ctx context.Context, videoID string, dataFolder string) *APIError {
+	methodName := "DeleteImagesOfVideo"
+	log.Printf("%s - Deleting images from video (%s)...", methodName, videoID)
+
+	result, err := s.dbClient.Database("ico").Collection("images").Find(ctx, bson.M{"video_id": videoID})
+	if err != nil {
+		return &APIError{code: http.StatusInternalServerError, message: err.Error()}
+	}
+	defer result.Close(context.Background())
+
+	for result.Next(context.Background()) {
+		i := &Image{}
+		err = result.Decode(i)
+		if err != nil {
+			return &APIError{code: http.StatusInternalServerError, message: err.Error()}
+		}
+		_, aerr := s.DeleteImage(ctx, i.ID, dataFolder)
+		if aerr != nil {
+			return &APIError{code: http.StatusInternalServerError, message: aerr.Error()}
+		}
+	}
+
+	log.Printf("%s - Success", methodName)
+
+	return nil
 }
 
 // isValidUUID - Check if id is a valid uuid

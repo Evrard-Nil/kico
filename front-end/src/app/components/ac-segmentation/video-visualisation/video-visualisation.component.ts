@@ -3,6 +3,7 @@ import { ViewChild } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Output } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
+import { AppConstants } from 'src/app/app.constants';
 import { Image } from 'src/app/model/image';
 import { Video } from 'src/app/model/video';
 import { ImageService } from 'src/app/services/image.service';
@@ -21,7 +22,7 @@ export class VideoVisualisationComponent implements OnInit, AfterViewInit {
 
   @Output() eventCreateImage : EventEmitter<Image>;
 
-  constructor(private imageService: ImageService) { 
+  constructor(private imageService: ImageService, private constants : AppConstants) { 
     this.eventCreateImage = new EventEmitter()
   }
 
@@ -44,8 +45,8 @@ export class VideoVisualisationComponent implements OnInit, AfterViewInit {
     var canvasElement = document.createElement("canvas")
     var ctx = canvasElement.getContext('2d')
     
-    canvasElement.width = this.videoElement.clientWidth;
-    canvasElement.height = this.videoElement.clientHeight;
+    canvasElement.width = this.constants.image.WIDTH
+    canvasElement.height = this.constants.image.HEIGHT
     ctx.drawImage(this.videoElement, 0, 0, canvasElement.width, canvasElement.height);
 
     this.saveImage(canvasElement)
@@ -59,7 +60,6 @@ export class VideoVisualisationComponent implements OnInit, AfterViewInit {
   saveImage(canvasElement: HTMLCanvasElement) {
     canvasElement.toBlob((blob) => {
       const time = Math.round(this.videoElement.currentTime)
-      var url = URL.createObjectURL(blob)
 
       const formData = new FormData()
       formData.append('name', "Nouvelle image ("+ this.getDurationFromSeconds(time) + ")");

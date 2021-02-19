@@ -59,7 +59,7 @@
           <label id="example-radio-group-label"><b>Size</b></label>
           <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
             [(ngModel)]="nodule.size">
-            <mat-radio-button class="example-radio-button" *ngFor="let size of sizes" [value]="size">
+            <mat-radio-button class="example-radio-button" *ngFor="let size of constants.sizes" [value]="size">
               {{size}}
             </mat-radio-button>
           </mat-radio-group>
@@ -70,7 +70,7 @@
           <label id="example-radio-group-label"><b>Score</b></label>
           <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
             [(ngModel)]="nodule.score">
-            <mat-radio-button class="example-radio-button" *ngFor="let score of scores" [value]="score">
+            <mat-radio-button class="example-radio-button" *ngFor="let score of constants.scores" [value]="score">
               {{score}}
             </mat-radio-button>
           </mat-radio-group>
@@ -81,7 +81,7 @@
           <label id="example-radio-group-label"><b>Probability</b></label>
           <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
             [(ngModel)]="nodule.probability">
-            <mat-radio-button class="example-radio-button" *ngFor="let prob of probabilities" [value]="prob">
+            <mat-radio-button class="example-radio-button" *ngFor="let prob of constants.probabilities" [value]="prob">
               {{prob}}
             </mat-radio-button>
           </mat-radio-group>
@@ -95,7 +95,7 @@
           <label id="example-radio-group-label"><b>Retractile</b></label>
           <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
             [(ngModel)]="nodule.retractile">
-            <mat-radio-button class="example-radio-button" *ngFor="let ret of retractiles" [value]="ret">
+            <mat-radio-button class="example-radio-button" *ngFor="let ret of constants.retractiles" [value]="ret">
               {{ret == true ? "Yes" : "No"}}
             </mat-radio-button>
           </mat-radio-group>
@@ -106,7 +106,7 @@
           <label id="example-radio-group-label"><b>Adherant</b></label>
           <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
             [(ngModel)]="nodule.adherant">
-            <mat-radio-button class="example-radio-button" *ngFor="let adherant of adherants" [value]="adherant">
+            <mat-radio-button class="example-radio-button" *ngFor="let adherant of constants.adherants" [value]="adherant">
               {{adherant == true ? "Yes" : "No"}}
             </mat-radio-button>
           </mat-radio-group>
@@ -117,14 +117,14 @@
           <label id="example-radio-group-label"><b>Color</b></label>
           <mat-form-field appearance="fill" style="display: flex;">
             <mat-select [(value)]="nodule.color">
-              <mat-option [value]="color" *ngFor="let color of colors">{{ color }}</mat-option>
+              <mat-option [value]="color" *ngFor="let color of constants.colors">{{ color }}</mat-option>
             </mat-select>
           </mat-form-field>
 
           <label id="example-radio-group-label"><b>Form</b></label>
           <mat-form-field appearance="fill" style="display: flex;">
             <mat-select [(value)]="nodule.type">
-              <mat-option [value]="type" *ngFor="let type of types">{{ type }}</mat-option>
+              <mat-option [value]="type" *ngFor="let type of constants.types">{{ type }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>

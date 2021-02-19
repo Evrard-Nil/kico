@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -14,16 +15,17 @@ import { ActivatedRoute } from '@angular/router';
 import { Nodule } from 'src/app/model/nodule';
 import { ModalService } from '../modules/modal';
 
+import { AppConstants } from 'src/app/app.constants';
 
 @Component({
   selector: 'app-ac-image-annotator',
   templateUrl: './ac-image-annotator.component.html',
   styleUrls: ['./ac-image-annotator.component.css'],
 })
-export class ACImageAnnotatorComponent implements OnInit {
+export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true }) public canvas: ElementRef;
-  @Input() public width = 1200;
-  @Input() public height = 600;
+  @Input() public width
+  @Input() public height
   @Input() public idVideo;
   // @Input() image: ImageBitmap;
 
@@ -50,13 +52,7 @@ export class ACImageAnnotatorComponent implements OnInit {
   public nodule : Nodule;
   public noduleLoaded : Boolean;
 
-  sizes: string[] = ['0 cm', '> 0.5cm', '> 5cm', '> 5cm or confluence'];
-  scores: number[] = [0, 1, 2, 3];
-  probabilities: string[] = ['Certain', 'Average', 'Low'];
-  retractiles: Boolean[] = [true, false];
-  adherants: Boolean[] = [true, false];
-  colors: string[] = ["Jaunâtre", "Verdatre"];
-  types: string[] = ["Hétérogène", "Homogène"];
+
 
   private image: HTMLImageElement;
 
@@ -67,7 +63,8 @@ export class ACImageAnnotatorComponent implements OnInit {
   constructor(
     private imageService: ImageService,
     private route: ActivatedRoute,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private constants : AppConstants
   ) {
     this.coordinates = new Array<[number, number]>();
     this.increment = 1;
@@ -82,6 +79,17 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.erasedAnnotations = false;
   }
 
+  /**
+   * Supprime les images du localstorage, pour éviter la fuite mémoire
+   */
+  ngOnDestroy(): void {
+    this.receivedImages.forEach((image) => {
+      localStorage.removeItem(
+        image.id.toString()
+      );
+    })
+  }
+
   //Méthode faisant partie du cycle angular : Lancée à l'initialisation du composant.
   /*
    * On récupère les dimensions exactes de la photo //TODO
@@ -89,6 +97,8 @@ export class ACImageAnnotatorComponent implements OnInit {
    * On branche une méthode sur l'event "Clic du bouton de la souris" afin de dessiner au clic lorsqu'on est en mode dessin.
    */
   ngOnInit(): void {
+    this.width = this.constants.image.WIDTH;
+    this.height = this.constants.image.HEIGHT;
     this.loadImages();
     this.initImage();
     this.initCanvas();
