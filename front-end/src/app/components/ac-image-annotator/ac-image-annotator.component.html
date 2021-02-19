@@ -6,7 +6,15 @@
 
     <div class="wrapper">
       <!-- <div class="one"><input type="image" src="../../../assets/redo.jpg" id="redo" (click)="redoPolygons()" width="64px" height="64px"></div> -->
-      <div class="two"><input type="image" src="../../../assets/undo.jpg" id="undo" (click)="clearAnnotations()" width="64px" height="64px"></div>
+      <div class="two"><input type="image" src="../../../assets/undo.jpg" id="undo" (click)="openClearAnnotationModal()" width="64px" height="64px"></div>
+      <modal id="confirmation-erase-all-annotations">
+        <h1>Sauvegarde</h1>
+        <p>Êtes-vous sur de vouloir effacer toutes les annotations ?</p>
+        <div class="flex flex-row space-between">
+          <button class="button-rouge" (click)="closeModal('confirmation-erase-all-annotations')">Non</button>
+          <button class="button-vert" (click)="clearAnnotations()">Oui</button>
+        </div>
+      </modal>
       <div class="three"><input type="image" src="../../../assets/save.jpg" id="save" (click)="saveCanvas()" width="64px" height="64px"></div>
       <div class="four"><input type="image" src="../../../assets/draw.jpg" id="draw" (click)="drawCanvas()" width="64px" height="64px"></div>
     </div>

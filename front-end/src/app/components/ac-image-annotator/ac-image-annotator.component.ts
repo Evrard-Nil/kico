@@ -119,13 +119,8 @@ export class ACImageAnnotatorComponent implements OnInit {
     });
   }
 
-  logNodule(){
-    console.log("this nodule : ", this.nodule);
-    console.log("size nodule : ", Object.keys(this.nodule).length);
-  }
 
   private initQualification(image : CustomImage){
-    // console.log("image : ,", image);
     this.nodule = Object.assign({}, image.nodule);
     this.noduleLoaded = true;
   }
@@ -208,11 +203,16 @@ export class ACImageAnnotatorComponent implements OnInit {
     );
   }
 
+  openClearAnnotationModal(){
+    this.openModal("confirmation-erase-all-annotations");
+  }
+
   clearAnnotations(){
     this.polygons.splice(0, this.polygons.length);
     this.coordinates.splice(0, this.coordinates.length);
     this.drawPolygon();
     this.erasedAnnotations = true;
+    this.closeModal('confirmation-erase-all-annotations');
   }
 
   //Sauve l'état du canvas.
@@ -263,8 +263,6 @@ export class ACImageAnnotatorComponent implements OnInit {
       }
 
       if(this.erasedAnnotations){
-        console.log("rentre dedans");
-        console.log("this.polygons : ", this.polygons);
         tempImage.annotations = Array.from(this.polygons);
       } else {
         tempImage.annotations = Array.from(new Set(this.currentImage.annotations.concat( //Permet de gérer les doublons
@@ -353,7 +351,6 @@ export class ACImageAnnotatorComponent implements OnInit {
     this.currentImage = image
     this.currentZone = zones[+this.currentImage.secteur_id];
     this.erasedAnnotations = false;
-    console.log(this.currentImage);
 
     this.image.onload = () => {
       this.ctx.drawImage(this.image, 0, 0);
