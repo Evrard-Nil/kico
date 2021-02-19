@@ -22,6 +22,7 @@ export class ActableauVideosComponent implements OnInit {
 
   ngOnInit(): void {
     this.videos = new Array<Video>();
+    console.log("avant log vidéo");
     this.loadVideos();
   }
 
@@ -67,8 +68,11 @@ export class ActableauVideosComponent implements OnInit {
    * Charge les vidéos depuis le serveur
    */
   loadVideos(): void {
+    console.log("logvideos");
     this.videoService.getVideos().subscribe((videos) => {
+      console.log("videos : ", videos);
       videos.forEach((video) => {
+        console.log("video :", video);
         this.videos.push(video);
       });
     });
