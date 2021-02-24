@@ -1,6 +1,8 @@
 <div class="page">
     <h1>Toutes les vidéos</h1>
-    <!-- Décommenter quand il y aura réellement un code couleur
+    <!-- TODO Décommenter quand il y aura réellement un code couleur, 
+      -- supprimer si abandon de l'idée de code couleur (pour le background des lignes du tableau)
+
         <div class="list-video-legend">
         <span>
             <div id="annote-color" class="list-video-legend-block"></div> Annotée
@@ -15,6 +17,17 @@
             <div id="enregistre-color" class="list-video-legend-block"></div> Enregistrée
         </span>
     </div> -->
+
+    <modal id="confirmation-delete-video">
+        <h1>Suppression d'une vidéo</h1>
+        <p>Êtes-vous sur de vouloir supprimer cette vidéo ? (Les segmentations et annotations seront perdues, cette
+            action est définitive)</p>
+        <div class="flex flex-row space-between">
+            <button class="button-rouge" (click)="closeModal('confirmation-delete-video')">Non</button>
+            <button class="button-vert" (click)="modalOnDeleteImage('confirmation-delete-video')">Oui</button>
+        </div>
+    </modal>
+
     <div class="table">
         <div class="table-head">
             <table>
@@ -42,7 +55,7 @@
                         <td>{{video.score_pci}}/39</td>
                         <td><button class="btn-action" (click)="segmentate(video.id)">Segmenter</button>
                             <button class="btn-action" (click)="annotate(video.id)">Annoter</button>
-                            <button id="delete-btn" (click)="deleteVideo(video.id)"><img
+                            <button id="delete-btn" (click)="openModal('confirmation-delete-video',video.id)"><img
                                     src="assets/img/trash.svg" /></button>
                         </td>
                     </tr>

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ModalService } from '../modules/modal';
 
 @Component({
   selector: 'app-actableau-videos',
@@ -16,8 +17,9 @@ export class ActableauVideosComponent implements OnInit {
   files = [];
 
   videos: Array<Video>;
+  selectedVideoId = "";
 
-  constructor(private videoService: VideoService, private router: Router) {
+  constructor(private videoService: VideoService, private modalService: ModalService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -73,4 +75,23 @@ export class ActableauVideosComponent implements OnInit {
       });
     });
   }
+
+
+  openModal(id: string, idVideo) {
+    this.selectedVideoId = idVideo;
+    this.modalService.open(id);
+  }
+
+  modalOnDeleteImage(id: string) {
+    if (this.selectedVideoId != "") {
+      this.deleteVideo(this.selectedVideoId);
+      this.selectedVideoId = "";
+    }
+    this.closeModal(id);
+  }
+
+  closeModal(id: string) {
+    this.modalService.close(id);
+  }
+
 }
