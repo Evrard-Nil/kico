@@ -21,8 +21,8 @@ import { AppConstants } from 'src/app/app.constants';
 })
 export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true }) public canvas: ElementRef;
-  @Input() public width
-  @Input() public height
+  @Input() public width;
+  @Input() public height;
   @Input() public idVideo;
   // @Input() image: ImageBitmap;
 
@@ -44,24 +44,21 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
   private deletedPolygons: Array<Array<[number, number]>>;
   private erasedAnnotations;
 
-
   //Paramètres pour gérer le nodule
-  public nodule : Nodule;
-  public noduleLoaded : Boolean;
-
-
+  public nodule: Nodule;
+  public noduleLoaded: Boolean;
 
   private image: HTMLImageElement;
 
   receivedImages: Array<CustomImage>;
   currentImage: CustomImage;
-  currentZone : String
+  currentZone: String;
 
   constructor(
     private imageService: ImageService,
     private route: ActivatedRoute,
     private modalService: ModalService,
-    private constants : AppConstants
+    private constants: AppConstants
   ) {
     this.coordinates = new Array<[number, number]>();
     this.increment = 1;
@@ -71,7 +68,7 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     this.polygonsByState = new Map<ImageData, Array<Array<[number, number]>>>();
     this.receivedImages = new Array();
     this.idVideo = this.route.snapshot.paramMap.get('id');
-    this.currentImage = new CustomImage()
+    this.currentImage = new CustomImage();
     this.noduleLoaded = false;
     this.erasedAnnotations = false;
   }
@@ -81,10 +78,14 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.receivedImages.forEach((image) => {
-      localStorage.removeItem(
-        image.id.toString()
-      );
-    })
+      this.removeImageInLocalStorage(image);
+    });
+  }
+
+  private removeImageInLocalStorage(image: CustomImage) {
+    if (image.id !== undefined) {
+      localStorage.removeItem(image.id.toString());
+    }
   }
 
   //Méthode faisant partie du cycle angular : Lancée à l'initialisation du composant.
@@ -126,8 +127,7 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  private initQualification(image : CustomImage){
+  private initQualification(image: CustomImage) {
     this.nodule = Object.assign({}, image.nodule);
     this.noduleLoaded = true;
   }
@@ -142,7 +142,6 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
       receivedImages.forEach((image) => {
         image.url = environment.fileBaseUrl + image.url;
         this.receivedImages.push(image);
-        this.initLocalImage(image);
       });
     });
   }
@@ -151,18 +150,16 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
    * Créer un nouveau HTMLImageElement qui affichera l'image reçu depuis l'api. Cet HTMLImageElement sera enregistré en local.
    * @param image l'image a enregsitré dans le localStorage
    */
-  private initLocalImage(image: CustomImage) {
-    var downloadedImg = new Image();
-    downloadedImg.crossOrigin = 'anonymous';
-    downloadedImg.src = image.url.toString();
-    downloadedImg.id = image.id.toString();
-    downloadedImg.addEventListener(
-      'load',
-      () => {
-        this.loadImageInLocalStorage(downloadedImg);
-      },
-      false
-    );
+  private async initLocalImage(image: CustomImage) {
+    return new Promise((resolve) => {
+      var downloadedImg = new Image();
+      downloadedImg.crossOrigin = 'anonymous';
+      downloadedImg.src = image.url.toString();
+      downloadedImg.id = image.id.toString();
+      downloadedImg.onload = () => {
+        resolve(this.loadImageInLocalStorage(downloadedImg));
+      };
+    });
   }
 
   /**
@@ -178,7 +175,6 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     canvas.height = downloadedImg.height;
 
     context.drawImage(downloadedImg, 0, 0);
-
     try {
       localStorage.setItem(
         downloadedImg.id.toString(),
@@ -188,7 +184,6 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
       console.log('Error: ' + err);
     }
   }
-
 
   /**
    * Retourne vrai si les deux tableaux en paramètre sont égaux
@@ -210,11 +205,11 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     );
   }
 
-  openClearAnnotationModal(){
-    this.openModal("confirmation-erase-all-annotations");
+  openClearAnnotationModal() {
+    this.openModal('confirmation-erase-all-annotations');
   }
 
-  clearAnnotations(){
+  clearAnnotations() {
     this.polygons.splice(0, this.polygons.length);
     this.coordinates.splice(0, this.coordinates.length);
     this.drawPolygon();
@@ -230,8 +225,8 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
    */
   saveCanvas(): void {
     this.increment = 1;
-    if(Object.keys(this.nodule).length < 7){
-      this.openModal("confirmation-save-annotations");
+    if (Object.keys(this.nodule).length < 7) {
+      this.openModal('confirmation-save-annotations');
     } else {
       this.saveImage();
     }
@@ -245,7 +240,7 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     this.modalService.close(id);
   }
 
-  public saveImage() : void {
+  public saveImage(): void {
     this.state = this.ctx.getImageData(0, 0, this.width, this.height);
     this.states.push(this.state);
     this.isDrawing = false;
@@ -255,13 +250,16 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
       this.polygons.push(polygon);
     }
 
-    if (!this.arrayEquals(this.currentImage.annotations, this.polygons) || this.currentImage.nodule != this.nodule) {
+    if (
+      !this.arrayEquals(this.currentImage.annotations, this.polygons) ||
+      this.currentImage.nodule != this.nodule
+    ) {
       let tempImage = new CustomImage();
       tempImage.id = this.currentImage.id;
       tempImage.name = this.currentImage.name;
       tempImage.secteur_id = this.currentImage.secteur_id;
       tempImage.time = this.currentImage.time;
-      tempImage.url = "/" + this.currentImage.url.match(/images\/(.)*/)[0]
+      tempImage.url = '/' + this.currentImage.url.match(/images\/(.)*/)[0];
       tempImage.video_id = this.currentImage.video_id;
       let clonedNodule = Object.assign({}, this.nodule);
       tempImage.nodule = clonedNodule;
@@ -269,22 +267,26 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
         this.currentImage.annotations = [];
       }
 
-      if(this.erasedAnnotations){
+      if (this.erasedAnnotations) {
         tempImage.annotations = Array.from(this.polygons);
       } else {
-        tempImage.annotations = Array.from(new Set(this.currentImage.annotations.concat( //Permet de gérer les doublons
-        Array.from(this.polygons)
-      )));
+        tempImage.annotations = Array.from(
+          new Set(
+            this.currentImage.annotations.concat(
+              //Permet de gérer les doublons
+              Array.from(this.polygons)
+            )
+          )
+        );
       }
       this.currentImage.annotations = tempImage.annotations;
-      this.imageService.updateImage(tempImage).subscribe((img) => {
-      });
+      this.imageService.updateImage(tempImage).subscribe((img) => {});
     }
 
     let polygons = Array.from(this.polygons);
     this.polygonsByState.set(this.state, polygons);
     this.coordinates.splice(0, this.coordinates.length); //On remet le tableau de coordonnées du polygone à vide.
-    this.closeModal("confirmation-save-annotations");
+    this.closeModal('confirmation-save-annotations');
   }
 
   //Permet de passer en mode dessin.
@@ -292,7 +294,6 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     // this.polygons = this.polygonsByState.get(this.state);
     this.increment = 1;
     this.isDrawing = true;
-
   }
 
   //Permet de garder affiché les polygones précédemment dessinés.
@@ -310,7 +311,6 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
       this.ctx.closePath();
       this.ctx.stroke();
     });
-
   }
 
   //Dessine un polygone au clic.
@@ -324,7 +324,7 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     this.ctx.drawImage(this.image, 0, 0);
     this.drawPreviousPolygons();
     this.ctx.beginPath();
-    if(this.coordinates.length>0){
+    if (this.coordinates.length > 0) {
       this.ctx.moveTo(this.coordinates[0][0], this.coordinates[0][1]);
       for (let i = 1; i < this.coordinates.length; i++) {
         this.ctx.lineTo(this.coordinates[i][0], this.coordinates[i][1]);
@@ -342,11 +342,12 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
    * Charge la nouvelle image.
    *
    */
-  clickImage(image: CustomImage, element) {
+  async clickImage(image: CustomImage, element) {
     //RECHARGER LES IMAGES
     this.ctx.clearRect(0, 0, this.width, this.height); //Remet le canvas à blanc.
-
-
+    this.removeImageInLocalStorage(this.currentImage);
+    // On attend que l'image soit chargée dans le localstorage
+    await this.initLocalImage(image);
     this.polygons = [];
     this.polygonsByState.clear();
     this.coordinates = [];
@@ -355,27 +356,31 @@ export class ACImageAnnotatorComponent implements OnInit, OnDestroy {
     this.image = new Image();
     this.image.crossOrigin = 'anonymous';
     this.image.src = localStorage.getItem(image.id.toString());
-    this.currentImage = image
+    this.currentImage = image;
     this.currentZone = this.constants.zones[+this.currentImage.secteur_id];
     this.erasedAnnotations = false;
 
     this.image.onload = () => {
       this.ctx.drawImage(this.image, 0, 0);
-      this.receivedImages.forEach(image => {
+      this.receivedImages.forEach((image) => {
         if (image === this.currentImage && image.annotations != undefined) {
           this.polygons = Array.from(this.currentImage.annotations);
           this.drawPolygon();
           this.state = this.ctx.getImageData(0, 0, this.width, this.height);
           this.polygonsByState.set(this.state, this.polygons);
           this.initQualification(image);
-        } else if(image === this.currentImage && image.annotations == undefined) {
-          this.states.push(this.ctx.getImageData(0, 0, this.width, this.height));
-          this.state = this.states[0]
+        } else if (
+          image === this.currentImage &&
+          image.annotations == undefined
+        ) {
+          this.states.push(
+            this.ctx.getImageData(0, 0, this.width, this.height)
+          );
+          this.state = this.states[0];
           this.polygonsByState.set(this.state, []);
           this.initQualification(image);
         }
       });
-
-    }
+    };
   }
 }
